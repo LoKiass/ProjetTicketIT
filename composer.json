@@ -2,7 +2,7 @@
   "minimum-stability": "stable",
   "autoload": {
     "psr-4": {
-      "mvc2526A\\": "Src/",
+      "ProjectTicketIT\\": "Src/",
       "Routing\\": "Src/Routing/"
     }
   },

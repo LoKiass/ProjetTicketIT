@@ -1,5 +1,7 @@
 <?php
+// Routes du sites
 return [
-    'home' => ['home', 'index'],
-    'test' => ['test', 'index']
+    'login' => ['Login' => 'index'],
+    ''      => ['Login' => 'index'],
+    'test'  => ['Test' => 'index']
 ];

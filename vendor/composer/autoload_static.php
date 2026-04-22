@@ -7,24 +7,24 @@ namespace Composer\Autoload;
 class ComposerStaticInitd751713988987e9331980363e24189ce
 {
     public static $prefixLengthsPsr4 = array (
-        'm' =>
-        array (
-            'mvc2526A\\' => 9,
-        ),
         'R' =>
         array (
             'Routing\\' => 8,
         ),
+        'P' =>
+        array (
+            'ProjectTicketIT\\' => 16,
+        ),
     );
 
     public static $prefixDirsPsr4 = array (
-        'mvc2526A\\' =>
-        array (
-            0 => __DIR__ . '/../..' . '/Src',
-        ),
         'Routing\\' =>
         array (
             0 => __DIR__ . '/../..' . '/Src/Routing',
+        ),
+        'ProjectTicketIT\\' =>
+        array (
+            0 => __DIR__ . '/../..' . '/Src',
         ),
     );
 

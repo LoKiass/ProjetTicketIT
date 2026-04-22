@@ -1,0 +1,14 @@
+{
+  "minimum-stability": "stable",
+  "autoload": {
+    "psr-4": {
+      "mvc2526A\\": "Src/"
+    }
+  },
+  "require-dev": {
+    "twig/twig": "v3.24.0"
+  },
+  "require": {
+    "ext-pdo": "*"
+  }
+}

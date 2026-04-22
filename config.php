@@ -2,8 +2,5 @@
 $isProd = true;
 
 if ($isProd === true) {
-
-}
-else {
-
+    $rootDir = "ProjectTicketIT";
 }

@@ -24,7 +24,7 @@ class ComposerStaticInitd751713988987e9331980363e24189ce
         ),
         'Routing\\' =>
         array (
-            0 => __DIR__ . '/../..' . '/Routing',
+            0 => __DIR__ . '/../..' . '/Src/Routing',
         ),
     );
 

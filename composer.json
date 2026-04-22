@@ -3,7 +3,7 @@
   "autoload": {
     "psr-4": {
       "mvc2526A\\": "Src/",
-      "Routing\\": "Routing/"
+      "Routing\\": "Src/Routing/"
     }
   },
   "require-dev": {

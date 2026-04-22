@@ -11,12 +11,20 @@ class ComposerStaticInitd751713988987e9331980363e24189ce
         array (
             'mvc2526A\\' => 9,
         ),
+        'R' =>
+        array (
+            'Routing\\' => 8,
+        ),
     );
 
     public static $prefixDirsPsr4 = array (
         'mvc2526A\\' =>
         array (
             0 => __DIR__ . '/../..' . '/Src',
+        ),
+        'Routing\\' =>
+        array (
+            0 => __DIR__ . '/../..' . '/Routing',
         ),
     );
 

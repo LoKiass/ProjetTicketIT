@@ -7,4 +7,5 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'mvc2526A\\' => array($baseDir . '/Src'),
+    'Routing\\' => array($baseDir . '/Routing'),
 );

@@ -2,7 +2,8 @@
   "minimum-stability": "stable",
   "autoload": {
     "psr-4": {
-      "mvc2526A\\": "Src/"
+      "mvc2526A\\": "Src/",
+      "Routing\\": "Routing/"
     }
   },
   "require-dev": {

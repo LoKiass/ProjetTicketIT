@@ -15,6 +15,12 @@ class LoginController extends BaseController
      * La méthode index permet d'afficher la page de connexion'
      */
     public function formLogin(){
-        echo $this->TemplateEngine->render('/Login/Login.twig');
+        if( isset($_POST['username'])){
+            
+        }
+        else {
+            echo $this->TemplateEngine->render('/Login/Login.twig');
+        }
+
     }
 }

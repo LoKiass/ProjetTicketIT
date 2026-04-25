@@ -10,11 +10,11 @@ class LoginController extends BaseController
     public function __construct(){
         parent::__construct();
     }
+
     /*
      * La méthode index permet d'afficher la page de connexion'
      */
-
-    public function index(){
+    public function formLogin(){
         echo $this->TemplateEngine->render('/Login/Login.twig');
     }
 }

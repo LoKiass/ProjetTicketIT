@@ -24,7 +24,7 @@ class Router
 
     /*
      * Cette méthode permet de récuper le nom du controller dans la table des routes
-     * Dans le cas ou le controller n'existe pas, elle retourne notfound'
+     * Dans le cas ou le controller n'existe pas, elle retourne notfound
      */
     public function get_Ctrl(): string
     {
@@ -37,7 +37,7 @@ class Router
 
     /*
      * Cette méthode permet de récuper l'action du controller dans la table des routes
-     * Dans le cas ou l'action n'existe pas, elle retourne notfound'
+     * Dans le cas ou l'action n'existe pas, elle retourne notfound
      */
     public function get_Action(): string
     {

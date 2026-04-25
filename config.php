@@ -2,5 +2,5 @@
 $isProd = true;
 
 if ($isProd === true) {
-    $rootDir = "ProjectTicketIT";
+    $rootDir = "DISEUMAT";
 }

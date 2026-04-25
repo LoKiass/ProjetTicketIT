@@ -2,7 +2,7 @@
   "minimum-stability": "stable",
   "autoload": {
     "psr-4": {
-      "ProjectTicketIT\\": "Src/",
+      "DISEUMAT\\": "Src/",
       "Routing\\": "Src/Routing/"
     }
   },

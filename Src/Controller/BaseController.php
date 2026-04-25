@@ -1,6 +1,6 @@
 <?php
 
-namespace ProjectTicketIT\Controller;
+namespace DISEUMAT\Controller;
 
 class BaseController
 {

@@ -30,9 +30,9 @@ class ComposerStaticInitd751713988987e9331980363e24189ce
         array (
             'Routing\\' => 8,
         ),
-        'P' =>
+        'D' =>
         array (
-            'ProjectTicketIT\\' => 16,
+            'DISEUMAT\\' => 9,
         ),
     );
 
@@ -53,7 +53,7 @@ class ComposerStaticInitd751713988987e9331980363e24189ce
         array (
             0 => __DIR__ . '/../..' . '/Src/Routing',
         ),
-        'ProjectTicketIT\\' =>
+        'DISEUMAT\\' =>
         array (
             0 => __DIR__ . '/../..' . '/Src',
         ),

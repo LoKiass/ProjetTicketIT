@@ -10,5 +10,5 @@ return array(
     'Symfony\\Polyfill\\Mbstring\\' => array($vendorDir . '/symfony/polyfill-mbstring'),
     'Symfony\\Polyfill\\Ctype\\' => array($vendorDir . '/symfony/polyfill-ctype'),
     'Routing\\' => array($baseDir . '/Src/Routing'),
-    'ProjectTicketIT\\' => array($baseDir . '/Src'),
+    'DISEUMAT\\' => array($baseDir . '/Src'),
 );

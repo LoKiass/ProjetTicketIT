@@ -1,6 +1,6 @@
 <?php
 
-namespace ProjectTicketIT\Model\Session;
+namespace DISEUMAT\Model\Session;
 
 class UserManager
 {

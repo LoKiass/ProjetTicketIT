@@ -1,6 +1,6 @@
 <?php
 
-namespace ProjectTicketIT\Model\Entity;
+namespace DISEUMAT\Model\Entity;
 
 class User
 {

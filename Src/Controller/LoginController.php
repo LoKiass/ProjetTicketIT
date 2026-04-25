@@ -1,12 +1,12 @@
 <?php
 
-namespace ProjectTicketIT\Controller;
+namespace DISEUMAT\Controller;
 
 /*
  * La classe LoginController contient les méthodes nécesaires pour la gestion de la page de connexion
  */
 
-use ProjectTicketIT\Model\Session\UserManager;
+use DISEUMAT\Model\Session\UserManager;
 
 class LoginController extends BaseController
 {
@@ -27,6 +27,10 @@ class LoginController extends BaseController
             $checkLogin = $this->UM->checkUser($Login, $Pswd);
             if ($checkLogin){
                 $_SESSION['Login'] = $Login;
+                $_SESSION['Pswd'] = $Pswd;
+                $_SESSION['Actif'] = true;
+                $_SESSION['Staus'] = "Admin";
+
                 echo "LOGIN REUSSI";
             }
             else{

@@ -1,18 +1,18 @@
 {% extends 'baseTemplate.twig' %}
-
 {% block pageTitle %}Connexion{% endblock %}
 
 {% block content %}
     <h1>Login</h1>
     <form method="post">
         <!-- Nom utilisateur -->
-        <label for="username">Username</label>
-        <input type="text" name="username" id="username" />
+        <label for="Login">Username</label>
+        <input type="text" name="Login" id="Login" />
         <br>
         <!-- Mots de passe utilisateurs -->
-        <label for="password">Password</label>
-        <input type="password" name="password" id="password" />
+        <label for="Pswd">Password</label>
+        <input type="password" name="Pswd" id="Pswd" />
         <br>
         <button type="submit">Connexion</button>
     </form>
+    {% if errorFlag %}Mauvais login : Veuillez re-essayer !{% endif %}
 {% endblock %}

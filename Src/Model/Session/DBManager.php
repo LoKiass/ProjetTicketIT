@@ -5,6 +5,7 @@ namespace ProjectTicketIT\Model\Session;
 class DBManager
 {
     private $pdo;
+    private static $instance;
 
     private function __construct(){
         try {
@@ -15,6 +16,9 @@ class DBManager
     }
 
     public static function getInstance(){
-        return new self();
+        if(empty(self::$instance)) {
+            self::$instance = new self();
+        }
+        return self::$instance->pdo;
     }
 }

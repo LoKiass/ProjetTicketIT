@@ -31,7 +31,7 @@ class LoginController extends BaseController
                 $_SESSION['Actif'] = true;
                 $_SESSION['Staus'] = "Admin";
 
-                echo "LOGIN REUSSI";
+                echo $this->TemplateEngine->render('/Accueil/Accueil.twig');
             }
             else{
                 echo $this->TemplateEngine->render('/Login/Login.twig', ['errorFlag' => true]);

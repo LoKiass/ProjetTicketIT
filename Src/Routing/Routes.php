@@ -3,5 +3,6 @@
 return [
     'login' => ['Login' => 'formLogin'],
     ''      => ['Login' => 'formLogin'],
-    'test'  => ['Test' => 'index']
+    'test'  => ['Test' => 'index'],
+    'accueil' => ['Accueil' => 'formAccueil'],
 ];

@@ -1,6 +1,6 @@
 <?php
 
-namespace DISEUMAT\Model\Session;
+namespace DISEUMAT\Model\Service\Manager;
 
 class DBManager
 {

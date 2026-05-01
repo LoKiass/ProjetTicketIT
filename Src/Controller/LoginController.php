@@ -6,7 +6,7 @@ namespace DISEUMAT\Controller;
  * La classe LoginController contient les méthodes nécesaires pour la gestion de la page de connexion
  */
 
-use DISEUMAT\Model\Session\UserManager;
+use DISEUMAT\Model\Service\Manager\UserManager;
 
 class LoginController extends BaseController
 {

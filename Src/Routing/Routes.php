@@ -1,8 +1,10 @@
 <?php
 // Routes du sites
 return [
-    'login' => ['Login' => 'formLogin'],
+    'formLogin' => ['Login' => 'formLogin'],
     ''      => ['Login' => 'formLogin'],
     'test'  => ['Test' => 'index'],
-    'accueil' => ['Accueil' => 'formAccueil'],
+    'formTech'   => ['Tech' => 'formTech'],
+    'createTech' => ['Tech' => 'createTech'],
+    'readeTech'  => ['Tech' => 'readTech']
 ];

@@ -1,0 +1,20 @@
+{% extends 'baseTemplate.twig' %}
+{% block content %}
+    <h1> Creations de truc </h1>
+    <form method="post">
+        <label for="Nom">Nom</label>
+        <input type="text" name="Nom" id="Nom">
+
+        <label for="Pren">Prenom</label>
+        <input type="text" name="Pren" id="Pren">
+
+        <label for="Email">Email</label>
+        <input type="email" name="Email" id="Email">
+
+        <label for="Actif">Actif?</label>
+        <input type="checkbox" name="Actif" id="Actif">
+
+        <button type="submit">Envoyer</button>
+    </form>
+    {% if rowAffected %}ADDRESE CREE AVEC SUCCES{% endif %}
+{% endblock %}

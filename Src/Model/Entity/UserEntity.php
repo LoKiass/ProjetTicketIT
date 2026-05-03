@@ -2,7 +2,7 @@
 
 namespace DISEUMAT\Model\Entity;
 
-class User
+class UserEntity
 {
     private string $Login;
     private int $Pswd;

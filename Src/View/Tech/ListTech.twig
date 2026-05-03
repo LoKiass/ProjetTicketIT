@@ -1,0 +1,17 @@
+{% extends 'baseTemplate.twig' %}
+{% block menu %}
+    <ul>
+        <li><a href="createTech">Créations</a></li>
+        <li><a href="readTech">Liste</a></li>
+    </ul>
+{% endblock %}
+{% block content %}
+    <ul>
+        {% for tech in TabTech %}
+            <li>{{ tech.getNom }}</li>
+            <li>{{ tech.getPrenom }}</li>
+            <lu>{{ tech.getEmail }}</lu>
+            <li>{{ tech.getActif ? 'Actif' : 'Inactif' }}</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

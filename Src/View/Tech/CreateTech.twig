@@ -1,4 +1,10 @@
 {% extends 'baseTemplate.twig' %}
+{% block menu %}
+    <ul>
+        <li><a href="createTech">Créations</a></li>
+        <li><a href="readTech">Liste</a></li>
+    </ul>
+{% endblock %}
 {% block content %}
     <h1> Creations de truc </h1>
     <form method="post">
@@ -12,9 +18,11 @@
         <input type="email" name="Email" id="Email">
 
         <label for="Actif">Actif?</label>
-        <input type="checkbox" name="Actif" id="Actif">
+        <input type="checkbox" name="Actif" id="Actif" value="1">
 
         <button type="submit">Envoyer</button>
     </form>
-    {% if rowAffected %}ADDRESE CREE AVEC SUCCES{% endif %}
+{% if rowAffected is defined and rowAffected is not null%}
+    <p>ADRESSE CRÉÉE AVEC SUCCÈS</p>
+{% endif %}
 {% endblock %}

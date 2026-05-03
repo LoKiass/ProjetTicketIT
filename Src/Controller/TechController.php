@@ -2,6 +2,7 @@
 
 namespace DISEUMAT\Controller;
 
+use DISEUMAT\Model\Entity\TechEntity;
 use DISEUMAT\Model\Service\Manager\TechManager;
 
 class TechController extends BaseController
@@ -32,12 +33,12 @@ class TechController extends BaseController
         $rowAffected = null;
 
         if (isset($_POST['Pren'])){
-            $Pren = $_POST['Pren'];
-            $Nom = $_POST['Nom'];
-            $Email = $_POST['Email'];
-            $Actif = $_POST['Actif'] ?? 0;
+            $_POST['Pk_Tech'] ?? $_POST['Pk_Tech'] = 0; // Afin d'utilise l'entité statique sans problème de nul
+            $_POST['Actif'] ?? $_POST['Actif'] = 0; // Cas de la checkbox
 
-            $rowAffected = $this->TM->create($Pren, $Nom, $Email, $Actif);
+            $tempTech = TechEntity::fromArray($_POST);
+
+            $rowAffected = $this->TM->create($tempTech);
             echo $this->TemplateEngine->render("Tech/CreateTech.twig", ['rowAffected' => $rowAffected]);
         }
         else{

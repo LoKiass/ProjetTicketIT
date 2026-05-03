@@ -41,8 +41,14 @@ class TechManager
         }
         return $TabTech;
     }
-    public function create($Pren, $Nom, $Email, $Actif) : bool{
-        $query = "INSERT INTO Tech (Nom, Pren, Email, Actif) VALUES ('$Nom', '$Pren', '$Email', '$Actif')";
+    public function create($entity) : bool{
+        $query = "INSERT INTO Tech (Nom, Pren, Email, Actif) VALUES ("
+            . "'" . $entity->getNom() . "', "
+            . "'" . $entity->getPrenom() . "', "
+            . "'" . $entity->getEmail() . "', "
+            . "'" . ($entity->getActif() ?? 0) . "')";
+
+
         $retour = $this->pdb->query($query);
 
         if ($retour){

@@ -22,6 +22,7 @@ class LoginController extends BaseController
      */
     public function formLogin(){
         if( isset($_POST['Login'])){
+            // A MODIFIER
             $Login = $_POST['Login'];
             $Pswd = $_POST['Pswd'];
             $checkLogin = $this->UM->checkUser($Login, $Pswd);

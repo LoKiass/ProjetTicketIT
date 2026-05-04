@@ -24,6 +24,7 @@ class TechManager
             $tempTech = TechEntity::fromArray($record);
             return $tempTech;
         }
+
     }
 
     public function list() : array
@@ -58,8 +59,4 @@ class TechManager
     }
     public function update(int $pk){
     }
-    public function delete(int $pk){
-    }
-
-
 }

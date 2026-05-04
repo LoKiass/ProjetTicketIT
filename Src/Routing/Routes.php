@@ -6,5 +6,5 @@ return [
     'test'  => ['Test' => 'index'],
     'formTech'   => ['Tech' => 'formTech'],
     'createTech' => ['Tech' => 'createTech'],
-    'readTech'  => ['Tech' => 'readTech'],
+    'getTech'  => ['Tech' => 'getTech'],
 ];

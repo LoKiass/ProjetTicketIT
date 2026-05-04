@@ -17,7 +17,7 @@ class TechController extends BaseController
     public function formTech(){
         echo $this->TemplateEngine->render("Tech/FormTech.twig");
     }
-    public function readTech()  {
+    public function getTech()  {
         echo "Hello";
         if (isset($_GET['Pk'])){
             $Pk = $_GET['Pk'];
@@ -47,8 +47,5 @@ class TechController extends BaseController
     }
     public function updateTech(){
         echo $this->TemplateEngine->render("Tech/UpdateTech.twig");
-    }
-    public function deleteTech(){
-        // Delete
     }
 }

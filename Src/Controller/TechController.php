@@ -2,8 +2,8 @@
 
 namespace DISEUMAT\Controller;
 
-use DISEUMAT\Model\Entity\TechEntity;
-use DISEUMAT\Model\Service\Manager\TechManager;
+use DISEUMAT\Controller\Model\Entity\TechEntity;
+use DISEUMAT\Controller\Model\Service\Manager\TechManager;
 
 class TechController extends BaseController
 {
@@ -17,19 +17,17 @@ class TechController extends BaseController
     public function formTech(){
         echo $this->TemplateEngine->render("Tech/FormTech.twig");
     }
-    public function getTech()  {
-        echo "Hello";
+    public function getTech()  { // Manque securite
         if (isset($_GET['Pk'])){
-            $Pk = $_GET['Pk'];
-            $Tech = $this->TM->read($Pk);
-            echo $this->TemplateEngine->render("Tech/ListTech.twig", ['TechEntity' => $Tech]);
+            $Tech = $this->TM->read($_GET['Pk']);
+            echo $this->TemplateEngine->render("Tech/InfoTech.twig", ['TechEntity' => $Tech]);
         }
         else{
             $TabTech = $this->TM->list();
             echo $this->TemplateEngine->render("Tech/ListTech.twig", ['TabTech' => $TabTech]);
         }
     }
-    public function createTech(){
+    public function createTech(){ // Manque securite
         $rowAffected = null;
 
         if (isset($_POST['Pren'])){

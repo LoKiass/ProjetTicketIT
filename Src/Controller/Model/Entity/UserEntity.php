@@ -1,6 +1,6 @@
 <?php
 
-namespace DISEUMAT\Model\Entity;
+namespace DISEUMAT\Controller\Model\Entity;
 
 class UserEntity
 {

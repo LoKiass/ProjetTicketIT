@@ -1,6 +1,6 @@
 <?php
 
-namespace DISEUMAT\Model\Service\Manager;
+namespace DISEUMAT\Controller\Model\Service\Manager;
 
 class UserManager
 {

@@ -1,0 +1,23 @@
+{% extends 'baseTemplate.twig' %}
+{% block menu %}
+    <ul>
+        <li><a href="createTech">Créations</a></li>
+        <li><a href="getTech">Liste</a></li>
+    </ul>
+{% endblock %}
+{% block content %}
+    <table>
+        <tr>
+            <th>Nom</th>
+            <th>Prenom</th>
+            <th>Email</th>
+            <th>Actif</th>
+        </tr>
+            <tr>
+                <td>{{ TechEntity.getNom }}</td>
+                <td>{{ TechEntity.getPrenom }}</td>
+                <td>{{ TechEntity.getEmail }}</td>
+                <td>{{ TechEntity.getActif ? 'Actif' : 'Inactif' }}</td>
+            </tr>
+    </table>
+{% endblock %}

@@ -6,12 +6,23 @@
     </ul>
 {% endblock %}
 {% block content %}
-    <ul>
+    <table>
+        <tr>
+            <th>Nom</th>
+            <th>Prenom</th>
+            <th>Email</th>
+            <th>Actif</th>
+        </tr>
+
         {% for tech in TabTech %}
-            <li>{{ tech.getNom }}</li>
-            <li>{{ tech.getPrenom }}</li>
-            <lu>{{ tech.getEmail }}</lu>
-            <li>{{ tech.getActif ? 'Actif' : 'Inactif' }}</li>
+        <tr>
+                <td>{{ tech.getNom }}</td>
+                <td>{{ tech.getPrenom }}</td>
+                <td>{{ tech.getEmail }}</td>
+                <td>{{ tech.getActif ? 'Actif' : 'Inactif' }}</td>
+                <td><a href="updateTech">Modification</a></td>
+                <td><a href="getTech?Pk={{ tech.getPk }}">Information</a></td>
+        </tr>
         {% endfor %}
-    </ul>
+    </table>
 {% endblock %}

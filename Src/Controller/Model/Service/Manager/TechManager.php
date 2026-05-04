@@ -57,6 +57,19 @@ class TechManager
         }
         return false;
     }
-    public function update(int $pk){
+    public function update(TechEntity $entity){
+        $query = <<< SQL
+            UPDATE Tech set 
+            Nom = '{$entity->getNom()}',
+            Pren= '{$entity->getPrenom()}',
+            Email = '{$entity->getEmail()}',
+            Actif = '{$entity->getActif()}'
+            WHERE Pk_Tech = '{$entity->getPk()}';
+        SQL;
+        $retour = $this->pdb->query($query);
+        if ($retour->rowCount() > 0){
+            return true;
+        }
+        return false;
     }
 }

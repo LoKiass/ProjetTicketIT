@@ -1,12 +1,10 @@
 {% extends 'baseTemplate.twig' %}
 {% block menu %}
-    <ul>
-        <li><a href="createTech">Créations</a></li>
-        <li><a href="readTech">Liste</a></li>
-    </ul>
+    {% include 'Tech/menuTech.twig' %}
 {% endblock %}
+{% block headerTitre %}<h1>Créations du téchniciens</h1>{% endblock %}
+
 {% block content %}
-    <h1> Creations de truc </h1>
     <form method="post">
         <label for="Nom">Nom</label>
         <input type="text" name="Nom" id="Nom">

@@ -1,4 +1,5 @@
 {% extends 'baseTemplate.twig' %}
+{% block headerTitre %}<h1>Listing des téchniciens</h1>{% endblock %}
 {% block menu %}
     <ul>
         <li><a href="createTech">Créations</a></li>
@@ -20,7 +21,7 @@
                 <td>{{ tech.getPrenom }}</td>
                 <td>{{ tech.getEmail }}</td>
                 <td>{{ tech.getActif ? 'Actif' : 'Inactif' }}</td>
-                <td><a href="updateTech">Modification</a></td>
+                <td><a href="updateTech?Pk={{ tech.getPk }}">Modification</a></td>
                 <td><a href="getTech?Pk={{ tech.getPk }}">Information</a></td>
         </tr>
         {% endfor %}

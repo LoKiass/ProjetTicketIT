@@ -44,6 +44,23 @@ class TechController extends BaseController
         }
     }
     public function updateTech(){
-        echo $this->TemplateEngine->render("Tech/UpdateTech.twig");
+        if (isset($_GET['Pk'])){
+            $pk = $_GET['Pk'];
+
+            if ($_SERVER['REQUEST_METHOD'] === 'POST'){
+                $_POST['Pk_Tech'] = $pk;
+                $_POST['Actif'] ?? $_POST['Actif'] = 0;
+
+                $this->TM->update(TechEntity::fromArray($_POST));
+
+                unset($_GET['Pk']); // Permet de passer directement à la liste et pas l'information de celui ci.
+                $this->getTech();
+            }
+            else if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+                $tempTech = $this->TM->read($_GET['Pk']);
+                echo $this->TemplateEngine->render("Tech/UpdateTech.twig", ['TechEntity' => $tempTech]);
+            }
+        }
+
     }
 }

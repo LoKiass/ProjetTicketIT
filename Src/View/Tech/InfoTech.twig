@@ -1,10 +1,8 @@
 {% extends 'baseTemplate.twig' %}
 {% block menu %}
-    <ul>
-        <li><a href="createTech">Créations</a></li>
-        <li><a href="getTech">Liste</a></li>
-    </ul>
+    {% include 'Tech/menuTech.twig' %}
 {% endblock %}
+{% block headerTitre %}<h1>Information du techniciens</h1>{% endblock %}
 {% block content %}
     <table>
         <tr>

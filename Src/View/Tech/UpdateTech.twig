@@ -1,0 +1,22 @@
+{% extends 'baseTemplate.twig' %}
+{% block menu %}
+    {% include 'Tech/menuTech.twig' %}
+{% endblock %}
+{% block headerTitre %}<h1>Modification de l'adresse</h1>{% endblock %}
+{% block content %}
+    <form method="post">
+        <label for="Nom">Nom</label>
+        <input type="text" name="Nom" id="Nom" value="{{ TechEntity.getNom }}">
+
+        <label for="Pren">Prenom</label>
+        <input type="text" name="Pren" id="Pren" value="{{ TechEntity.getPrenom }}">
+
+        <label for="Email">Email</label>
+        <input type="email" name="Email" id="Email" value="{{ TechEntity.getEmail }}">
+
+        <label for="Actif">Actif?</label>
+        <input type="checkbox" name="Actif" id="Actif" value="{{ TechEntity.getActif }}">
+
+        <button type="submit">Envoyer</button>
+    </form>
+{% endblock %}

@@ -15,9 +15,13 @@ class TechController extends BaseController
         parent::__construct();
     }
     public function formTech(){
+        $this->requireLogin();
+
         echo $this->TemplateEngine->render("Tech/FormTech.twig");
     }
     public function getTech()  { // Manque securite
+        $this->requireLogin();
+
         if (isset($_GET['Pk'])){
             $Tech = $this->TM->read($_GET['Pk']);
             echo $this->TemplateEngine->render("Tech/InfoTech.twig", ['TechEntity' => $Tech]);
@@ -28,39 +32,59 @@ class TechController extends BaseController
         }
     }
     public function createTech(){ // Manque securite
-        $rowAffected = null;
+        try{
+            $this->requireLogin();
 
-        if (isset($_POST['Pren'])){
-            $_POST['Pk_Tech'] ?? $_POST['Pk_Tech'] = 0; // Afin d'utilise l'entité statique sans problème de nul
-            $_POST['Actif'] ?? $_POST['Actif'] = 0; // Cas de la checkbox
+            $rowAffected = null;
 
-            $tempTech = TechEntity::fromArray($_POST);
+            if (isset($_POST['Pren'])){
+                $_POST['Pk_Tech'] ?? $_POST['Pk_Tech'] = 0; // Afin d'utilise l'entité statique sans problème de nul
+                $_POST['Actif'] ?? $_POST['Actif'] = 0; // Cas de la checkbox
 
-            $rowAffected = $this->TM->create($tempTech);
-            echo $this->TemplateEngine->render("Tech/CreateTech.twig", ['rowAffected' => $rowAffected]);
+                $tempTech = TechEntity::fromArray($_POST);
+
+                if(!$tempTech){
+                    header("HTTP/1.0 404 Not Found");
+                }
+
+                $rowAffected = $this->TM->create($tempTech);
+                echo $this->TemplateEngine->render("Tech/CreateTech.twig", ['rowAffected' => $rowAffected]);
+            }
+            else{
+                echo $this->TemplateEngine->render("Tech/CreateTech.twig", ['rowAffected' => $rowAffected]);
+            }
+        } catch (\Exception $e){
+
         }
-        else{
-            echo $this->TemplateEngine->render("Tech/CreateTech.twig", ['rowAffected' => $rowAffected]);
-        }
+
     }
     public function updateTech(){
-        if (isset($_GET['Pk'])){
-            $pk = $_GET['Pk'];
+        $this->requireLogin();
 
-            if ($_SERVER['REQUEST_METHOD'] === 'POST'){
-                $_POST['Pk_Tech'] = $pk;
-                $_POST['Actif'] ?? $_POST['Actif'] = 0;
+        try{ // Bloc de test
+            if (isset($_GET['Pk'])){
+                $pk = $_GET['Pk'];
 
-                $this->TM->update(TechEntity::fromArray($_POST));
+                if ($_SERVER['REQUEST_METHOD'] === 'POST'){
+                    $_POST['Pk_Tech'] = $pk;
+                        $_POST['Actif'] ?? $_POST['Actif'] = 0;
 
-                unset($_GET['Pk']); // Permet de passer directement à la liste et pas l'information de celui ci.
-                $this->getTech();
+                    $isUpdate = $this->TM->update(TechEntity::fromArray($_POST));
+                    if ($isUpdate){ // Si un row à été affecté
+                        unset($_GET['Pk']); // Permet de passer directement à la liste et pas l'information de celui ci.
+                        $this->getTech();
+                    }
+                    else {
+                        throw new \Exception("Erreur lors de la mise à jour");
+                    }
+                }
+                else if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+                    $tempTech = $this->TM->read($_GET['Pk']);
+                    echo $this->TemplateEngine->render("Tech/UpdateTech.twig", ['TechEntity' => $tempTech]);
+                }
             }
-            else if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-                $tempTech = $this->TM->read($_GET['Pk']);
-                echo $this->TemplateEngine->render("Tech/UpdateTech.twig", ['TechEntity' => $tempTech]);
-            }
+        } catch (\Exception $e){
+            echo $e->getMessage();
         }
-
     }
 }

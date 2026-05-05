@@ -52,7 +52,7 @@ class TechManager
 
         $retour = $this->pdb->query($query);
 
-        if ($retour){
+        if ($retour->rowCount() > 0){
             return true;
         }
         return false;

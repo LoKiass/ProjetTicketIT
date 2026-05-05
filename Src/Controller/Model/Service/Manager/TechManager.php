@@ -24,6 +24,9 @@ class TechManager
             $tempTech = TechEntity::fromArray($record);
             return $tempTech;
         }
+        else {
+            return new TechEntity(); // Dans le cas ou le read na pas trouve
+        }
 
     }
 

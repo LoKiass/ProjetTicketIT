@@ -16,22 +16,26 @@ class TechController extends BaseController
     }
     public function formTech(){
         $this->requireLogin();
-
         echo $this->TemplateEngine->render("Tech/FormTech.twig");
     }
-    public function getTech()  { // Manque securite
-        $this->requireLogin();
+    public function getTech()  {
+        try{
+            $this->requireLogin();
 
-        if (isset($_GET['Pk'])){
-            $Tech = $this->TM->read($_GET['Pk']);
-            echo $this->TemplateEngine->render("Tech/InfoTech.twig", ['TechEntity' => $Tech]);
+            if (isset($_GET['Pk'])){
+                $Tech = $this->TM->read($_GET['Pk']);
+                echo $this->TemplateEngine->render("Tech/InfoTech.twig", ['TechEntity' => $Tech]);
+            }
+            else{
+                $TabTech = $this->TM->list();
+                echo $this->TemplateEngine->render("Tech/ListTech.twig", ['TabTech' => $TabTech]);
+            }
+        } catch (\Exception $e){
+            echo $this->TemplateEngine->render("Tech/ListTech.twig", ['TabTech' => null]);
         }
-        else{
-            $TabTech = $this->TM->list();
-            echo $this->TemplateEngine->render("Tech/ListTech.twig", ['TabTech' => $TabTech]);
-        }
+
     }
-    public function createTech(){ // Manque securite
+    public function createTech(){
         try{
             $this->requireLogin();
 
@@ -54,7 +58,7 @@ class TechController extends BaseController
                 echo $this->TemplateEngine->render("Tech/CreateTech.twig", ['rowAffected' => $rowAffected]);
             }
         } catch (\Exception $e){
-
+            echo $this->TemplateEngine->render("Tech/CreateTech.twig", ['rowAffected' => false]); // Si erreur SQL
         }
 
     }
@@ -84,7 +88,9 @@ class TechController extends BaseController
                 }
             }
         } catch (\Exception $e){
-            echo $e->getMessage();
+            echo $this->TemplateEngine->render("Tech/Tech.twig", [
+                'TechEntity' => $tempTech,
+            ]);
         }
     }
 }

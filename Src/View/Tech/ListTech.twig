@@ -14,16 +14,19 @@
             <th>Email</th>
             <th>Actif</th>
         </tr>
-
-        {% for tech in TabTech %}
-        <tr>
-                <td>{{ tech.getNom }}</td>
-                <td>{{ tech.getPrenom }}</td>
-                <td>{{ tech.getEmail }}</td>
-                <td>{{ tech.getActif ? 'Actif' : 'Inactif' }}</td>
-                <td><a href="updateTech?Pk={{ tech.getPk }}">Modification</a></td>
-                <td><a href="getTech?Pk={{ tech.getPk }}">Information</a></td>
-        </tr>
-        {% endfor %}
+        {% if TabTech is not null %}
+            {% for tech in TabTech %}
+            <tr>
+                    <td>{{ tech.getNom }}</td>
+                    <td>{{ tech.getPrenom }}</td>
+                    <td>{{ tech.getEmail }}</td>
+                    <td>{{ tech.getActif ? 'Actif' : 'Inactif' }}</td>
+                    <td><a href="updateTech?Pk={{ tech.getPk }}">Modification</a></td>
+                    <td><a href="getTech?Pk={{ tech.getPk }}">Information</a></td>
+            </tr>
+            {% endfor %}
+        {% else %}
+            <p style="color: red;">Erreur lors de la lecture du tableau des téchniciens, veuillez re-essayer ultérieurement</p>
+        {% endif %}
     </table>
 {% endblock %}

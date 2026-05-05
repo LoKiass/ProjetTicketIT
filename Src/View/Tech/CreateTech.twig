@@ -20,7 +20,9 @@
 
         <button type="submit">Envoyer</button>
     </form>
-{% if rowAffected is defined and rowAffected is not null%}
+{% if rowAffected is defined%}
     <p>ADRESSE CRÉÉE AVEC SUCCÈS</p>
+    {% else %}
+    <p style="color: red;">L'adresse ne peut pas être crée</p>
 {% endif %}
 {% endblock %}

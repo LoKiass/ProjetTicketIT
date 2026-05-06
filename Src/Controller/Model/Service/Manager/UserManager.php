@@ -11,7 +11,7 @@ class UserManager
     }
 
     public function checkUser($Login, $Pswd) : bool{
-        $query = "SELECT * FROM user WHERE login = '$Login' AND pswd = '$Pswd'";
+        $query = "SELECT * FROM User WHERE Login = '$Login' AND Pswd = '$Pswd'";
         $checkRetour = $this->pdb->query($query);
         if ($checkRetour->rowCount() == 1){
             return true;

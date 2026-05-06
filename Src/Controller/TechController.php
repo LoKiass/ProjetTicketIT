@@ -14,11 +14,11 @@ class TechController extends BaseController
         $this->TM = new TechManager();
         parent::__construct();
     }
-    public function formTech(){
+    public function formTech() : void{
         $this->requireLogin();
         echo $this->TemplateEngine->render("Tech/FormTech.twig");
     }
-    public function getTech()  {
+    public function getTech() : void {
         try{
             $this->requireLogin();
 
@@ -35,7 +35,7 @@ class TechController extends BaseController
         }
 
     }
-    public function createTech(){
+    public function createTech() : void{
         try{
             $this->requireLogin();
 
@@ -62,7 +62,7 @@ class TechController extends BaseController
         }
 
     }
-    public function updateTech(){
+    public function updateTech() : void{
         $this->requireLogin();
 
         try{ // Bloc de test

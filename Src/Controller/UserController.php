@@ -6,8 +6,10 @@ namespace DISEUMAT\Controller;
  * La classe UserController contient les méthodes nécesaires pour la gestion de la page de connexion
  */
 
-use DISEUMAT\Controller\Model\Entity\UserEntity as UserEntity;
-use DISEUMAT\Controller\Model\Service\Manager\UserManager;
+use DISEUMAT\Exception\DatabaseException;
+use DISEUMAT\Exception\NotFoundException;
+use DISEUMAT\Model\Entity\UserEntity as UserEntity;
+use DISEUMAT\Model\Service\Manager\UserManager;
 
 class UserController extends BaseController
 {
@@ -27,29 +29,27 @@ class UserController extends BaseController
         if(isset($_SESSION['userLogged'])){
             unset($_SESSION['userLogged']);
         }
+        try{
+            if(isset($_POST['Login'])){
+                $userTmp = new UserEntity();
+                $userTmp->setLogin($_POST['Login']);
+                $userTmp->setPswd($_POST['Pswd']);
 
-        if(isset($_POST['Login'])){
-            $userTmp = new UserEntity();
-            $userTmp->setLogin($_POST['Login']);
-            $userTmp->setPswd($_POST['Pswd']);
+                $userFromDb = $this->UM->checkUser($userTmp);
 
-            $userFromDb = $this->UM->checkUser($userTmp);
-
-            if ($userFromDb){
                 $_SESSION['userLogged'] = serialize($userFromDb);
                 echo $this->TemplateEngine->render('/Accueil/Accueil.twig');
+
             }
-            else{
+            else {
                 echo $this->TemplateEngine->render('/Login/Login.twig', [
-                    'errorFlag' => true,
-                    'userChanged' => 0
+                    'userChanged' => $userChangedParam
                 ]);
             }
-        }
-        else {
+        } catch (DatabaseException|NotFoundException $e){
             echo $this->TemplateEngine->render('/Login/Login.twig', [
-                'errorFlag' => false,
-                'userChanged' => $userChangedParam
+                'errorMessage' => $e->getMessage(),
+                'userChanged' => 0
             ]);
         }
     }

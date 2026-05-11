@@ -1,8 +1,11 @@
 <?php
 
-namespace DISEUMAT\Controller\Model\Service\Manager;
+namespace DISEUMAT\Model\Service\Manager;
 
-use DISEUMAT\Controller\Model\Entity\UserEntity as UserEntity;
+use DISEUMAT\Exception\DatabaseException;
+use DISEUMAT\Exception\NotFoundException;
+use DISEUMAT\Model\Entity\UserEntity as UserEntity;
+use PDOException;
 
 class UserManager
 {
@@ -12,17 +15,21 @@ class UserManager
         $this->pdb = DBManager::getInstance();
     }
 
-    public function checkUser(UserEntity $entity) : UserEntity|bool
+    public function checkUser(UserEntity $entity) : UserEntity
     {
-        $Login = $entity->getLogin();
-        $Pswd = $entity->getPswd();
+        try {
+            $Login = $entity->getLogin();
+            $Pswd = $entity->getPswd();
 
-        $query = $this->pdb->prepare("SELECT * FROM user WHERE Login = ? AND Pswd = ?");
-        $query->execute([$Login, $Pswd]);
+            $query = $this->pdb->prepare("SELECT * FROM User WHERE Login = ? AND Pswd = ?");
+            $query->execute([$Login, $Pswd]);
 
-        $data = $query->fetch(\PDO::FETCH_ASSOC);
+            $data = $query->fetch(\PDO::FETCH_ASSOC);
 
-        if ($data) {
+            if(!$data){
+                throw new NotFoundException("Ressource non trouver", 0);
+            }
+
             $userFound = new UserEntity();
 
             $userFound->setLogin($data['Login']);
@@ -31,10 +38,11 @@ class UserManager
             $userFound->setStatut($data['Statut']);
 
             return $userFound;
+        } catch (PDOException $e) {
+            throw new DatabaseException("Erreur lors de l'authentification", 0);
         }
-
-        return false;
     }
+
     public function list() : array{
         $query = $this->pdb->prepare("SELECT * FROM user");
         $query->execute();

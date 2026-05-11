@@ -1,7 +1,7 @@
 <?php
 
-namespace DISEUMAT\Controller\Model\Service\Manager;
-use DISEUMAT\Controller\Model\Entity\TechEntity;
+namespace DISEUMAT\Model\Service\Manager;
+use DISEUMAT\Model\Entity\TechEntity;
 
 class TechManager
 {

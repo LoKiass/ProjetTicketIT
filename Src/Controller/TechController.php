@@ -2,8 +2,8 @@
 
 namespace DISEUMAT\Controller;
 
-use DISEUMAT\Controller\Model\Entity\TechEntity;
-use DISEUMAT\Controller\Model\Service\Manager\TechManager;
+use DISEUMAT\Model\Entity\TechEntity;
+use DISEUMAT\Model\Service\Manager\TechManager;
 
 class TechController extends BaseController
 {

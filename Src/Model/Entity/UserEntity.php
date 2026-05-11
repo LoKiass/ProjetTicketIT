@@ -1,8 +1,6 @@
 <?php
 
-namespace DISEUMAT\Controller\Model\Entity;
-
-use http\Client\Curl\User;
+namespace DISEUMAT\Model\Entity;
 
 class UserEntity
 {

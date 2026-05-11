@@ -1,6 +1,6 @@
 <?php
 
-namespace DISEUMAT\Controller\Model\Entity;
+namespace DISEUMAT\Model\Entity;
 
 class TechEntity
 {

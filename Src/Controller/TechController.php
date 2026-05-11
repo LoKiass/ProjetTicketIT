@@ -73,14 +73,9 @@ class TechController extends BaseController
                     $_POST['Pk_Tech'] = $pk;
                         $_POST['Actif'] ?? $_POST['Actif'] = 0;
 
-                    $isUpdate = $this->TM->update(TechEntity::fromArray($_POST));
-                    if ($isUpdate){ // Si un row à été affecté
-                        unset($_GET['Pk']); // Permet de passer directement à la liste et pas l'information de celui ci.
-                        $this->getTech();
-                    }
-                    else {
-                        throw new \Exception("Erreur lors de la mise à jour");
-                    }
+                    $this->TM->update(TechEntity::fromArray($_POST));
+                    unset($_GET['Pk']); // Permet de passer directement à la liste et pas l'information de celui ci.
+                    $this->getTech();
                 }
                 else if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                     $tempTech = $this->TM->read($_GET['Pk']);

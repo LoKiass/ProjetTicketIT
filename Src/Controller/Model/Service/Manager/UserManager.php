@@ -17,7 +17,7 @@ class UserManager
         $Login = $entity->getLogin();
         $Pswd = $entity->getPswd();
 
-        $query = $this->pdb->prepare("SELECT * FROM User WHERE Login = ? AND Pswd = ?");
+        $query = $this->pdb->prepare("SELECT * FROM user WHERE Login = ? AND Pswd = ?");
         $query->execute([$Login, $Pswd]);
 
         $data = $query->fetch(\PDO::FETCH_ASSOC);

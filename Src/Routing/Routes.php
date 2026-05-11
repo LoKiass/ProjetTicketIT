@@ -10,7 +10,7 @@ return [
     /*
      * Partie User
      */
-    'listUser' => ['User' => 'listUser'],
+    'getUser' => ['User' => 'getUser'],
     'updateUser' => ['User' => 'updateUser'],
     /*
      * Partie accueil

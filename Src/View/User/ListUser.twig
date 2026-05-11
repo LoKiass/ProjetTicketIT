@@ -10,7 +10,7 @@
             <th>Statut</th>
             <th>Actif</th>
         </tr>
-        {% if TabUser is not null %}
+        {% if errorMessage is not defined %}
             {% for user in TabUser %}
                 <tr>
                     <td>{{ user.getLogin() }}</td>
@@ -22,7 +22,7 @@
                 </tr>
             {% endfor %}
         {% else %}
-            <p style="color: red;">Erreur lors de la lecture du tableau des téchniciens, veuillez re-essayer ultérieurement</p>
+            {{errorMessage}}
         {% endif %}
     </table>
 {% endblock %}

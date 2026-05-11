@@ -9,29 +9,28 @@
 {% endblock %}
 
 {% block content %}
-    <form method="post" style="max-width: 400px; margin: 20px auto; display: flex; flex-direction: column; gap: 10px;">
+        <form method="post" style="max-width: 400px; margin: 20px auto; display: flex; flex-direction: column; gap: 10px;">
 
-        <label for="Login">Login (Lecture seule)</label>
+            <label for="Login">Login (Lecture seule)</label>
 
-        <input type="text" name="Login" id="Login" value="{{ UserEntity.getLogin() }}" readonly style="background-color: #eee;">
+            <input type="text" name="Login" id="Login" value="{{ UserEntity.getLogin() }}" readonly style="background-color: #eee;">
 
-        <label for="oldPswd">Ancien mot de passe</label>
-        <input type="password" name="oldPswd" id="oldPswd">
+            <label for="oldPswd">Ancien mot de passe</label>
+            <input type="password" name="oldPswd" id="oldPswd">
 
-        <label for="newPswd">Nouveau mot de passe</label>
-        <input type="password" name="newPswd" id="newPswd">
+            <label for="newPswd">Nouveau mot de passe</label>
+            <input type="password" name="newPswd" id="newPswd">
 
-        <hr>
+            <hr>
 
-        <button type="submit" style="padding: 10px; cursor: pointer;">
-            Mettre à jour le mot de passe
-        </button>
+            <button type="submit" style="padding: 10px; cursor: pointer;">
+                Mettre à jour le mot de passe
+            </button>
 
-        <a href="listUser" style="text-align: center; margin-top: 10px; color: #666;">Annuler</a>
-    </form>
-    {% if error is defined and error is not null %}
-        <div style="background-color: #f8d7da; color: #721c24; padding: 10px; border-radius: 5px; margin-bottom: 15px; border: 1px solid #f5c6cb; text-align: center;">
-            {{ error }}
-        </div>
+            <a href="getUser" style="text-align: center; margin-top: 10px; color: #666;">Annuler</a>
+        </form>
+    {% if errorMessage is defined %}
+        {{ errorMessage }}
     {% endif %}
+    
 {% endblock %}

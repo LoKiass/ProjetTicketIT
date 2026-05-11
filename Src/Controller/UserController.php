@@ -7,6 +7,7 @@ namespace DISEUMAT\Controller;
  */
 
 use DISEUMAT\Exception\DatabaseException;
+use DISEUMAT\Exception\InvalidCredentialException;
 use DISEUMAT\Exception\NotFoundException;
 use DISEUMAT\Model\Entity\UserEntity as UserEntity;
 use DISEUMAT\Model\Service\Manager\UserManager;
@@ -37,7 +38,12 @@ class UserController extends BaseController
 
                 $userFromDb = $this->UM->checkUser($userTmp);
 
-                $_SESSION['userLogged'] = serialize($userFromDb);
+                $_SESSION['userLogged'] = [
+                    'Login'  => $userFromDb->getLogin(),
+                    'Statut' => $userFromDb->getStatut(),
+                    'Actif'  => $userFromDb->getActif(),
+                ];
+
                 echo $this->TemplateEngine->render('/Accueil/Accueil.twig');
 
             }
@@ -46,21 +52,24 @@ class UserController extends BaseController
                     'userChanged' => $userChangedParam
                 ]);
             }
-        } catch (DatabaseException|NotFoundException $e){
+        } catch (DatabaseException|InvalidCredentialException $e){
             echo $this->TemplateEngine->render('/Login/Login.twig', [
                 'errorMessage' => $e->getMessage(),
                 'userChanged' => 0
             ]);
         }
     }
-    public function listUser(){
-        $this->requireLogin();
-
-        $TabUser = $this->UM->list();
-        if (!$TabUser){
-            header("HTTP/1.0 404 Not Found");
+    public function getUser(){
+        try{
+            $this->requireLogin();
+            $TabUser = $this->UM->list();
+            echo $this->TemplateEngine->render('/User/ListUser.twig', ['TabUser' => $TabUser]);
+        } catch (DatabaseException|NotFoundException $e){
+            echo $this->TemplateEngine->render('/User/ListUser.twig', [
+                'errorMessage' => $e->getMessage(),
+                'userChanged' => 0
+            ]);
         }
-        echo $this->TemplateEngine->render('/User/ListUser.twig', ['TabUser' => $TabUser]);
     }
 
     public function updateUser(): void
@@ -69,6 +78,7 @@ class UserController extends BaseController
 
         try {
             $loginTarget = $_GET['Login'] ?? null;
+            $userToEdit = $this->UM->read($loginTarget);
 
             if ($loginTarget !== null) {
                 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -78,40 +88,38 @@ class UserController extends BaseController
                     $verifUser->setPswd($_POST['oldPswd'] ?? '');
 
                     // Verification de l'existence de l'ancien mot de passe lier au user
-                    if (!$this->UM->checkUser($verifUser)) {
-                        $userToEdit = $this->UM->read($loginTarget);
-                        echo $this->TemplateEngine->render('/User/UpdateUser.twig', [
-                            'UserEntity' => $userToEdit,
-                            'error' => "L'ancien mot de passe est incorrect."
-                        ]);
-                        return;
-                    }
+                    $this->UM->checkUser($verifUser);
+
 
                     // Mise en place du nouveau mot de passe
                     $newPswd = $_POST['newPswd'];
                     $this->UM->updatePassword($loginTarget, $newPswd);
 
 
-                    $userSerial = $_SESSION['userLogged'];
-                    $userActuallyLogged = unserialize($userSerial);
-                    if ($userActuallyLogged->getLogin() === $loginTarget) { // Si le user qui modifie ce modifie lui même, alors on le déconnecte pour eviter
+                    $loginLogged = $_SESSION['userLogged']['Login'];
+                    if ($loginLogged === $loginTarget) { // Si le user qui modifie ce modifie lui même, alors on le déconnecte pour eviter
                         // d'avoir la variable sessions valide avec les credentiales de l'ancien user'
                         session_abort();
                         header("Location: formLogin?userChanged=1");
                     }
                     else {
-                        header("Location: listUser");
+                        header("Location: ListUser");
                     }
 
                 }
 
                 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-                    $userToEdit = $this->UM->read($loginTarget);
-                    echo $this->TemplateEngine->render('/User/UpdateUser.twig', ['UserEntity' => $userToEdit]);
+                    echo $this->TemplateEngine->render('/User/UpdateUser.twig', [
+                        'UserEntity' => $userToEdit
+                    ]);
                 }
             }
-        } catch (\Exception $e) {
-            echo "Erreur : " . $e->getMessage();
+        } catch (DatabaseException|NotFoundException|InvalidCredentialException $e) {
+            echo $this->TemplateEngine->render('/User/UpdateUser.twig', [
+                'UserEntity' => $userToEdit,
+                'errorMessage' => $e->getMessage(),
+            ]);
         }
+
     }
 }

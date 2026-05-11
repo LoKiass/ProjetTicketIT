@@ -3,6 +3,7 @@
 namespace DISEUMAT\Model\Service\Manager;
 
 use DISEUMAT\Exception\DatabaseException;
+use DISEUMAT\Exception\InvalidCredentialException;
 use DISEUMAT\Exception\NotFoundException;
 use DISEUMAT\Model\Entity\UserEntity as UserEntity;
 use PDOException;
@@ -27,7 +28,7 @@ class UserManager
             $data = $query->fetch(\PDO::FETCH_ASSOC);
 
             if(!$data){
-                throw new NotFoundException("Ressource non trouver", 0);
+                throw new InvalidCredentialException("Les informations fournites ne sont pas valides", 0);
             }
 
             $userFound = new UserEntity();
@@ -43,32 +44,56 @@ class UserManager
         }
     }
 
-    public function list() : array{
-        $query = $this->pdb->prepare("SELECT * FROM user");
-        $query->execute();
+        public function list() : array{
+            try{
+                $query = $this->pdb->prepare("SELECT * FROM user");
+                $query->execute();
 
-        $TabUser = array();
+                $TabUser = array();
 
-        while($record = $query->fetch()){
-            $tempUser = UserEntity::fromArray($record);
-            $TabUser[] = clone $tempUser;
+                while($record = $query->fetch()){
+                    $tempUser = UserEntity::fromArray($record);
+                    $TabUser[] = clone $tempUser;
+                }
+
+                if (empty($TabUser)){
+                    throw new NotFoundException("Aucun user trouver");
+                }
+                return $TabUser;
+            } catch (PDOException $e){
+                throw new DatabaseException("Erreur lors de l'accès à la DB", 0);
+            }
         }
-        return $TabUser;
-    }
     public function read(string $Login){
-        $query = $this->pdb->prepare("SELECT * FROM user WHERE Login = ?");
-        $query->execute([$Login]);
+        try{
+            $query = $this->pdb->prepare("SELECT * FROM user WHERE Login = ?");
+            $query->execute([$Login]);
 
-        $record = $query->fetch();
+            $record = $query->fetch();
 
-        print_r($record);
-        return UserEntity::fromArray($record);
+            if(!$record){
+                throw new NotFoundException("Le user specifier est introuvable", 0);
+            }
+
+            return UserEntity::fromArray($record);
+        } catch (PDOException $e){
+            throw new DatabaseException("Erreur de le l'accès à la DB", 0);
+        }
     }
 
     public function updatePassword(string $login, string $newPassword) : void
     {
-        $query = $this->pdb->prepare("UPDATE user SET Pswd = ? WHERE Login = ?");
-        $query->execute([$newPassword, $login]);
+        try{
+            $query = $this->pdb->prepare("UPDATE user SET Pswd = ? WHERE Login = ?");
+            $query->execute([$newPassword, $login]);
+
+            if($query->rowCount() == 0){
+                throw new NotFoundException("Le user specifier aura subit aucune modification", 0);
+            }
+
+        } catch (PDOException $e){
+            throw new DatabaseException("Impossible de mettre à jours le mots de passe", 0);
+        }
     }
 
 }

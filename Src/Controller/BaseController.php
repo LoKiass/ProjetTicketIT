@@ -16,7 +16,7 @@ class BaseController
     }
     protected function requireLogin(): void
     {
-        if (empty($_SESSION['user'])) {
+        if (empty($_SESSION['userLogged'])) {
             header("HTTP/1.0 404 Not Found");
             exit;
         }

@@ -6,6 +6,7 @@ namespace DISEUMAT\Controller;
  * La classe LoginController contient les méthodes nécesaires pour la gestion de la page de connexion
  */
 
+use DISEUMAT\Controller\Model\Entity\UserEntity;
 use DISEUMAT\Controller\Model\Service\Manager\UserManager;
 
 class LoginController extends BaseController
@@ -26,16 +27,14 @@ class LoginController extends BaseController
         }
 
         if( isset($_POST['Login'])){
-            // A MODIFIER
-            $Login = $_POST['Login'];
-            $Pswd = $_POST['Pswd'];
-            $checkLogin = $this->UM->checkUser($Login, $Pswd);
-            if ($checkLogin){
-                $_SESSION['user'] = [
-                    'Login' => $_POST['Login'],
-                    'Pswd' => $_POST['Pswd'],
-                ];
+            $userTmp = new UserEntity();
+            $userTmp->setLogin($_POST['Login']);
+            $userTmp->setPswd($_POST['Pswd']);
 
+            $userFromDb = $this->UM->checkUser($userTmp);
+
+            if ($userFromDb){
+                $_SESSION['userLogged'] = $userFromDb; // Serialisation de l'objet
                 echo $this->TemplateEngine->render('/Accueil/Accueil.twig');
             }
             else{

@@ -5,25 +5,24 @@ namespace DISEUMAT\Controller\Model\Entity;
 class UserEntity
 {
     private string $Login;
-    private int $Pswd;
-    private string $Staus;
+    private string $Pswd;
+    private string $Statut;
     private bool $Actif;
 
-    public function __construct(string $Login, int $Pswd, string $Staus, bool $Actif){
-        $this->Login = $Login;
-        $this->Pswd = $Pswd;
-        $this->Staus = $Staus;
-        $this->Actif = $Actif;
+    public function __construct(){
+        $this->Login = "";
+        $this->Pswd = "";
+        $this->Statut = "";
+        $this->Actif = false;
     }
-
     // Getter
     public function getLogin(): string{
         return $this->Login;
     }
-    public function getPswd(): int{
+    public function getPswd(): string{
         return $this->Pswd;
     }
-    public function getStaus(): string{
+    public function getStatut(): string{
         return $this->Staus;
     }
     public function getActif(): bool{
@@ -34,11 +33,11 @@ class UserEntity
     public function setLogin(string $Login){
         $this->Login = $Login;
     }
-    public function setPswd(int $Pswd){
+    public function setPswd(string $Pswd){
         $this->Pswd = $Pswd;
     }
-    public function setStaus(string $Staus){
-        $this->Staus = $Staus;
+    public function setStatut(string $Statut){
+        $this->Statut = $Statut;
     }
     public function setActif(bool $Actif){
         $this->Actif = $Actif;

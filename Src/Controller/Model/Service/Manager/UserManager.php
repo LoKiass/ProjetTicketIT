@@ -2,6 +2,8 @@
 
 namespace DISEUMAT\Controller\Model\Service\Manager;
 
+use DISEUMAT\Controller\Model\Entity\UserEntity as UserEntity;
+
 class UserManager
 {
     private $pdb;
@@ -10,12 +12,27 @@ class UserManager
         $this->pdb = DBManager::getInstance();
     }
 
-    public function checkUser($Login, $Pswd) : bool{
-        $query = "SELECT * FROM User WHERE Login = '$Login' AND Pswd = '$Pswd'";
-        $checkRetour = $this->pdb->query($query);
-        if ($checkRetour->rowCount() == 1){
-            return true;
+    public function checkUser(UserEntity $entity) : UserEntity|bool
+    {
+        $Login = $entity->getLogin();
+        $Pswd = $entity->getPswd();
+
+        $query = $this->pdb->prepare("SELECT * FROM User WHERE Login = ? AND Pswd = ?");
+        $query->execute([$Login, $Pswd]);
+
+        $data = $query->fetch(\PDO::FETCH_ASSOC);
+
+        if ($data) {
+            $userFound = new UserEntity();
+
+            $userFound->setLogin($data['Login']);
+            $userFound->setPswd($data['Pswd']);
+            $userFound->setActif($data['Actif']);
+            $userFound->setStatut($data['Statut']);
+
+            return $userFound;
         }
+
         return false;
     }
 

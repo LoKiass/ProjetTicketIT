@@ -16,4 +16,7 @@
         <button type="submit">Connexion</button>
     </form>
     {% if errorFlag %}Mauvais login : Veuillez re-essayer !{% endif %}
+    {% if userChanged is defined and userChanged === 1%}
+        User changer avec succès, mais comme vous vous êtes connecter avec : nous vous avons deconnecter
+    {% endif %}
 {% endblock %}

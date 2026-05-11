@@ -11,6 +11,7 @@ return [
      * Partie User
      */
     'listUser' => ['User' => 'listUser'],
+    'updateUser' => ['User' => 'updateUser'],
     /*
      * Partie accueil
      */

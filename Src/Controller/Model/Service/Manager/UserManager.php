@@ -47,5 +47,20 @@ class UserManager
         }
         return $TabUser;
     }
+    public function read(string $Login){
+        $query = $this->pdb->prepare("SELECT * FROM user WHERE Login = ?");
+        $query->execute([$Login]);
+
+        $record = $query->fetch();
+
+        print_r($record);
+        return UserEntity::fromArray($record);
+    }
+
+    public function updatePassword(string $login, string $newPassword) : void
+    {
+        $query = $this->pdb->prepare("UPDATE user SET Pswd = ? WHERE Login = ?");
+        $query->execute([$newPassword, $login]);
+    }
 
 }

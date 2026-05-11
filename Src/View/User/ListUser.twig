@@ -16,7 +16,9 @@
                     <td>{{ user.getLogin() }}</td>
                     <td>{{ user.getStatut() }}</td>
                     <td>{{ user.getActif() ? 'Actif' : 'Inactif' }}</td>
-                    <td><a href="updateUser?Login={{ user.getLogin() }},Pswd={{ user.getPswd() }}">Update</a></td>
+                    <td>
+                        <a href="updateUser?Login={{ user.getLogin() }}">Update</a>
+                    </td>
                 </tr>
             {% endfor %}
         {% else %}

@@ -3,13 +3,13 @@
 namespace DISEUMAT\Controller;
 
 /*
- * La classe LoginController contient les méthodes nécesaires pour la gestion de la page de connexion
+ * La classe UserController contient les méthodes nécesaires pour la gestion de la page de connexion
  */
 
 use DISEUMAT\Controller\Model\Entity\UserEntity;
 use DISEUMAT\Controller\Model\Service\Manager\UserManager;
 
-class LoginController extends BaseController
+class UserController extends BaseController
 {
     private UserManager $UM;
 
@@ -22,8 +22,8 @@ class LoginController extends BaseController
      * La méthode index permet d'afficher la page de connexion'
      */
     public function formLogin(){
-        if(isset($_SESSION['user'])){
-            unset($_SESSION['user']); // Dans le cas ou le user désire ce deconneter et revenir à la page de connexion
+        if(isset($_SESSION['userLogged'])){
+            unset($_SESSION['userLogged']); // Dans le cas ou le user désire ce deconneter et revenir à la page de connexion
         }
 
         if( isset($_POST['Login'])){
@@ -46,5 +46,12 @@ class LoginController extends BaseController
             echo $this->TemplateEngine->render('/Login/Login.twig', ['errorFlag' => false]);
         }
 
+    }
+    public function listUser(){
+        $TabUser = $this->UM->list();
+        if (!$TabUser){
+            header("HTTP/1.0 404 Not Found");
+        }
+        echo $this->TemplateEngine->render('/User/ListUser.twig', ['TabUser' => $TabUser]);
     }
 }

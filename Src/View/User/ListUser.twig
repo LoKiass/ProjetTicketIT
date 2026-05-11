@@ -1,0 +1,26 @@
+{% extends 'baseTemplate.twig' %}
+{% block headerTitre %}<h1>Listing des téchniciens</h1>{% endblock %}
+{% block menu %}
+    menu
+{% endblock %}
+{% block content %}
+    <table>
+        <tr>
+            <th>Login</th>
+            <th>Statut</th>
+            <th>Actif</th>
+        </tr>
+        {% if TabUser is not null %}
+            {% for user in TabUser %}
+                <tr>
+                    <td>{{ user.getLogin() }}</td>
+                    <td>{{ user.getStatut() }}</td>
+                    <td>{{ user.getActif() ? 'Actif' : 'Inactif' }}</td>
+                    <td><a href="updateUser?Login={{ user.getLogin() }},Pswd={{ user.getPswd() }}">Update</a></td>
+                </tr>
+            {% endfor %}
+        {% else %}
+            <p style="color: red;">Erreur lors de la lecture du tableau des téchniciens, veuillez re-essayer ultérieurement</p>
+        {% endif %}
+    </table>
+{% endblock %}

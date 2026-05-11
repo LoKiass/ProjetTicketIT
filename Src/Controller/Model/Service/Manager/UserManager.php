@@ -35,6 +35,17 @@ class UserManager
 
         return false;
     }
+    public function list() : array{
+        $query = $this->pdb->prepare("SELECT * FROM user");
+        $query->execute();
 
+        $TabUser = array();
+
+        while($record = $query->fetch()){
+            $tempUser = UserEntity::fromArray($record);
+            $TabUser[] = clone $tempUser;
+        }
+        return $TabUser;
+    }
 
 }

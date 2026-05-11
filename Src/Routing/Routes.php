@@ -1,11 +1,25 @@
 <?php
 // Routes du sites
 return [
-    'formLogin' => ['Login' => 'formLogin'],
-    ''      => ['Login' => 'formLogin'],
+    /*
+     * Partie login
+     */
+    'formLogin' => ['User' => 'formLogin'],
+    ''      => ['User' => 'formLogin'],
     'test'  => ['Test' => 'index'],
+    /*
+     * Partie User
+     */
+    'listUser' => ['User' => 'listUser'],
+    /*
+     * Partie accueil
+     */
     'formAccueil' => ['Accueil' => 'formAccueil'],
     'formTech'   => ['Tech' => 'formTech'],
+    'formUser' => ['User' => 'formUser'],
+    /*
+     * Partie Tech
+     */
     'createTech' => ['Tech' => 'createTech'],
     'getTech'  => ['Tech' => 'getTech'],
     'updateTech' => ['Tech' => 'updateTech'],

@@ -2,6 +2,8 @@
 
 namespace DISEUMAT\Controller\Model\Entity;
 
+use http\Client\Curl\User;
+
 class UserEntity
 {
     private string $Login;
@@ -23,7 +25,7 @@ class UserEntity
         return $this->Pswd;
     }
     public function getStatut(): string{
-        return $this->Staus;
+        return $this->Statut;
     }
     public function getActif(): bool{
         return $this->Actif;
@@ -41,6 +43,18 @@ class UserEntity
     }
     public function setActif(bool $Actif){
         $this->Actif = $Actif;
+    }
+
+    public static function fromArray(array $data) : UserEntity
+    {
+        $instance = new self();
+
+        $instance->setLogin($data['Login'] ?? null);
+        $instance->setPswd($data['Pswd'] ?? null);
+        $instance->setStatut($data['Statut'] ?? null);
+        $instance->setActif($data['Actif'] ?? null);
+
+        return $instance;
     }
 
 }

@@ -1,4 +1,7 @@
 {% extends 'baseTemplate.twig' %}
+{% block navbar %}
+    {% include 'Navbar/Navbar.twig' %}
+{% endblock%}
 {% block menu %}
     {% include 'Tech/menuTech.twig' %}
 {% endblock %}
@@ -18,4 +21,7 @@
                 <td>{{ TechEntity.getActif ? 'Actif' : 'Inactif' }}</td>
             </tr>
     </table>
+    {% if errorMessage is defined %}
+        {{errorMessage}}
+    {% endif %}
 {% endblock %}

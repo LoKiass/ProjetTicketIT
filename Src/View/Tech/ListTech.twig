@@ -1,10 +1,10 @@
 {% extends 'baseTemplate.twig' %}
+{% block navbar %}
+    {% include 'Navbar/Navbar.twig' %}
+{% endblock%}
 {% block headerTitre %}<h1>Listing des téchniciens</h1>{% endblock %}
 {% block menu %}
-    <ul>
-        <li><a href="createTech">Créations</a></li>
-        <li><a href="getTech">Liste</a></li>
-    </ul>
+    {% include 'Tech/menuTech.twig' %}
 {% endblock %}
 {% block content %}
     <table>
@@ -25,8 +25,9 @@
                     <td><a href="getTech?Pk={{ tech.getPk }}">Information</a></td>
             </tr>
             {% endfor %}
-        {% else %}
-            <p style="color: red;">Erreur lors de la lecture du tableau des téchniciens, veuillez re-essayer ultérieurement</p>
+        {% if errorMessage is defined %}
+            {{ errorMessage }}
+            {% endif  %}
         {% endif %}
     </table>
 {% endblock %}

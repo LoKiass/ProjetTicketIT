@@ -1,6 +1,9 @@
 <?php
 
 namespace DISEUMAT\Model\Service\Manager;
+use DISEUMAT\Exception\DatabaseException;
+use DISEUMAT\Exception\NotCreatedInDatabase;
+use DISEUMAT\Exception\NotFoundException;
 use DISEUMAT\Model\Entity\TechEntity;
 
 class TechManager
@@ -12,84 +15,110 @@ class TechManager
 
     public function read(int $id) : TechEntity
     {
-        $Pk = $id;
-        $query = <<< SQL
+        try{
+            $Pk = $id;
+            $query = <<< SQL
             SELECT Pk_Tech, Nom, Pren, Email, Actif
             FROM tech WHERE Pk_Tech = ?;
         SQL;
 
-        $stmt = $this->pdb->prepare($query);
-        $stmt->execute([$Pk]);
+            $stmt = $this->pdb->prepare($query);
+            $stmt->execute([$Pk]);
 
-        if($record = $stmt->fetch())
-        {
+            $record = $stmt->fetch();
+
+            if (!$record){
+                throw new NotFoundException("Le technicien n'existe pas", 0);
+            }
             $tempTech = TechEntity::fromArray($record);
             return $tempTech;
-        }
-        else {
-            return new TechEntity(); // Dans le cas ou le read na pas trouve
+
+        } catch (\PDOException $e){
+            throw new DatabaseException($e->getMessage(), 0);
         }
 
     }
 
     public function list() : array
     {
-        $query = <<< SQL
+        try{
+            $query = <<< SQL
             SELECT Pk_Tech, Nom, Pren, Email, Actif
             FROM tech;
         SQL;
 
-        $stmt = $this->pdb->prepare($query);
-        $stmt->execute();
+            $stmt = $this->pdb->prepare($query);
+            $stmt->execute();
 
-        $TabTech = array();
-        while ($record = $stmt->fetch())
-        {
-            $tempTech = TechEntity::fromArray($record);
-            $TabTech[] = clone $tempTech;
+            $TabTech = array();
+            while ($record = $stmt->fetch())
+            {
+                $tempTech = TechEntity::fromArray($record);
+                $TabTech[] = clone $tempTech;
+            }
+
+            if (empty($TabTech)){
+                throw new NotFoundException("La liste est vide ou aucun technicien n'existe");
+            }
+
+            return $TabTech;
+        }catch (\PDOException $e){
+            throw new DatabaseException($e->getMessage(), 0);
         }
-        return $TabTech;
     }
 
-    public function create($entity) : bool {
-        $query = "INSERT INTO tech (Nom, Pren, Email, Actif) VALUES (?, ?, ?, ?)";
+    public function create($entity) : void {
+       try{
+           $query = "INSERT INTO tech (Nom, Pren, Email, Actif) VALUES (?, ?, ?, ?)";
 
-        $stmt = $this->pdb->prepare($query);
-        $stmt->execute([
-            $entity->getNom(),
-            $entity->getPrenom(),
-            $entity->getEmail(),
-            ($entity->getActif() ?? 0)
-        ]);
+           $stmt = $this->pdb->prepare($query);
+           $stmt->execute([
+               $entity->getNom(),
+               $entity->getPrenom(),
+               $entity->getEmail(),
+               ($entity->getActif() ?? 0)
+           ]);
 
-        if ($stmt->rowCount() > 0){
-            return true;
-        }
-        return false;
+           if ($stmt->rowCount() === 0){
+                throw new NotCreatedInDatabase("Le techniciens n'a pas été crée", 0);
+           }
+       } catch (\PDOException $e){
+            throw new DatabaseException($e->getMessage(), 0);
+       }
     }
 
-    public function update(TechEntity $entity){
-        $query = <<< SQL
-            UPDATE tech set 
-            Nom = ?,
-            Pren= ?,
-            Email = ?,
-            Actif = ?
-            WHERE Pk_Tech = ?;
-        SQL;
+    public function update(TechEntity $entity) : bool
+    {
+        try {
+            $check = $this->pdb->prepare("SELECT 1 FROM tech WHERE Pk_Tech = ?");
+            $check->execute([$entity->getPk()]);
 
-        $stmt = $this->pdb->prepare($query);
-        $stmt->execute([
-            $entity->getNom(),
-            $entity->getPrenom(),
-            $entity->getEmail(),
-            $entity->getActif(),
-            $entity->getPk()
-        ]);
+            if ($check->rowCount() === 0) {
+                throw new NotFoundException("Tech introuvable", 0);
+            }
 
-        if ($stmt->rowCount() > 0){
+            $query = <<<SQL
+                UPDATE tech SET 
+                    Nom   = ?,
+                    Pren  = ?,
+                    Email = ?,
+                    Actif = ?
+                WHERE Pk_Tech = ?
+            SQL;
+
+            $stmt = $this->pdb->prepare($query);
+            $stmt->execute([
+                $entity->getNom(),
+                $entity->getPrenom(),
+                $entity->getEmail(),
+                $entity->getActif(),
+                $entity->getPk()
+            ]);
+
             return true;
+
+        } catch (\PDOException $e) {
+            throw new DatabaseException($e->getMessage(), 0);
         }
-        return false;
     }
 }

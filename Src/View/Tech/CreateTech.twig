@@ -1,4 +1,7 @@
 {% extends 'baseTemplate.twig' %}
+{% block navbar %}
+    {% include 'Navbar/Navbar.twig' %}
+{% endblock%}
 {% block menu %}
     {% include 'Tech/menuTech.twig' %}
 {% endblock %}
@@ -20,8 +23,11 @@
 
         <button type="submit">Envoyer</button>
     </form>
-{% if rowAffected is defined and rowAffected === true%}
-    <p>ADRESSE CRÉÉE AVEC SUCCÈS</p>
-{% endif %}
+
+    {% if error is defined and error %}
+        <p>ERREUR : {{ error }}</p>
+    {% elseif success is defined and success %}
+        <p>TECHNICIEN CRÉÉ AVEC SUCCÈS</p>
+    {% endif %}
 
 {% endblock %}

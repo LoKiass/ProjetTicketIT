@@ -1,22 +1,30 @@
+{% block navbar %}
+    {% include 'Navbar/Navbar.twig' %}
+{% endblock%}
 {% extends 'baseTemplate.twig' %}
 {% block menu %}
     {% include 'Tech/menuTech.twig' %}
 {% endblock %}
-{% block headerTitre %}<h1>Modification de l'adresse</h1>{% endblock %}
+{% block headerTitre %}<h1>Modification de du techncien</h1>{% endblock %}
 {% block content %}
+    {% if TechEntity is defined and TechEntity != null %}
     <form method="post">
         <label for="Nom">Nom</label>
-        <input type="text" name="Nom" id="Nom" value="{{ TechEntity.getNom }}">
+        <input type="text" name="Nom" id="Nom" value="{{ TechEntity.getNom() }}">
 
         <label for="Pren">Prenom</label>
-        <input type="text" name="Pren" id="Pren" value="{{ TechEntity.getPrenom }}">
+        <input type="text" name="Pren" id="Pren" value="{{ TechEntity.getPrenom() }}">
 
         <label for="Email">Email</label>
-        <input type="email" name="Email" id="Email" value="{{ TechEntity.getEmail }}">
+        <input type="email" name="Email" id="Email" value="{{ TechEntity.getEmail() }}">
 
         <label for="Actif">Actif?</label>
-        <input type="checkbox" name="Actif" id="Actif" value="{{ TechEntity.getActif }}">
+        <input type="checkbox" name="Actif" id="Actif" value="{{ TechEntity.getActif() }}">
 
         <button type="submit">Envoyer</button>
     </form>
+    {% endif %}
+    {% if errorMessage is defined %}
+        {{ errorMessage }}
+    {% endif %}
 {% endblock %}

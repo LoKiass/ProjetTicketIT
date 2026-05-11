@@ -87,7 +87,7 @@ class UserManager
             $query = $this->pdb->prepare("UPDATE user SET Pswd = ? WHERE Login = ?");
             $query->execute([$newPassword, $login]);
 
-            if($query->rowCount() == 0){
+            if($query->rowCount() === 0){
                 throw new NotFoundException("Le user specifier aura subit aucune modification", 0);
             }
 

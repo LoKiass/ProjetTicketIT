@@ -6,7 +6,6 @@ return [
      */
     'formLogin' => ['User' => 'formLogin'],
     ''      => ['User' => 'formLogin'],
-    'test'  => ['Test' => 'index'],
     /*
      * Partie User
      */
@@ -16,8 +15,6 @@ return [
      * Partie accueil
      */
     'formAccueil' => ['Accueil' => 'formAccueil'],
-    'formTech'   => ['Tech' => 'formTech'],
-    'formUser' => ['User' => 'formUser'],
     /*
      * Partie Tech
      */

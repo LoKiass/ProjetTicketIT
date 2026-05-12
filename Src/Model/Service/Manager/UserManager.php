@@ -15,7 +15,7 @@ class UserManager
 
     public function __construct(){
         $this->pdb = DBManager::getInstance();
-        $this->keyString = "x";
+        $this->keyString = 'x';
     }
 
     public function checkUser(UserEntity $entity) : UserEntity
@@ -24,8 +24,8 @@ class UserManager
             $Login = $entity->getLogin();
             $Pswd = $entity->getPswd();
 
-            $query = $this->pdb->prepare("SELECT * FROM User WHERE Login = ? AND Pswd = AES_ENCRYPT($this->keyString, ?)");
-            $query->execute([$Login, $Pswd]);
+            $query = $this->pdb->prepare("SELECT * FROM User WHERE Login = ? AND Pswd = AES_ENCRYPT(?, ?)");
+            $query->execute([$Login, $this->keyString ,$Pswd]);
 
             $data = $query->fetch(\PDO::FETCH_ASSOC);
 

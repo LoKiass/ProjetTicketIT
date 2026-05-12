@@ -2,9 +2,6 @@
     {% include 'Navbar/Navbar.twig' %}
 {% endblock%}
 {% extends 'baseTemplate.twig' %}
-{% block menu %}
-    {% include 'Tech/menuTech.twig' %}
-{% endblock %}
 {% block headerTitre %}<h1>Modification de du techncien</h1>{% endblock %}
 {% block content %}
     {% if TechEntity is defined and TechEntity != null %}

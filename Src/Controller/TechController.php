@@ -17,13 +17,6 @@ class TechController extends BaseController
         $this->TM = new TechManager();
         parent::__construct();
     }
-
-    public function formTech() : void{
-        $this->requireLogin();
-        echo $this->TemplateEngine->render("Tech/FormTech.twig");
-    }
-
-
     public function getTech() : void {
         try{
             $this->requireLogin();

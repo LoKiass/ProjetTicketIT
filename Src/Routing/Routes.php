@@ -21,4 +21,8 @@ return [
     'createTech' => ['Tech' => 'createTech'],
     'getTech'  => ['Tech' => 'getTech'],
     'updateTech' => ['Tech' => 'updateTech'],
+    /*
+     * Partie fonction
+     */
+    'getFonction' => ['Fonction' => 'getFonction'],
 ];

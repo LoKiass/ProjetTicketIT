@@ -2,29 +2,64 @@
 {% block navbar %}
     {% include 'Navbar/Navbar.twig' %}
 {% endblock%}
-{% block headerTitre %}<h1>Créations du téchniciens</h1>{% endblock %}
-
 {% block content %}
-    <form method="post">
-        <label for="Nom">Nom</label>
-        <input type="text" name="Nom" id="Nom">
+    <div class="min-vh-100 d-flex justify-content-center bg-light py-5">
+        <div class="card shadow-sm border-0 w-100" style="max-width: 650px; border-radius: 12px;">
+            <div class="card-body p-4">
+                <div class="mb-4">
+                    <h1 class="h4 fw-semibold mb-1">
+                        <i class="bi bi-shield-check me-2"></i>Création utilisateurs
+                    </h1>
+                    <p class="text-muted small mb-0">Veuillez fournir toutes les informations ci-dessous</p>
+                </div>
 
-        <label for="Pren">Prenom</label>
-        <input type="text" name="Pren" id="Pren">
+                <form method="post">
+                    <div class="row mb-3 align-items-center">
+                        <label for="Nom" class="col-sm-3 col-form-label fw-medium">Nom</label>
+                        <div class="col-sm-9">
+                            <input type="text" name="Nom" id="Nom" class="form-control">
+                        </div>
+                    </div>
 
-        <label for="Email">Email</label>
-        <input type="email" name="Email" id="Email">
+                    <div class="row mb-3 align-items-center">
+                        <label for="Pren" class="col-sm-3 col-form-label fw-medium">Prenom</label>
+                        <div class="col-sm-9">
+                            <input type="text" name="Pren" id="Pren" class="form-control">
+                        </div>
+                    </div>
 
-        <label for="Actif">Actif?</label>
-        <input type="checkbox" name="Actif" id="Actif" value="1">
+                    <div class="row mb-3 align-items-center">
+                        <label for="Email" class="col-sm-3 col-form-label fw-medium">Email</label>
+                        <div class="col-sm-9">
+                            <input type="email" name="Email" id="Email" class="form-control">
+                        </div>
+                    </div>
 
-        <button type="submit">Envoyer</button>
-    </form>
+                    <div class="row mb-4">
+                        <div class="col-sm-9 offset-sm-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="Actif" id="Actif" value="1">
+                                <label class="form-check-label" for="Actif">Actif ?</label>
+                            </div>
+                        </div>
+                    </div>
 
-    {% if error is defined and error %}
-        <p>ERREUR : {{ error }}</p>
-    {% elseif success is defined and success %}
-        <p>TECHNICIEN CRÉÉ AVEC SUCCÈS</p>
-    {% endif %}
+                    <div class="row">
+                        <div class="col-12 text-center">
+                            <button class="btn btn-dark px-4" type="submit">Envoyer</button>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 text-center">
+                        {% if error is defined and error %}
+                            <p class="text-danger">ERREUR : {{ error }}</p>
+                        {% elseif success is defined and success %}
+                            <p class="text-success">TECHNICIEN CRÉÉ AVEC SUCCÈS</p>
+                        {% endif %}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
 {% endblock %}

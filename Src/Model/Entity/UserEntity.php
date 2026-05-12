@@ -50,7 +50,7 @@ class UserEntity
         $instance->setLogin($data['Login'] ?? null);
         $instance->setPswd($data['Pswd'] ?? null);
         $instance->setStatut($data['Statut'] ?? null);
-        $instance->setActif($data['Actif'] ?? null);
+        $instance->setActif((bool)($data['Actif'] ?? 0));
 
         return $instance;
     }

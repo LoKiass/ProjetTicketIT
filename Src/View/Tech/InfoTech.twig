@@ -2,23 +2,62 @@
 {% block navbar %}
     {% include 'Navbar/Navbar.twig' %}
 {% endblock%}
-{% block headerTitre %}<h1>Information du techniciens</h1>{% endblock %}
 {% block content %}
-    <table>
-        <tr>
-            <th>Nom</th>
-            <th>Prenom</th>
-            <th>Email</th>
-            <th>Actif</th>
-        </tr>
-            <tr>
-                <td>{{ TechEntity.getNom }}</td>
-                <td>{{ TechEntity.getPrenom }}</td>
-                <td>{{ TechEntity.getEmail }}</td>
-                <td>{{ TechEntity.getActif ? 'Actif' : 'Inactif' }}</td>
-            </tr>
-    </table>
-    {% if errorMessage is defined %}
-        {{errorMessage}}
-    {% endif %}
+    <div class="min-vh-100 d-flex justify-content-center bg-light py-5">
+        <div class="card shadow-sm border-0 w-100" style="max-width: 650px; border-radius: 12px;">
+            <div class="card-body p-4">
+                <div class="mb-4">
+                    <h1 class="h4 fw-semibold mb-1">
+                        <i class="bi bi-person-badge me-2"></i>Information du technicien
+                    </h1>
+                    <p class="text-muted small mb-0">Détails du compte technicien</p>
+                </div>
+
+                <div class="row mb-3 align-items-center">
+                    <span class="col-sm-3 col-form-label fw-medium">Nom</span>
+                    <div class="col-sm-9">
+                        <p class="form-control-plaintext">{{ TechEntity.getNom }}</p>
+                    </div>
+                </div>
+
+                <div class="row mb-3 align-items-center">
+                    <span class="col-sm-3 col-form-label fw-medium">Prénom</span>
+                    <div class="col-sm-9">
+                        <p class="form-control-plaintext">{{ TechEntity.getPrenom }}</p>
+                    </div>
+                </div>
+
+                <div class="row mb-3 align-items-center">
+                    <span class="col-sm-3 col-form-label fw-medium">Email</span>
+                    <div class="col-sm-9">
+                        <p class="form-control-plaintext">{{ TechEntity.getEmail }}</p>
+                    </div>
+                </div>
+
+                <div class="row mb-3 align-items-center">
+                    <span class="col-sm-3 col-form-label fw-medium">Statut</span>
+                    <div class="col-sm-9">
+                        {% if TechEntity.getActif %}
+                            <span class="badge bg-success">Actif</span>
+                        {% else %}
+                            <span class="badge bg-secondary">Inactif</span>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <a class="btn btn-dark px-4" href="getTech">Retour</a>
+                    </div>
+                </div>
+
+                {% if errorMessage is defined %}
+                    <div class="mt-4 text-center">
+                        <p class="text-danger">{{ errorMessage }}</p>
+                    </div>
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
 {% endblock %}

@@ -30,23 +30,18 @@ class TechController extends BaseController
                 echo $this->TemplateEngine->render("Tech/ListTech.twig", ['TabTech' => $TabTech]);
             }
         } catch (NotFoundException $e){
-            try {
-                $TabTech = $this->TM->list();
-                echo $this->TemplateEngine->render("Tech/ListTech.twig", ['TabTech' => $TabTech, 'errorMessage' => $e->getMessage()]);
-            } catch (DatabaseException $e){
-                echo $this->TemplateEngine->render("Tech/ListTech.twig", ['TabTech' => null, 'errorMessage' => $e->getMessage()]);
-            }
+            echo $this->TemplateEngine->render("Tech/ListTech.twig", ['TabTech' => null, 'errorMessage' => $e->getMessage()]);
         } catch (DatabaseException $e){
             echo $this->TemplateEngine->render("Tech/ListTech.twig", ['TabTech' => null, 'errorMessage' => $e->getMessage()]);
         }
     }
 
-    public function createTech() : void{
+    public function createTech() : void {
         $this->requireLogin();
         try{
             if (isset($_POST['Pren'])){
-                $_POST['Pk_Tech'] ?? $_POST['Pk_Tech'] = 0;
-                $_POST['Actif'] ?? $_POST['Actif'] = 0;
+                $_POST['Pk_Tech'] = $_POST['Pk_Tech'] ?? 0;
+                $_POST['Actif'] = $_POST['Actif'] ?? 0;
 
                 $tempTech = TechEntity::fromArray($_POST);
 
@@ -65,15 +60,16 @@ class TechController extends BaseController
         }
     }
 
-    public function updateTech() : void{
+    public function updateTech() : void {
         $this->requireLogin();
         try{
+            var_dump($_POST);
             if (isset($_GET['Pk'])){
                 $pk = $_GET['Pk'];
 
                 if ($_SERVER['REQUEST_METHOD'] === 'POST'){
                     $_POST['Pk_Tech'] = $pk;
-                    $_POST['Actif'] ?? $_POST['Actif'] = 0;
+                    $_POST['Actif'] = $_POST['Actif'] ?? 0;
 
                     $this->TM->update(TechEntity::fromArray($_POST));
                     header('Location: getTech');

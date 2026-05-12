@@ -7,16 +7,12 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
+                    {# Partit accueil#}
                     <li class="nav-item">
                         <a class="nav-link" href="formAccueil">Accueil</a>
                     </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Technicien</a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="getTech">Liste technicien</a></li>
-                            <li><a class="dropdown-item" href="createTech">Créations téchniciens</a></li>
-                        </ul>
-                    </li>
+
+                    {# Partit utilisateur#}
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Utilisateur
@@ -25,7 +21,34 @@
                             <li><a class="dropdown-item" href="getUser">Liste utilisateur</a></li>
                         </ul>
                     </li>
+
+                    {# Partit technicien#}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Technicien</a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="getTech">Liste technicien</a></li>
+                            <li><a class="dropdown-item" href="createTech">+ Nouveau téchniciens</a></li>
+                        </ul>
+                    </li>
+
+                    {# Partit fonction #}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Fonction</a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="getFunct">Liste fonction</a></li>
+                            <li><a class="dropdown-item" href="createFunct">+ Nouvelle fonction</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Projet</a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="getProj">Liste projet</a></li>
+                            <li><a class="dropdown-item" href="createProj">+ Nouveau projet</a></li>
+                        </ul>
+                    </li>
                 </ul>
+                {# Partit login#}
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
                         <a class="nav-link" href="formLogin">Login</a>

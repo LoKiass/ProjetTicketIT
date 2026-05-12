@@ -14,8 +14,7 @@ class BaseController
         $this->TemplateEngine->enableStrictVariables();
         $this->TemplateEngine->addExtension(new \Twig\Extension\DebugExtension());
     }
-    protected function requireLogin(): void
-    {
+    protected function requireLogin(): void {
         if (empty($_SESSION['userLogged'])) {
             header("HTTP/1.0 404 Not Found");
             exit;

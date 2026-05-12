@@ -2,32 +2,55 @@
 {% block navbar %}
     {% include 'Navbar/Navbar.twig' %}
 {% endblock%}
-{% block headerTitre %}
-    <h1>Modification du mot de passe</h1>
-{% endblock %}
 {% block content %}
-        <form method="post" style="max-width: 400px; margin: 20px auto; display: flex; flex-direction: column; gap: 10px;">
+    <div class="min-vh-100 d-flex justify-content-center bg-light py-5">
+        <div class="card shadow-sm border-0 w-100" style="max-width: 650px; border-radius: 12px;">
+            <div class="card-body p-4">
+                <div class="mb-4">
+                    <h1 class="h4 fw-semibold mb-1">
+                        <i class="bi bi-key me-2"></i>Modification du mot de passe
+                    </h1>
+                    <p class="text-muted small mb-0">Veuillez fournir toutes les informations ci-dessous</p>
+                </div>
 
-            <label for="Login">Login (Lecture seule)</label>
+                <form method="post">
+                    <div class="row mb-3 align-items-center">
+                        <label for="Login" class="col-sm-4 col-form-label fw-medium">Login</label>
+                        <div class="col-sm-8">
+                            <input type="text" name="Login" id="Login" class="form-control bg-light"
+                                   value="{{ UserEntity.getLogin() }}" readonly>
+                        </div>
+                    </div>
 
-            <input type="text" name="Login" id="Login" value="{{ UserEntity.getLogin() }}" readonly style="background-color: #eee;">
+                    <div class="row mb-3 align-items-center">
+                        <label for="oldPswd" class="col-sm-4 col-form-label fw-medium">Ancien mot de passe</label>
+                        <div class="col-sm-8">
+                            <input type="password" name="oldPswd" id="oldPswd" class="form-control">
+                        </div>
+                    </div>
 
-            <label for="oldPswd">Ancien mot de passe</label>
-            <input type="password" name="oldPswd" id="oldPswd">
+                    <div class="row mb-4 align-items-center">
+                        <label for="newPswd" class="col-sm-4 col-form-label fw-medium">Nouveau mot de passe</label>
+                        <div class="col-sm-8">
+                            <input type="password" name="newPswd" id="newPswd" class="form-control">
+                        </div>
+                    </div>
 
-            <label for="newPswd">Nouveau mot de passe</label>
-            <input type="password" name="newPswd" id="newPswd">
+                    <div class="row mb-3">
+                        <div class="col-12 text-center d-flex flex-column gap-2">
+                            <button type="submit" class="btn btn-dark px-4">Mettre à jour le mot de passe</button>
+                            <a href="getUser" class="btn btn-outline-secondary px-4">Annuler</a>
+                        </div>
+                    </div>
 
-            <hr>
+                    {% if errorMessage is defined %}
+                        <div class="mt-3 text-center">
+                            <p class="text-danger">{{ errorMessage }}</p>
+                        </div>
+                    {% endif %}
+                </form>
 
-            <button type="submit" style="padding: 10px; cursor: pointer;">
-                Mettre à jour le mot de passe
-            </button>
-
-            <a href="getUser" style="text-align: center; margin-top: 10px; color: #666;">Annuler</a>
-        </form>
-    {% if errorMessage is defined %}
-        {{ errorMessage }}
-    {% endif %}
-    
+            </div>
+        </div>
+    </div>
 {% endblock %}

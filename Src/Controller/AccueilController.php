@@ -8,7 +8,7 @@ class AccueilController extends BaseController
         parent::__construct();
     }
 
-    public function formAccueil(){
+    public function formAccueil() : void{
         echo $this->TemplateEngine->render('/Accueil/Accueil.twig');
     }
 }

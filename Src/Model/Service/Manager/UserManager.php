@@ -66,7 +66,7 @@ class UserManager
                 throw new DatabaseException("Erreur lors de l'accès à la DB", 0);
             }
         }
-    public function read(string $Login){
+    public function read(string $Login) : UserEntity {
         try{
             $query = $this->pdb->prepare("SELECT * FROM user WHERE Login = ?");
             $query->execute([$Login]);
@@ -83,11 +83,10 @@ class UserManager
         }
     }
 
-    public function updatePassword(string $login, string $newPassword) : void
-    {
+    public function updatePassword(string $login, string $newPassword) : void {
         try{
-            $query = $this->pdb->prepare("UPDATE user SET Pswd = AES_ENCRYPT($this->keyString, ?) WHERE Login = ?");
-            $query->execute([$newPassword, $login]);
+            $query = $this->pdb->prepare("UPDATE user SET Pswd = AES_ENCRYPT(?, ?) WHERE Login = ?");
+            $query->execute([$this->keyString, $newPassword, $login]);
 
             if($query->rowCount() === 0){
                 throw new NotFoundException("Le user specifier aura subit aucune modification", 0);

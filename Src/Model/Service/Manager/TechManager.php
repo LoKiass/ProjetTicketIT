@@ -13,8 +13,7 @@ class TechManager
         $this->pdb = DBManager::getInstance();
     }
 
-    public function read(int $id) : TechEntity
-    {
+    public function read(int $id) : TechEntity {
         try{
             $Pk = $id;
             $query = <<< SQL
@@ -39,8 +38,7 @@ class TechManager
 
     }
 
-    public function list() : array
-    {
+    public function list() : array {
         try{
             $query = <<< SQL
             SELECT Pk_Tech, Nom, Pren, Email, Actif
@@ -76,7 +74,7 @@ class TechManager
                $entity->getNom(),
                $entity->getPrenom(),
                $entity->getEmail(),
-               ($entity->getActif() ?? 0)
+               ((int)$entity->getActif() ?? 0)
            ]);
 
            if ($stmt->rowCount() === 0){
@@ -87,8 +85,7 @@ class TechManager
        }
     }
 
-    public function update(TechEntity $entity) : bool
-    {
+    public function update(TechEntity $entity) : bool {
         try {
             $check = $this->pdb->prepare("SELECT 1 FROM tech WHERE Pk_Tech = ?");
             $check->execute([$entity->getPk()]);
@@ -111,7 +108,7 @@ class TechManager
                 $entity->getNom(),
                 $entity->getPrenom(),
                 $entity->getEmail(),
-                $entity->getActif(),
+                (int)$entity->getActif(),
                 $entity->getPk()
             ]);
 

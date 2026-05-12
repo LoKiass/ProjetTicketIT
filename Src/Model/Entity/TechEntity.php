@@ -64,7 +64,7 @@ class TechEntity
         $instance->setNom($data['Nom'] ?? null);
         $instance->setPrenom($data['Pren'] ?? null);
         $instance->setEmail($data['Email'] ?? null);
-        $instance->setActif($data['Actif'] ?? null);
+        $instance->setActif((bool)($data['Actif'] ?? 0));
 
         return $instance;
     }

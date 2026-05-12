@@ -24,7 +24,7 @@ class UserController extends BaseController
     /*
      * La méthode index permet d'afficher la page de connexion'
      */
-    public function formLogin(){
+    public function formLogin() : void {
         $userChangedParam = isset($_GET['userChanged']) ? 1 : 0;
 
         if(isset($_SESSION['userLogged'])){
@@ -44,7 +44,7 @@ class UserController extends BaseController
                     'Actif'  => $userFromDb->getActif(),
                 ];
 
-                echo $this->TemplateEngine->render('/Accueil/Accueil.twig');
+                header("Location: formAccueil");
 
             }
             else {
@@ -59,9 +59,9 @@ class UserController extends BaseController
             ]);
         }
     }
-    public function getUser(){
+    public function getUser() : void{
+        $this->requireLogin();
         try{
-            $this->requireLogin();
             $TabUser = $this->UM->list();
             echo $this->TemplateEngine->render('/User/ListUser.twig', ['TabUser' => $TabUser]);
         } catch (DatabaseException|NotFoundException $e){
@@ -72,8 +72,7 @@ class UserController extends BaseController
         }
     }
 
-    public function updateUser(): void
-    {
+    public function updateUser(): void {
         $this->requireLogin();
 
         try {

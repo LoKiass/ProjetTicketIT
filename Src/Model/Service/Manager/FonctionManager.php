@@ -20,6 +20,7 @@ class FonctionManager
         try{
             $query = $this->pdb->prepare("INSERT INTO fonction (Descr, Niveau) VALUES (?, ?)");
             $query->execute([$entity->getDescr(), $entity->getNiveau()]);
+
             if($query->rowCount() === 0){
                throw new NotCreatedInDatabase("L'enregistrement a pas été crée, veuillez re-essayer");
             }

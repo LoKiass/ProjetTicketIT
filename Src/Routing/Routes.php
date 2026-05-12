@@ -25,4 +25,5 @@ return [
      * Partie fonction
      */
     'getFonction' => ['Fonction' => 'getFonction'],
+    'createFonction' => ['Fonction' => 'createFonction'],
 ];

@@ -4,7 +4,9 @@ namespace DISEUMAT\Controller;
 
 use DISEUMAT\Controller\BaseController;
 use DISEUMAT\Exception\DatabaseException;
+use DISEUMAT\Exception\NotCreatedInDatabase;
 use DISEUMAT\Exception\NotFoundException;
+use DISEUMAT\Model\Entity\FonctionEntity;
 use DISEUMAT\Model\Service\Manager\FonctionManager;
 
 class FonctionController extends BaseController
@@ -25,14 +27,27 @@ class FonctionController extends BaseController
                 $TabFonction = $this->FM->list();
                 echo $this->TemplateEngine->render("Fonction/ListFonction.twig", ['TabFonction' => $TabFonction]);
             }
-        } catch (NotFoundException $e){
-            echo $this->TemplateEngine->render("Fonction/ListFonction.twig", [ 'TabFonction' => null, 'errorMessage' => $e->getMessage()]);
-        } catch (DatabaseException $e) {
+        } catch (NotFoundException|DatabaseException $e){
             echo $this->TemplateEngine->render("Fonction/ListFonction.twig", [ 'TabFonction' => null, 'errorMessage' => $e->getMessage()]);
         }
     }
     public function createFonction() : void {
-        echo $this->TemplateEngine->render("Fonction/CreateFonction.twig");
+        try{
+            $this->requireLogin();
+            if (isset($_POST['Descr']) && isset($_POST['Niveau'])){
+                $_POST['Pk_Fonction'] = 0;
+                $Fonction = FonctionEntity::fromArray($_POST);
+                $this->FM->create($Fonction);
+
+                echo $this->TemplateEngine->render("Fonction/CreateFonction.twig", ['success' => true]);
+            }
+            else{
+                echo $this->TemplateEngine->render("Fonction/CreateFonction.twig");
+            }
+        } catch (DatabaseException|NotCreatedInDatabase $e){
+            echo $this->TemplateEngine->render("Fonction/CreateFonction.twig", ['success' => false, 'error' => $e->getMessage()]);
+        }
+
     }
 
 }

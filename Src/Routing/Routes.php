@@ -26,4 +26,6 @@ return [
      */
     'getFonction' => ['Fonction' => 'getFonction'],
     'createFonction' => ['Fonction' => 'createFonction'],
+    'updateFonction' => ['Fonction' => 'updateFonction'],
+    'deleteFonction' => ['Fonction' => 'deleteFonction'],
 ];

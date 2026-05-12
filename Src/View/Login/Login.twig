@@ -1,24 +1,47 @@
 {% extends 'baseTemplate.twig' %}
-{% block pageTitle %}Connexion{% endblock %}
-
+{% block pagetitle %}TicketSystem - Login{% endblock %}
 {% block content %}
-    <h1>Login</h1>
-    <form method="post">
-        <!--SOUCIS CASE SENSITIF -->
-        <!-- Nom utilisateur -->
-        <label for="Login">Username</label>
-        <input type="text" name="Login" id="Login" />
-        <br>
-        <!-- Mots de passe utilisateurs -->
-        <label for="Pswd">Password</label>
-        <input type="password" name="Pswd" id="Pswd" />
-        <br>
-        <button type="submit">Connexion</button>
-    </form>
-    {% if errorMessage is defined %}
-        <p style="color: red;">{{ errorMessage }}</p>
-    {% endif %}
-    {% if userChanged is defined and userChanged == 1%}
-        User changer avec succès, mais comme vous vous êtes connecter avec : nous vous avons deconnecter
-    {% endif %}
+    <div class="min-vh-100 d-flex justify-content-center align-items-center bg-light">
+        <div class="card shadow-sm border-0 w-100" style="max-width: 450px; border-radius: 12px;">
+            <div class="card-body p-4">
+
+                <div class="mb-4 text-center">
+                    <h1 class="h4 fw-semibold mb-1">
+                        <i class="bi bi-person-lock me-2"></i>Connexion
+                    </h1>
+                    <p class="text-muted small mb-0">Veuillez vous identifier pour continuer</p>
+                </div>
+
+                <form method="post">
+                    <div class="mb-3">
+                        <label for="Login" class="form-label fw-medium">Nom d'utilisateur</label>
+                        <input type="text" name="Login" id="Login" class="form-control">
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="Pswd" class="form-label fw-medium">Mot de passe</label>
+                        <input type="password" name="Pswd" id="Pswd" class="form-control">
+                    </div>
+
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-dark">Connexion</button>
+                    </div>
+                </form>
+
+                {% if errorMessage is defined %}
+                    <div class="alert alert-danger mt-3 mb-0">
+                        <i class="bi bi-exclamation-triangle me-2"></i>{{ errorMessage }}
+                    </div>
+                {% endif %}
+
+                {% if userChanged is defined and userChanged == 1 %}
+                    <div class="alert alert-warning mt-3 mb-0">
+                        <i class="bi bi-info-circle me-2"></i>
+                        Utilisateur modifié avec succès. Vous avez été déconnecté suite au changement.
+                    </div>
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
 {% endblock %}

@@ -1,4 +1,5 @@
 {% extends 'baseTemplate.twig' %}
+{% block pagetitle %}TicketSystem - Modification utilisateur{% endblock %}
 {% block navbar %}
     {% include 'Navbar/Navbar.twig' %}
 {% endblock%}
@@ -8,7 +9,7 @@
             <div class="card-body p-4">
                 <div class="mb-4">
                     <h1 class="h4 fw-semibold mb-1">
-                        <i class="bi bi-key me-2"></i>Modification du mot de passe
+                        <i class="bi bi-key me-2"></i>Modification du mot de passe utilisateur
                     </h1>
                     <p class="text-muted small mb-0">Veuillez fournir toutes les informations ci-dessous</p>
                 </div>
@@ -36,10 +37,10 @@
                         </div>
                     </div>
 
-                    <div class="row mb-3">
-                        <div class="col-12 text-center d-flex flex-column gap-2">
-                            <button type="submit" class="btn btn-dark px-4">Mettre à jour le mot de passe</button>
-                            <a href="getUser" class="btn btn-outline-secondary px-4">Annuler</a>
+                    <div class="row">
+                        <div class="col-12 text-center d-flex justify-content-center gap-2">
+                            <button class="btn btn-dark px-4" type="submit">Envoyer</button>
+                            <a class="btn btn-dark px-4" href="getUser">Retour</a>
                         </div>
                     </div>
 

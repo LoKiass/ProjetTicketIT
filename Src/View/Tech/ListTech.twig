@@ -1,10 +1,8 @@
 {% extends 'baseTemplate.twig' %}
-
+{% block pagetitle %}TicketSystem - Liste technicien{% endblock %}
 {% block navbar %}
     {% include 'Navbar/Navbar.twig' %}
 {% endblock %}
-
-{% block headerTitre %}{% endblock %}
 
 {% block content %}
     <div class="min-vh-100 d-flex justify-content-center bg-light py-5">
@@ -21,6 +19,7 @@
                 {% if errorMessage is defined %}
                     <div class="alert alert-danger">{{ errorMessage }}</div>
                 {% endif %}
+
 
                 {% if TabTech is not null %}
                     <div class="table-responsive">
@@ -60,6 +59,9 @@
                             </tbody>
                         </table>
                     </div>
+                    {% if success is defined and success %}
+                        <p class="text-success text-center bg-light p-1">Techniciens modifier aves succès</p>
+                    {% endif %}
                 {% endif %}
 
             </div>

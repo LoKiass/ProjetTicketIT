@@ -1,5 +1,5 @@
 {% extends 'baseTemplate.twig' %}
-{% block pagetitle %}TicketSystem - Modification téchnicien{% endblock %}
+{% block pagetitle %}TicketSystem - Modification fonction{% endblock %}
 {% block navbar %}
     {% include 'Navbar/Navbar.twig' %}
 {% endblock%}
@@ -9,50 +9,31 @@
             <div class="card-body p-4">
                 <div class="mb-4">
                     <h1 class="h4 fw-semibold mb-1">
-                        <i class="bi bi-shield-check me-2"></i>Modification téchniciens
+                        <i class="bi bi-shield-check me-2"></i>Modification fonction
                     </h1>
                     <p class="text-muted small mb-0">Veuillez fournir toutes les informations ci-dessous</p>
                 </div>
 
                 <form method="post">
                     <div class="row mb-3 align-items-center">
-                        <label for="Nom" class="col-sm-3 col-form-label fw-medium">Nom</label>
+                        <label for="Descr" class="col-sm-3 col-form-label fw-medium">Descr</label>
                         <div class="col-sm-9">
-                            <input type="text" name="Nom" id="Nom" value="{{ TechEntity.getNom() }}">
+                            <input type="text" name="Descr" id="Descr" value="{{ FonctionEntity.getDescr() }}">
                         </div>
                     </div>
 
                     <div class="row mb-3 align-items-center">
-                        <label for="Pren" class="col-sm-3 col-form-label fw-medium">Prenom</label>
+                        <label for="Niveau" class="col-sm-3 col-form-label fw-medium">Niveau</label>
                         <div class="col-sm-9">
-                            <input type="text" name="Pren" id="Pren" value="{{ TechEntity.getPrenom() }}">
+                            <input type="text" name="Niveau" id="Niveau" value="{{ FonctionEntity.getNiveau() }}">
                         </div>
                     </div>
-
-                    <div class="row mb-3 align-items-center">
-                        <label for="Email" class="col-sm-3 col-form-label fw-medium">Email</label>
-                        <div class="col-sm-9">
-                            <input type="text" name="Email" id="Email" value="{{ TechEntity.getEmail() }}">
-                        </div>
-                    </div>
-
-                    <div class="row mb-4">
-                        <div class="col-sm-9 offset-sm-3">
-                            <div class="form-check">
-                                <label for="Actif"> Actif
-                                    <input class="form-check-input" type="checkbox" name="Actif" id="Actif" value="1" {{ TechEntity.getActif() ? 'checked' : '' }}>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-
                     <div class="row">
                         <div class="col-12 text-center d-flex justify-content-center gap-2">
                             <button class="btn btn-dark px-4" type="submit">Envoyer</button>
-                            <a class="btn btn-dark px-4" href="getTech">Retour</a>
+                            <a class="btn btn-dark px-4" href="getFonction">Retour</a>
                         </div>
                     </div>
-
                     <div class="mt-4 text-center">
                         {% if error is defined and error %}
                             <p class="text-danger">ERREUR : {{ error }}</p>

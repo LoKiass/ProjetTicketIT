@@ -25,7 +25,10 @@ class FonctionController extends BaseController
             }
             else{
                 $TabFonction = $this->FM->list();
-                echo $this->TemplateEngine->render("Fonction/ListFonction.twig", ['TabFonction' => $TabFonction]);
+                $success = isset($_GET['success']) && $_GET['success'] === 'true';
+                unset($_GET['success']); // Succes uniquement comme log au niveau de l'action update
+
+                echo $this->TemplateEngine->render("Fonction/ListFonction.twig", ['TabFonction' => $TabFonction, 'success' => $success]);
             }
         } catch (NotFoundException|DatabaseException $e){
             echo $this->TemplateEngine->render("Fonction/ListFonction.twig", [ 'TabFonction' => null, 'errorMessage' => $e->getMessage()]);
@@ -50,4 +53,28 @@ class FonctionController extends BaseController
 
     }
 
+    public function updateFonction() : void {
+        $this->requireLogin();
+        try{
+            if (isset($_GET['Pk'])){
+                $pk = $_GET['Pk'];
+
+                if ($_SERVER['REQUEST_METHOD'] === 'POST'){
+                    $_POST['Pk_Fonction'] = $pk;
+                    $this->FM->update(FonctionEntity::fromArray($_POST));
+
+                    header('Location: getFonction?success=true');
+                }
+                else if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+                    $tempFonction = $this->FM->read($_GET['Pk']);
+                    echo $this->TemplateEngine->render("Fonction/UpdateFonction.twig", ['FonctionEntity' => $tempFonction]);
+                }
+            }
+        } catch (NotFoundException|DatabaseException $e){
+            echo $this->TemplateEngine->render("Fonction/UpdateFonction.twig", [
+                'FonctionEntity' => null,
+                'errorMessage' => $e->getMessage()
+            ]);
+        }
+    }
 }

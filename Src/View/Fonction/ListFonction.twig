@@ -1,5 +1,5 @@
 {% extends 'baseTemplate.twig' %}
-
+{% block pagetitle %}TicketSystem - Liste fonction{% endblock %}
 {% block navbar %}
     {% include 'Navbar/Navbar.twig' %}
 {% endblock %}
@@ -43,12 +43,16 @@
                                         <a href="getFonction?Pk={{ fonctions.getPk }}" class="btn btn-sm btn-outline-secondary">
                                             <i class="bi bi-info-circle"></i> Infos
                                         </a>
+                                        <a href="deleteFonction?Pk={{ fonctions.getPk }}" class="btn btn-sm btn-outline-danger">Suppresions</a>
                                     </td>
                                 </tr>
                             {% endfor %}
                             </tbody>
                         </table>
                     </div>
+                    {% if success is defined and success %}
+                        <p class="text-success text-center bg-light p-1">Fonction modifier aves succès</p>
+                    {% endif %}
                 {% endif %}
 
             </div>

@@ -27,7 +27,10 @@ class TechController extends BaseController
             }
             else{
                 $TabTech = $this->TM->list();
-                echo $this->TemplateEngine->render("Tech/ListTech.twig", ['TabTech' => $TabTech]);
+                $success = isset($_GET['success']) && $_GET['success'] === 'true'; // Succes uniquement comme log au niveau de l'action update
+
+                unset($_GET['success']);
+                echo $this->TemplateEngine->render("Tech/ListTech.twig", ['TabTech' => $TabTech, 'success' => $success]);
             }
         } catch (NotFoundException $e){
             echo $this->TemplateEngine->render("Tech/ListTech.twig", ['TabTech' => null, 'errorMessage' => $e->getMessage()]);
@@ -63,7 +66,6 @@ class TechController extends BaseController
     public function updateTech() : void {
         $this->requireLogin();
         try{
-            var_dump($_POST);
             if (isset($_GET['Pk'])){
                 $pk = $_GET['Pk'];
 
@@ -72,7 +74,7 @@ class TechController extends BaseController
                     $_POST['Actif'] = $_POST['Actif'] ?? 0;
 
                     $this->TM->update(TechEntity::fromArray($_POST));
-                    header('Location: getTech');
+                    header('Location: getTech?success=true');
                 }
                 else if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                     $tempTech = $this->TM->read($_GET['Pk']);

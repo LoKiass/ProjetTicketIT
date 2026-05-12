@@ -11,9 +11,11 @@ use PDOException;
 class UserManager
 {
     private $pdb;
+    private $keyString;
 
     public function __construct(){
         $this->pdb = DBManager::getInstance();
+        $this->keyString = "x";
     }
 
     public function checkUser(UserEntity $entity) : UserEntity
@@ -22,7 +24,7 @@ class UserManager
             $Login = $entity->getLogin();
             $Pswd = $entity->getPswd();
 
-            $query = $this->pdb->prepare("SELECT * FROM User WHERE Login = ? AND Pswd = ?");
+            $query = $this->pdb->prepare("SELECT * FROM User WHERE Login = ? AND Pswd = AES_ENCRYPT($this->keyString, ?)");
             $query->execute([$Login, $Pswd]);
 
             $data = $query->fetch(\PDO::FETCH_ASSOC);
@@ -84,7 +86,7 @@ class UserManager
     public function updatePassword(string $login, string $newPassword) : void
     {
         try{
-            $query = $this->pdb->prepare("UPDATE user SET Pswd = ? WHERE Login = ?");
+            $query = $this->pdb->prepare("UPDATE user SET Pswd = AES_ENCRYPT($this->keyString, ?) WHERE Login = ?");
             $query->execute([$newPassword, $login]);
 
             if($query->rowCount() === 0){

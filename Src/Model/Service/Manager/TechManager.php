@@ -21,16 +21,14 @@ class TechManager
             FROM tech WHERE Pk_Tech = ?;
         SQL;
 
-            $stmt = $this->pdb->prepare($query);
-            $stmt->execute([$Pk]);
+            $query = $this->pdb->prepare($query);
+            $query->execute([$Pk]);
 
-            $record = $stmt->fetch();
-
-            if (!$record){
-                throw new NotFoundException("Le technicien n'existe pas", 0);
+            if($query->rowCount() === 0){
+                throw new NotFoundException("Le technicien n'existe pas");
             }
-            $tempTech = TechEntity::fromArray($record);
-            return $tempTech;
+
+            return TechEntity::fromArray($query->fetch());
 
         } catch (\PDOException $e){
             throw new DatabaseException($e->getMessage(), 0);
@@ -45,11 +43,11 @@ class TechManager
             FROM tech;
         SQL;
 
-            $stmt = $this->pdb->prepare($query);
-            $stmt->execute();
+            $query = $this->pdb->prepare($query);
+            $query->execute();
 
             $TabTech = array();
-            while ($record = $stmt->fetch())
+            while ($record = $query->fetch())
             {
                 $tempTech = TechEntity::fromArray($record);
                 $TabTech[] = clone $tempTech;
@@ -69,15 +67,15 @@ class TechManager
        try{
            $query = "INSERT INTO tech (Nom, Pren, Email, Actif) VALUES (?, ?, ?, ?)";
 
-           $stmt = $this->pdb->prepare($query);
-           $stmt->execute([
+           $query = $this->pdb->prepare($query);
+           $query->execute([
                $entity->getNom(),
                $entity->getPrenom(),
                $entity->getEmail(),
                ((int)$entity->getActif() ?? 0)
            ]);
 
-           if ($stmt->rowCount() === 0){
+           if ($query->rowCount() === 0){
                 throw new NotCreatedInDatabase("Le techniciens n'a pas été crée", 0);
            }
        } catch (\PDOException $e){
@@ -103,8 +101,8 @@ class TechManager
                 WHERE Pk_Tech = ?
             SQL;
 
-            $stmt = $this->pdb->prepare($query);
-            $stmt->execute([
+            $query = $this->pdb->prepare($query);
+            $query->execute([
                 $entity->getNom(),
                 $entity->getPrenom(),
                 $entity->getEmail(),

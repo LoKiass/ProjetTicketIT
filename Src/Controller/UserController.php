@@ -21,8 +21,12 @@ class UserController extends BaseController
         parent::__construct();
     }
 
-    /*
-     * La méthode index permet d'afficher la page de connexion'
+    /**
+     * Gère l'affichage et la soumission du formulaire de connexion.
+     * En GET : affiche la page de login, en indiquant si un utilisateur vient de changer ses identifiants.
+     * En POST (si 'Login' est présent) : vérifie les credentials en base, initialise la session
+     * avec les informations de l'utilisateur, puis redirige vers l'accueil.
+     * En cas d'erreur (identifiants invalides, erreur base), réaffiche le formulaire avec un message d'erreur.
      */
     public function formLogin() : void {
         $userChangedParam = isset($_GET['userChanged']) ? 1 : 0;
@@ -59,6 +63,12 @@ class UserController extends BaseController
             ]);
         }
     }
+
+    /**
+     * Affiche la liste de tous les utilisateurs enregistrés en base de données.
+     * Nécessite d'être connecté. En cas d'erreur, réaffiche la liste vide
+     * avec un message d'erreur.
+     */
     public function getUser() : void{
         $this->requireLogin();
         try{
@@ -72,6 +82,14 @@ class UserController extends BaseController
         }
     }
 
+    /**
+     * Gère la modification du mot de passe d'un utilisateur identifié par le paramètre GET 'Login'.
+     * En GET : récupère l'utilisateur en base et affiche le formulaire pré-rempli.
+     * En POST : vérifie l'ancien mot de passe, applique le nouveau, puis redirige.
+     * Si l'utilisateur modifie son propre compte, la session est détruite et il est
+     * redirigé vers le login pour se reconnecter avec ses nouveaux identifiants.
+     * Sinon, redirige vers la liste des utilisateurs.
+     */
     public function updateUser(): void {
         $this->requireLogin();
 

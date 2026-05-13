@@ -17,6 +17,12 @@ class TechController extends BaseController
         $this->TM = new TechManager();
         parent::__construct();
     }
+
+    /**
+     * Affiche la liste de tous les techniciens ou les détails d'un technicien spécifique.
+     * Si le paramètre GET 'Pk' est fourni, affiche la fiche du technicien correspondant.
+     * Sinon, affiche la liste complète avec un éventuel message de succès suite à une mise à jour.
+     */
     public function getTech() : void {
         try{
             $this->requireLogin();
@@ -39,6 +45,12 @@ class TechController extends BaseController
         }
     }
 
+    /**
+     * Gère la création d'un nouveau technicien.
+     * En GET : affiche le formulaire de création vierge.
+     * En POST (si 'Pren' est présent) : construit un TechEntity depuis les données du formulaire
+     * et l'insère en base de données, puis affiche le résultat (succès ou erreur).
+     */
     public function createTech() : void {
         $this->requireLogin();
         try{
@@ -63,6 +75,12 @@ class TechController extends BaseController
         }
     }
 
+    /**
+     * Gère la modification d'un technicien existant identifié par le paramètre GET 'Pk'.
+     * En GET : récupère le technicien en base et affiche le formulaire pré-rempli.
+     * En POST : met à jour le technicien avec les nouvelles données du formulaire,
+     * puis redirige vers la liste avec un indicateur de succès.
+     */
     public function updateTech() : void {
         $this->requireLogin();
         try{

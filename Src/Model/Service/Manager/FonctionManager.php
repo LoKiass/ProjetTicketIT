@@ -16,6 +16,9 @@ class FonctionManager
     public function __construct(){
         $this->pdb = DBManager::getInstance();
     }
+    /*
+     * Cette fonction permet de crée une fonction dans la BDD
+     */
     public function create(FonctionEntity $entity) : void {
         try{
             $query = $this->pdb->prepare("INSERT INTO fonction (Descr, Niveau) VALUES (?, ?)");
@@ -28,6 +31,9 @@ class FonctionManager
             throw new DatabaseException("Erreur lors de l'authentification", 0);
         }
     }
+    /*
+     * Cette fonction permet de modifier les informations d'une fonction déjà existante en BDD
+     */
     public function update(FonctionEntity $FonctionEntity) : void {
         try{
             $query = $this->pdb->prepare("UPDATE fonction SET Descr = ?, Niveau = ? WHERE Pk_Fonction = ?");
@@ -41,6 +47,9 @@ class FonctionManager
         }
     }
 
+    /*
+     * Cette methode permet de lire toutes les fonctions de la BDD
+     */
     public function list() : array
     {
         try {
@@ -62,6 +71,9 @@ class FonctionManager
             throw new DatabaseException("Erreur lors de l'authentification", 0);
         }
     }
+    /*
+     * Cette methode permet de lire une fonction de la BDD
+     */
     public function read(int $pk) : FonctionEntity {
         try{
             $query = $this->pdb->prepare("SELECT * FROM fonction WHERE Pk_Fonction = ?");
@@ -78,6 +90,9 @@ class FonctionManager
         }
     }
 
+    /*
+     * Cette méthode permet de supprimer une fonction de la BD si aucun liens n'existe entre elle et un technicien (Via checklink)
+     */
     public function delete(int $pk) : void {
         try {
             $this->checkLink($pk);
@@ -93,6 +108,9 @@ class FonctionManager
         }
     }
 
+    /*
+     * Cette méthode permet de verifier si un liens existe au niveau BD entre un téchniciens & une fonction
+     */
     public function checkLink(int $pk) : void {
         try {
             $query = $this->pdb->prepare("SELECT COUNT(*) FROM fonction_tech WHERE Fk_Fonction = ?");

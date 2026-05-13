@@ -13,6 +13,9 @@ class TechManager
         $this->pdb = DBManager::getInstance();
     }
 
+    /*
+     * Cette méthode permet de lire un technicien en fonction de son id en BDD
+     */
     public function read(int $id) : TechEntity {
         try{
             $Pk = $id;
@@ -36,6 +39,9 @@ class TechManager
 
     }
 
+    /*
+     * Cette methode permet de lire tous les technicien de la BDD
+     */
     public function list() : array {
         try{
             $query = <<< SQL
@@ -63,6 +69,9 @@ class TechManager
         }
     }
 
+    /*
+     * Cette méthode permet de créé un technicien en BDD
+     */
     public function create($entity) : void {
        try{
            $query = "INSERT INTO tech (Nom, Pren, Email, Actif) VALUES (?, ?, ?, ?)";
@@ -83,7 +92,10 @@ class TechManager
        }
     }
 
-    public function update(TechEntity $entity) : bool {
+    /*
+     * Cette méthode permet de modifier un téchnciens déjà existant en BDD
+     */
+    public function update(TechEntity $entity) : void {
         try {
             $check = $this->pdb->prepare("SELECT 1 FROM tech WHERE Pk_Tech = ?");
             $check->execute([$entity->getPk()]);
@@ -109,9 +121,6 @@ class TechManager
                 (int)$entity->getActif(),
                 $entity->getPk()
             ]);
-
-            return true;
-
         } catch (\PDOException $e) {
             throw new DatabaseException($e->getMessage(), 0);
         }

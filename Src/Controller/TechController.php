@@ -30,9 +30,13 @@ class TechController extends BaseController
         try{
             $this->requireLogin();
 
-            if (isset($_GET['Pk'])){
+            if (isset($_GET['Pk'])) {
                 $Tech = $this->TM->read($_GET['Pk']);
-                echo $this->TemplateEngine->render("Tech/InfoTech.twig", ['TechEntity' => $Tech]);
+                $ListeFonctions = $this->FM->listByTech($_GET['Pk']);
+                $Tech->setFonctions($ListeFonctions);
+                echo $this->TemplateEngine->render("Tech/InfoTech.twig", [
+                    'TechEntity' => $Tech
+                ]);
             }
             else{
                 $TabTech = $this->TM->list();

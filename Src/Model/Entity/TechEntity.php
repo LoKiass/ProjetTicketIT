@@ -10,11 +10,16 @@ class TechEntity
     private string $Prenom;
     private string $Email;
     private bool $Actif;
-
-    // private FonctionEntity $Fonction[];
-    // private JobEntity $Job[]
+    private array $Fonction;
     public function __construct()
     {
+        $this->Pk = 0;
+        $this->Fk_equipe = 0;
+        $this->Nom = "";
+        $this->Prenom = "";
+        $this->Email = "";
+        $this->Actif = false;
+        $this->Fonction = array();
     }
 
     // Getter & setter
@@ -55,7 +60,13 @@ class TechEntity
     {
         $this->Actif = $Actif;
     }
+    public function setFonctions(array $fonctions): void {
+        $this->Fonction = $fonctions;
+    }
 
+    public function getFonctions(): array {
+        return $this->Fonction;
+    }
     public static function fromArray(array $data) : TechEntity
     {
         $instance = new self();

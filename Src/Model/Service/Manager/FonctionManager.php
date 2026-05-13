@@ -123,4 +123,22 @@ class FonctionManager
             throw new DatabaseException("Le lien n'a pas pu être vérifié", 0, $e);
         }
     }
+
+    public function listByTech(int $Pk): array
+    {
+        $statement = "SELECT f.* 
+            FROM fonction f
+            INNER JOIN fonction_tech ft ON f.Pk_Fonction = ft.Fk_Fonction
+            WHERE ft.Fk_Tech = ?";
+
+        $query = $this->pdb->prepare($statement);
+        $query->execute([$Pk]);
+
+        $TabFonction = array();
+
+        while($record = $query->fetch()){
+            $TabFonction[] = FonctionEntity::fromArray($record);
+        }
+        return $TabFonction;
+    }
 }

@@ -46,6 +46,24 @@
                     </div>
                 </div>
 
+                <div class="row mb-4 align-items-top">
+                    <span class="col-sm-3 col-form-label fw-medium">Fonctions</span>
+                    <div class="col-sm-9">
+                        <div class="d-flex flex-wrap gap-2 pt-2">
+                            {% for fonction in TechEntity.getFonctions %}
+                                <span class="badge rounded-pill bg-info text-dark border">
+                    <i class="bi bi-gear-fill me-1"></i>
+                    {{ fonction.getDescr }}
+                </span>
+                            {% else %}
+                                <p class="form-control-plaintext text-muted italic small">
+                                    Aucune fonction assignée
+                                </p>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
                 <div class="row">
                     <div class="col-12 text-center">
                         <a class="btn btn-dark px-4" href="getTech">Retour</a>

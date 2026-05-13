@@ -79,31 +79,30 @@ class FonctionManager
     }
 
     public function delete(int $pk) : void {
-        try{
-            $this->checkLink($pk); // Verifier l'existence d'un lien entre la fonction et un technicien
+        try {
+            $this->checkLink($pk);
 
             $query = $this->pdb->prepare("DELETE FROM fonction WHERE Pk_Fonction = ?");
             $query->execute([$pk]);
-            if($query->rowCount() === 0){
+
+            if ($query->rowCount() === 0) {
                 throw new NotFoundException("La fonction n'existe pas");
             }
-
-        } catch (PDOException $e){
-            throw new DatabaseException("Erreur lors de l'authentification", 0);
+        } catch (PDOException $e) {
+            throw new DatabaseException("Erreur lors de la suppression", 0, $e);
         }
     }
-    public function checkLink(int $pk) : void{
-        try{
-            $query = $this->pdb->prepare("
-            SELECT COUNT(*) FROM fonction_tech WHERE Fk_Fonction = ? "
-            );
 
+    public function checkLink(int $pk) : void {
+        try {
+            $query = $this->pdb->prepare("SELECT COUNT(*) FROM fonction_tech WHERE Fk_Fonction = ?");
             $query->execute([$pk]);
-            if($query->fetchColumn() > 0){
-                throw new LinkExistBetween("Un liens existe entre la fonction et un téchniciens");
+
+            if ($query->fetchColumn() > 0) {
+                throw new LinkExistBetween("Un lien existe entre la fonction et un technicien");
             }
-        } catch (PDOException $e){
-            throw new DatabaseException("Le liens n'a pas pue être verifier", 0);
+        } catch (PDOException $e) {
+            throw new DatabaseException("Le lien n'a pas pu être vérifié", 0, $e);
         }
     }
 }

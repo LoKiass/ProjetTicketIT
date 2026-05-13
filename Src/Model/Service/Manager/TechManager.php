@@ -72,7 +72,7 @@ class TechManager
     /*
      * Cette méthode permet de créé un technicien en BDD
      */
-    public function create($entity) : void {
+    public function create($entity) : int {
        try{
            $query = "INSERT INTO tech (Nom, Pren, Email, Actif) VALUES (?, ?, ?, ?)";
 
@@ -87,6 +87,8 @@ class TechManager
            if ($query->rowCount() === 0){
                 throw new NotCreatedInDatabase("Le techniciens n'a pas été crée", 0);
            }
+
+           return (int)$this->pdb->lastInsertId();
        } catch (\PDOException $e){
             throw new DatabaseException($e->getMessage(), 0);
        }
@@ -123,6 +125,19 @@ class TechManager
             ]);
         } catch (\PDOException $e) {
             throw new DatabaseException($e->getMessage(), 0);
+        }
+    }
+    public function LinkToFunction(int $Pk_Tech, int $Pk_Fonction) : void {
+        try{
+            $query = "INSERT INTO fonction_tech (Fk_Tech, Fk_Fonction) VALUES (?, ?)";
+            $query = $this->pdb->prepare($query);
+
+            $query->execute([$Pk_Tech, $Pk_Fonction]);
+            if ($query->rowCount() === 0){
+                throw new NotFoundException("Le technicien n'existe pas ou la fonction n'existe pas");
+            }
+        } catch (\PDOException $e){
+            throw new DatabaseException("Erreur lors de l'insertion dans la table tech_fonction");
         }
     }
 }

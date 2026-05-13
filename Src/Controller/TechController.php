@@ -3,6 +3,7 @@
 namespace DISEUMAT\Controller;
 
 use DISEUMAT\Model\Entity\TechEntity;
+use DISEUMAT\Model\Service\Manager\FonctionManager;
 use DISEUMAT\Model\Service\Manager\TechManager;
 use DISEUMAT\Exception\NotFoundException;
 use DISEUMAT\Exception\DatabaseException;
@@ -12,9 +13,11 @@ use DISEUMAT\Exception\NotCreatedInDatabase;
 class TechController extends BaseController
 {
     private TechManager $TM;
+    private FonctionManager $FM; // Pour lectutre fonction
 
     public function __construct(){
         $this->TM = new TechManager();
+        $this->FM = new FonctionManager();
         parent::__construct();
     }
 
@@ -53,25 +56,40 @@ class TechController extends BaseController
      */
     public function createTech() : void {
         $this->requireLogin();
-        try{
-            if (isset($_POST['Pren'])){
+        try {
+            if (isset($_POST['Pren'])) {
                 $_POST['Pk_Tech'] = $_POST['Pk_Tech'] ?? 0;
                 $_POST['Actif'] = $_POST['Actif'] ?? 0;
 
                 $tempTech = TechEntity::fromArray($_POST);
 
-                if(!$tempTech){
+                if (!$tempTech) {
                     header("HTTP/1.0 404 Not Found");
+                    exit;
                 }
 
-                $this->TM->create($tempTech);
-                echo $this->TemplateEngine->render("Tech/CreateTech.twig", ['success' => true]);
+                // 1. On récupère directement l'ID (entier) renvoyé par le manager
+                $techId = $this->TM->create($tempTech);
+
+                // 2. On utilise cet entier directement pour la liaison
+                if (isset($_POST['fonctions']) && is_array($_POST['fonctions'])) {
+                    foreach ($_POST['fonctions'] as $idFonction) {
+                        // Pas de ->getPk() ici, $techId est déjà l'ID !
+                        $this->TM->LinkToFunction($techId, $idFonction);
+                    }
+                }
+
+                $TabFonction = $this->FM->list();
+                echo $this->TemplateEngine->render("Tech/CreateTech.twig", ['success' => true, 'TabFonction' => $TabFonction]);
+            } else {
+                $TabFonction = $this->FM->list();
+                echo $this->TemplateEngine->render("Tech/CreateTech.twig", ['TabFonction' => $TabFonction]);
             }
-            else{
-                echo $this->TemplateEngine->render("Tech/CreateTech.twig", ['success' => null]);
-            }
-        } catch (DatabaseException|NotCreatedInDatabase $e){
-            echo $this->TemplateEngine->render("Tech/CreateTech.twig", ['success' => false, 'error' => $e->getMessage()]);
+        } catch (DatabaseException|NotCreatedInDatabase $e) {
+            echo $this->TemplateEngine->render("Tech/CreateTech.twig", [
+                'success' => false,
+                'error' => $e->getMessage()
+            ]);
         }
     }
 

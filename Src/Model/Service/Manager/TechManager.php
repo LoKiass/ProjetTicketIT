@@ -129,15 +129,21 @@ class TechManager
     }
     public function LinkToFunction(int $Pk_Tech, int $Pk_Fonction) : void {
         try{
-            $query = "INSERT INTO fonction_tech (Fk_Tech, Fk_Fonction) VALUES (?, ?)";
+            $query = "INSERT IGNORE INTO fonction_tech (Fk_Tech, Fk_Fonction) VALUES (?, ?)";
             $query = $this->pdb->prepare($query);
-
             $query->execute([$Pk_Tech, $Pk_Fonction]);
-            if ($query->rowCount() === 0){
-                throw new NotFoundException("Le technicien n'existe pas ou la fonction n'existe pas");
-            }
+
         } catch (\PDOException $e){
             throw new DatabaseException("Erreur lors de l'insertion dans la table tech_fonction");
+        }
+    }
+    public function unlinkAllFunctions(int $Pk_Tech) : void {
+        try{
+            $query = "DELETE FROM fonction_tech WHERE Fk_Tech = ?";
+            $query = $this->pdb->prepare($query);
+            $query->execute([$Pk_Tech]);
+        } catch (\PDOException $e){
+            throw new DatabaseException("Erreur lors de la suppression des fonctions du technicien");
         }
     }
 }

@@ -35,21 +35,54 @@
                             <input type="text" name="Email" id="Email" value="{{ TechEntity.getEmail() }}">
                         </div>
                     </div>
-
-                    <div class="row mb-4">
-                        <div class="col-sm-9 offset-sm-3">
-                            <div class="form-check">
-                                <label for="Actif"> Actif
-                                    <input class="form-check-input" type="checkbox" name="Actif" id="Actif" value="1" {{ TechEntity.getActif() ? 'checked' : '' }}>
-                                </label>
+                    <div class="row mb-3 align-items-center">
+                        <label class="col-sm-3 col-form-label fw-medium">Fonctions</label>
+                        <div class="col-sm-9">
+                            <div class="dropdown">
+                                <button class="btn btn-outline-secondary dropdown-toggle w-100 text-start"
+                                        type="button"
+                                        data-bs-toggle="dropdown"
+                                        data-bs-auto-close="outside">
+                                    Choisir les fonctions...
+                                </button>
+                                <ul class="dropdown-menu p-3 w-100">
+                                    {% for fonction in TabFonction %}
+                                        <li>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" name="fonctions[]" value="{{ fonction.getPk() }}" id="f_{{ fonction.getPk() }}"
+                                                        {% set isChecked = false %}
+                                                        {% for userFonction in TechEntity.getFonctions() %}
+                                                            {% if userFonction.getPk() == fonction.getPk() %}
+                                                                {% set isChecked = true %}
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                        {{ isChecked ? 'checked' : '' }}
+                                                >
+                                                <label class="form-check-label w-100" for="f_{{ fonction.getPk() }}">
+                                                    {{ fonction.getDescr() }}
+                                                </label>
+                                            </div>
+                                        </li>
+                                    {% else %}
+                                        <li class="text-muted small ps-2">Aucune fonction disponible</li>
+                                    {% endfor %}
+                                </ul>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-12 text-center d-flex justify-content-center gap-2">
-                            <button class="btn btn-dark px-4" type="submit">Envoyer</button>
-                            <a class="btn btn-dark px-4" href="getTech">Retour</a>
+                        <div class="row mb-4">
+                            <div class="col-sm-9 offset-sm-3">
+                                <div class="form-check">
+                                    <label for="Actif"> Actif
+                                        <input class="form-check-input" type="checkbox" name="Actif" id="Actif" value="1" {{ TechEntity.getActif() ? 'checked' : '' }}>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row-cols-sm-5 p-4">
+                            <div class="col-12 text-center d-flex justify-content-center gap-2">
+                                <button class="btn btn-dark px-4" type="submit">Envoyer</button>
+                                <a class="btn btn-dark px-4" href="getTech">Retour</a>
+                            </div>
                         </div>
                     </div>
 

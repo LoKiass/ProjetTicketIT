@@ -72,13 +72,10 @@ class TechController extends BaseController
                     exit;
                 }
 
-                // 1. On récupère directement l'ID (entier) renvoyé par le manager
                 $techId = $this->TM->create($tempTech);
 
-                // 2. On utilise cet entier directement pour la liaison
                 if (isset($_POST['fonctions']) && is_array($_POST['fonctions'])) {
                     foreach ($_POST['fonctions'] as $idFonction) {
-                        // Pas de ->getPk() ici, $techId est déjà l'ID !
                         $this->TM->LinkToFunction($techId, $idFonction);
                     }
                 }
@@ -114,11 +111,25 @@ class TechController extends BaseController
                     $_POST['Actif'] = $_POST['Actif'] ?? 0;
 
                     $this->TM->update(TechEntity::fromArray($_POST));
+                    $this->TM->unlinkAllFunctions($pk);
+
+
+                    if (isset($_POST['fonctions']) && is_array($_POST['fonctions'])) {
+                        foreach ($_POST['fonctions'] as $idFonction) {
+                            $this->TM->LinkToFunction($pk, $idFonction);
+                        }
+                    }
+
                     header('Location: getTech?success=true');
                 }
                 else if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                     $tempTech = $this->TM->read($_GET['Pk']);
-                    echo $this->TemplateEngine->render("Tech/UpdateTech.twig", ['TechEntity' => $tempTech]);
+                    $userFonction = $this->FM->listByTech($_GET['Pk']);
+                    $tempTech->setFonctions($userFonction);
+                    echo $this->TemplateEngine->render("Tech/UpdateTech.twig",
+                        ['TechEntity' => $tempTech
+                        , 'TabFonction' => $this->FM->list()]
+                    );
                 }
             }
         } catch (NotFoundException|DatabaseException $e){

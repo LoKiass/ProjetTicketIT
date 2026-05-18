@@ -28,4 +28,11 @@ return [
     'createFonction' => ['Fonction' => 'createFonction'],
     'updateFonction' => ['Fonction' => 'updateFonction'],
     'deleteFonction' => ['Fonction' => 'deleteFonction'],
+    /*
+     * Partie Jobs
+     */
+    'getJob' => ['Job' => 'getJob'],
+    'createJob' => ['Job' => 'createJob'],
+    'updateJob' => ['Job' => 'updateJob'],
+    'deleteJob' => ['Job' => 'deleteJob'],
 ];

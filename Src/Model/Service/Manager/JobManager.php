@@ -31,7 +31,7 @@ class JobManager
             }
 
             if(empty($TabJob)){
-                throw new NotFoundException("Aucun jobs trouver au niveau de la BDD");
+                return [];
             }
 
             return $TabJob;

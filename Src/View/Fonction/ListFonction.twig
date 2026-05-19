@@ -21,6 +21,9 @@
                 {% if errorMessage is defined and errorMessage is not null%}
                     <div class="alert alert-danger">{{ errorMessage }}</div>
                 {% endif %}
+                {% if TabFonction is empty %}
+                    <div class="alert alert-danger">Aucune fonction encore enregistré</div>
+                {% endif %}
 
                 {% if TabFonction is not null %}
                     <div class="table-responsive">

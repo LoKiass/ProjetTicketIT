@@ -22,6 +22,9 @@
                 {% if successMessage is defined and successMessage != null %}
                     <div class="alert alert-success">{{ successMessage }}</div>
                 {% endif %}
+                {% if TabTech is empty %}
+                    <div class="alert alert-danger">Aucun téchniciens encore enregistré </div>
+                {% endif %}
 
 
                 {% if TabTech is not null %}
@@ -52,7 +55,7 @@
                                     </td>
                                     <td class="fw-semibold">
                                         {% for fonction in tech.getFonctions() %}
-                                            <span class="badge bg-info me-1">
+                                            <span class="badge bg-warning">
                                                 {{ fonction.Descr }}
                                             </span>
                                         {% else %}

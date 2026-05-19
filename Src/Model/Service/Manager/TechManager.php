@@ -76,7 +76,7 @@ class TechManager
             }
 
             if (empty($TabTech)) {
-                throw new NotFoundException("La liste est vide ou aucun technicien n'existe");
+                return [];
             }
 
             return $TabTech;

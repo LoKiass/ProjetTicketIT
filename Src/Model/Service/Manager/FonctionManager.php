@@ -63,7 +63,7 @@ class FonctionManager
             }
 
             if (empty($TabFunction)) {
-                throw new NotFoundException("La liste est vide ou aucune fonction n'existe");
+                return [];
             }
 
             return $TabFunction;

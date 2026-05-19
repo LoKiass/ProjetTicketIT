@@ -23,7 +23,7 @@
                         <label for="Fk_Project" class="col-sm-3 col-form-label fw-medium">Projet Associer</label>
                         <div class="col-sm-9">
                             <input type="text" name="Fk_Project" id="Fk_Project" class="form-control"
-                                   value="{{ JobEntity.getFk_project() }}">
+                                   value="{{ JobEntity.getFk_project() }}" required>
                         </div>
                     </div>
 
@@ -31,7 +31,7 @@
                         <label for="Titre" class="col-sm-3 col-form-label fw-medium">Titre</label>
                         <div class="col-sm-9">
                             <input type="text" name="Titre" id="Titre" class="form-control"
-                                   value="{{ JobEntity.getTitre() }}">
+                                   value="{{ JobEntity.getTitre() }}" required>
                         </div>
                     </div>
 
@@ -39,7 +39,7 @@
                         <label for="Dscr" class="col-sm-3 col-form-label fw-medium">Description</label>
                         <div class="col-sm-9">
                             <input type="text" name="Dscr" id="Dscr" class="form-control"
-                                   value="{{ JobEntity.getDscr() }}">
+                                   value="{{ JobEntity.getDscr() }}" required>
                         </div>
                     </div>
 
@@ -48,7 +48,7 @@
                         <label for="Status" class="col-sm-3 col-form-label fw-medium">Status</label>
                         <div class="col-sm-9">
                             <input type="text" name="Status" id="Status" class="form-control"
-                                   value="{{ JobEntity.getStatus() }}">
+                                   value="{{ JobEntity.getStatus() }}" required>
                         </div>
                     </div>
 
@@ -56,7 +56,7 @@
                         <label for="Prior" class="col-sm-3 col-form-label fw-medium">Priorité</label>
                         <div class="col-sm-9">
                             <input type="text" name="Prior" id="Prior" class="form-control"
-                                   value="{{ JobEntity.getPrior() }}">
+                                   value="{{ JobEntity.getPrior() }}" required>
                         </div>
                     </div>
 
@@ -64,7 +64,7 @@
                         <label for="Dstart" class="col-sm-3 col-form-label fw-medium">Date début</label>
                         <div class="col-sm-9">
                             <input type="date" name="Dstart" id="Dstart" class="form-control"
-                                   value="{{ JobEntity.getDstart() }}">
+                                   value="{{ JobEntity.getDstart() }}" required>
                         </div>
                     </div>
 
@@ -72,7 +72,7 @@
                         <label for="Dech" class="col-sm-3 col-form-label fw-medium">Date échéance</label>
                         <div class="col-sm-9">
                             <input type="date" name="Dech" id="Dech" class="form-control"
-                                   value="{{ JobEntity.getDech() }}">
+                                   value="{{ JobEntity.getDech() }}" required>
                         </div>
                     </div>
 
@@ -80,7 +80,7 @@
                         <label for="Dclot" class="col-sm-3 col-form-label fw-medium">Date clôture</label>
                         <div class="col-sm-9">
                             <input type="date" name="Dclot" id="Dclot" class="form-control"
-                                   value="{{ JobEntity.getDclot() }}">
+                                   value="{{ JobEntity.getDclot() }}" required>
                         </div>
                     </div>
 

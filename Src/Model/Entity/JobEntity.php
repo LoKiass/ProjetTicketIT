@@ -2,6 +2,8 @@
 
 namespace DISEUMAT\Model\Entity;
 
+use DISEUMAT\Exception\MissingInformation;
+
 class JobEntity
 {
     private int $pk;
@@ -33,9 +35,6 @@ class JobEntity
     public function getFk_project(): int{
         return $this->Fk_project;
     }
-    public function getParent(): int{
-        return $this->Parent;
-    }
     public function getTitre(): string{
         return $this->Titre;
     }
@@ -60,7 +59,8 @@ class JobEntity
     public function getTech(): array{
         return $this->Techs;
     }
-    public function setPk(int $Pk){
+    public function setPk(?int $Pk) : void{ // Dans le cas de la créations d'un job, il n'y a pas de PK
+        if ($Pk == 0) return;
         $this->pk = $Pk;
     }
     public function setFk_project(int $Fk_project){
@@ -92,19 +92,23 @@ class JobEntity
     }
 
     public static function fromArray(array $data) : JobEntity{
-        $instance = new self();
+        try{
+            $instance = new self();
 
-        $instance->setPk($data['Pk_Job'] ?? null);
-        $instance->setFk_project($data['Fk_Project'] ?? null);
-        $instance->setTitre($data['Titre'] ?? null);
-        $instance->setStatus($data['Status'] ?? null);
-        $instance->setPrior($data['Prior'] ?? null);
-        $instance->setDscr($data['Dscr'] ?? null);
-        $instance->setDstart($data['Dstart'] ?? null);
-        $instance->setDech($data['Dech'] ?? null);
-        $instance->setDclot($data['Dclot'] ?? null);
+            $instance->setPk($data['Pk_Job'] ?? null);
+            $instance->setFk_project($data['Fk_Project']);
+            $instance->setTitre($data['Titre']);
+            $instance->setStatus($data['Status']);
+            $instance->setPrior($data['Prior']);
+            $instance->setDscr($data['Dscr']);
+            $instance->setDstart($data['Dstart']);
+            $instance->setDech($data['Dech']);
+            $instance->setDclot($data['Dclot']);
 
-        return $instance;
+            return $instance;
+        } catch (\Throwable $e){
+            throw new MissingInformation("Des informations sont manquantes !");
+        }
     }
 
 }

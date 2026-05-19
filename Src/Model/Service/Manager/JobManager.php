@@ -8,6 +8,7 @@ use DISEUMAT\Exception\NotCreatedInDatabase;
 use DISEUMAT\Exception\NotFoundException;
 use DISEUMAT\Model\Entity\JobEntity;
 use PDO;
+use PDOException;
 
 class JobManager
 {
@@ -35,7 +36,7 @@ class JobManager
 
             return $TabJob;
         } catch (\PDOException $e){
-            throw new DatabaseException("Erreur lors l'authentification");
+            throw new DatabaseException("Erreur lors de la lecture de la liste des jobs");
         }
     }
     /*
@@ -136,7 +137,7 @@ class JobManager
                 $entity->getPk()
             ]);
         } catch (\PDOException $e) {
-            throw new DatabaseException($e->getMessage(), 0);
+            throw new DatabaseException("Erreur lors de l'update", 0);
         }
     }
     /*

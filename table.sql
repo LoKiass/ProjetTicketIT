@@ -67,3 +67,7 @@ CREATE TABLE User (
 
 -- Utilisateur admin de base
 INSERT INTO User VALUES ('admin', '', 'admin', true);
+
+SELECT * FROM tech as t
+INNER JOIN tech_jobs ft ON t.Pk_Tech = ft.fk_tech
+WHERE ft.Fk_Job = 1

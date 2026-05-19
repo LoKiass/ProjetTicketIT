@@ -1,5 +1,5 @@
 {% extends 'baseTemplate.twig' %}
-{% block pagetitle %}TicketSystem - Création technicien{% endblock %}
+{% block pagetitle %}TicketSystem - Modification Jobs{% endblock %}
 {% block navbar %}
     {% include 'Navbar/Navbar.twig' %}
 {% endblock%}
@@ -9,104 +9,109 @@
             <div class="card-body p-4">
                 <div class="mb-4">
                     <h1 class="h4 fw-semibold mb-1">
-                        <i class="bi bi-shield-check me-2"></i>Création d'un jobs
+                        <i class="bi bi-shield-check me-2"></i>Modification Jobs
                     </h1>
                     <p class="text-muted small mb-0">Veuillez fournir toutes les informations ci-dessous</p>
                 </div>
 
                 <form method="post">
                     <div class="row mb-3 align-items-center">
-                        <label for="Fk_Project" class="col-sm-3 col-form-label fw-medium">Fk_Project</label>
+                        <label for="Fk_Project" class="col-sm-3 col-form-label fw-medium">Projet Associer</label>
                         <div class="col-sm-9">
-                            <input type="text" name="Fk_Project" id="Fk_Project" class="form-control">
+                            <input type="text" name="Fk_Project" id="Fk_Project" class="form-control" value="{{ JobEntity.getFk_project() }}">
                         </div>
                     </div>
                     <div class="row mb-3 align-items-center">
                         <label for="Titre" class="col-sm-3 col-form-label fw-medium">Titre</label>
                         <div class="col-sm-9">
-                            <input type="text" name="Titre" id="Titre" class="form-control">
+                            <input type="text" name="Titre" id="Titre" class="form-control" value="{{ JobEntity.getTitre() }}">
                         </div>
                     </div>
                     <div class="row mb-3 align-items-center">
                         <label for="Dscr" class="col-sm-3 col-form-label fw-medium">Description</label>
                         <div class="col-sm-9">
-                            <input type="text" name="Dscr" id="Dscr" class="form-control">
+                            <input type="text" name="Dscr" id="Dscr" class="form-control" value="{{ JobEntity.getDscr() }}">
                         </div>
                     </div>
+                    // LISTE DEROULANTE ? 
                     <div class="row mb-3 align-items-center">
                         <label for="Status" class="col-sm-3 col-form-label fw-medium">Status</label>
                         <div class="col-sm-9">
-                            <input type="text" name="Status" id="Status" class="form-control">
+                            <input type="text" name="Status" id="Status" class="form-control" value="{{ JobEntity.getStatus() }}">
                         </div>
                     </div>
                     <div class="row mb-3 align-items-center">
                         <label for="Prior" class="col-sm-3 col-form-label fw-medium">Priorité</label>
                         <div class="col-sm-9">
-                            <input type="text" name="Prior" id="Prior" class="form-control">
+                            <input type="text" name="Prior" id="Prior" class="form-control" value="{{ JobEntity.getPrior() }}">
                         </div>
                     </div>
                     <div class="row mb-3 align-items-center">
                         <label for="Dstart" class="col-sm-3 col-form-label fw-medium">Date début</label>
                         <div class="col-sm-9">
-                            <input type="date" name="Dstart" id="Dstart" class="form-control">
+                            <input type="date" name="Dstart" id="Dstart" class="form-control" value="{{ JobEntity.getDstart() }}">
                         </div>
                     </div>
                     <div class="row mb-3 align-items-center">
                         <label for="Dech" class="col-sm-3 col-form-label fw-medium">Date échehance</label>
                         <div class="col-sm-9">
-                            {# Changement du type "text" en "date" #}
-                            <input type="date" name="Dech" id="Dech" class="form-control">
+                            <input type="date" name="Dech" id="Dech" class="form-control" value="{{ JobEntity.getDech() }}">
                         </div>
                     </div>
                     <div class="row mb-3 align-items-center">
                         <label for="Dclot" class="col-sm-3 col-form-label fw-medium">Date clôture</label>
                         <div class="col-sm-9">
-                            <input type="date" name="Dclot" id="Dclot" class="form-control">
+                            <input type="date" name="Dclot" id="Dclot" class="form-control" value="{{ JobEntity.getDclot() }}">
                         </div>
                     </div>
-
-
                     <div class="row mb-3 align-items-center">
-                        <label class="col-sm-3 col-form-label fw-medium">Techs</label>
+                        <label class="col-sm-3 col-form-label fw-medium">Technicien</label>
                         <div class="col-sm-9">
                             <div class="dropdown">
                                 <button class="btn btn-outline-secondary dropdown-toggle w-100 text-start"
                                         type="button"
                                         data-bs-toggle="dropdown"
                                         data-bs-auto-close="outside">
-                                    Choisir les téchniciens
+                                    Choisir les technicien...
                                 </button>
                                 <ul class="dropdown-menu p-3 w-100">
-                                    {% for Techs in TabTech %}
+                                    {% for tech in TabTech %}
                                         <li>
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" name="Tech[]" value="{{ Techs.getPk() }}" id="f_{{ Techs.getPk() }}">
-                                                <label class="form-check-label w-100" for="f_{{ Techs.getPk() }}">
-                                                    {{ Techs.getNom() }}
+                                                <input class="form-check-input" type="checkbox" name="tech[]" value="{{ tech.getPk() }}" id="f_{{ tech.getPk() }}"
+                                                        {% set isChecked = false %}
+                                                        {% for jobsTech in JobEntity.getTech() %}
+                                                            {% if jobsTech.getPk() == tech.getPk() %}
+                                                                {% set isChecked = true %}
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                        {{ isChecked ? 'checked' : '' }}
+                                                >
+                                                <label class="form-check-label w-100" for="f_{{ tech.getPk() }}">
+                                                    {{ tech.getNom() }}
                                                 </label>
                                             </div>
                                         </li>
                                     {% else %}
-                                        <li class="text-muted small ps-2">Aucune Techs disponible</li>
+                                        <li class="text-muted small ps-2">Aucune fonction disponible</li>
                                     {% endfor %}
                                 </ul>
                             </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-12 text-center d-flex justify-content-center gap-2">
-                            <button class="btn btn-dark px-4" type="submit">Envoyer</button>
-                            <a class="btn btn-dark px-4" href="getTech">Retour</a>
+
+                        <div class="row-cols-sm-5 p-4">
+                            <div class="col-12 text-center d-flex justify-content-center gap-2">
+                                <button class="btn btn-dark px-4" type="submit">Envoyer</button>
+                                <a class="btn btn-dark px-4" href="getJob">Retour</a>
+                            </div>
                         </div>
                     </div>
+
                     <div class="mt-4 text-center">
                         {% if error is defined and error %}
                             <p class="text-danger">ERREUR : {{ error }}</p>
-                        {% elseif success is defined and success %}
-                            <p class="text-success text-center bg-light p-1">Technicien crée avec succès</p>
                         {% endif %}
                     </div>
-
                 </form>
             </div>
         </div>

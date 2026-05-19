@@ -4,6 +4,7 @@ namespace DISEUMAT\Model\Service\Manager;
 use DISEUMAT\Exception\DatabaseException;
 use DISEUMAT\Exception\NotCreatedInDatabase;
 use DISEUMAT\Exception\NotFoundException;
+use DISEUMAT\Model\Entity\FonctionEntity;
 use DISEUMAT\Model\Entity\TechEntity;
 
 class TechManager
@@ -144,6 +145,28 @@ class TechManager
             $query->execute([$Pk_Tech]);
         } catch (\PDOException $e){
             throw new DatabaseException("Erreur lors de la suppression des fonctions du technicien");
+        }
+    }
+
+    public function listByJob(int $Pk): array
+    {
+        try{
+            $statement = "SELECT t.* 
+            FROM tech t
+            INNER JOIN tech_jobs ft ON t.Pk_Tech = ft.fk_tech
+            WHERE ft.Fk_Job = ?";
+
+            $query = $this->pdb->prepare($statement);
+            $query->execute([$Pk]);
+
+            $TabTech = array();
+
+            while($record = $query->fetch()){
+                $TabTech[] = TechEntity::fromArray($record);
+            }
+            return $TabTech;
+        } catch (PDOException $e){
+            throw new DatabaseException("Erreur lors de l'authentifications");
         }
     }
 }

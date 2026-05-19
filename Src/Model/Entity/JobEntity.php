@@ -57,7 +57,7 @@ class JobEntity
     public function getDclot(): string{
         return $this->Dclot;
     }
-    public function getTechs(): array{
+    public function getTech(): array{
         return $this->Techs;
     }
     public function setPk(int $Pk){
@@ -87,8 +87,8 @@ class JobEntity
     public function setDclot(string $Dclot){
         $this->Dclot = $Dclot;
     }
-    public function addTech(TechEntity $Tech){
-        $this->Techs[] = $Tech;
+    public function setTech(array $Tech){
+        $this->Techs = $Tech;
     }
 
     public static function fromArray(array $data) : JobEntity{

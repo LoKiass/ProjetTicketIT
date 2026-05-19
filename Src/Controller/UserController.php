@@ -12,13 +12,16 @@ use DISEUMAT\Exception\MissingInformation;
 use DISEUMAT\Exception\NotFoundException;
 use DISEUMAT\Model\Entity\UserEntity as UserEntity;
 use DISEUMAT\Model\Service\Manager\UserManager;
+use DISEUMAT\Model\Service\Session\UserSession;
 
 class UserController extends BaseController
 {
     private UserManager $UM;
+    private UserSession $US;
 
     public function __construct(){
         $this->UM = new UserManager();
+        $this->US = new UserSession();
         parent::__construct();
     }
 
@@ -43,11 +46,7 @@ class UserController extends BaseController
 
                 $userFromDb = $this->UM->checkUser($userTmp);
 
-                $_SESSION['userLogged'] = [
-                    'Login'  => $userFromDb->getLogin(),
-                    'Statut' => $userFromDb->getStatut(),
-                    'Actif'  => $userFromDb->getActif(),
-                ];
+                $this->US->create($userFromDb);
 
                 header("Location: formAccueil");
 

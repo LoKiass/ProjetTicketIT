@@ -16,4 +16,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
+<footer class="text-center">
+    {% block footer %}Connecté en temps que : {{ userLogged.Login }}{% endblock %}
+</footer>
 </html>

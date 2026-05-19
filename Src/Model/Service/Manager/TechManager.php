@@ -42,30 +42,46 @@ class TechManager
 
     /*
      * Cette methode permet de lire tous les technicien de la BDD
+     * Et de recuper leurs fonctions relatifs
      */
     public function list() : array {
-        try{
-            $query = <<< SQL
+        try {
+            // Recuperer tous les technicien
+            $sqlTech = <<< SQL
             SELECT Pk_Tech, Nom, Pren, Email, Actif
             FROM tech;
         SQL;
+            $stmtTech = $this->pdb->prepare($sqlTech);
+            $stmtTech->execute();
 
-            $query = $this->pdb->prepare($query);
-            $query->execute();
+            // Recuperer les fonctions relatifs aux technicien
+            $sqlFonctions = <<< SQL
+            SELECT f.Pk_Fonction, f.Descr
+            FROM fonction f
+            INNER JOIN fonction_tech ft ON f.Pk_Fonction = ft.Fk_Fonction
+            WHERE ft.Fk_Tech = ?; 
+        SQL;
+            $stmtFonctions = $this->pdb->prepare($sqlFonctions);
 
             $TabTech = array();
-            while ($record = $query->fetch())
-            {
+            while ($record = $stmtTech->fetch()) {
                 $tempTech = TechEntity::fromArray($record);
-                $TabTech[] = clone $tempTech;
+
+                $stmtFonctions->execute([$record['Pk_Tech']]);
+                $tabFonctionsTech = $stmtFonctions->fetchAll();
+
+                $tempTech->setFonctions($tabFonctionsTech);
+
+                $TabTech[] = $tempTech;
             }
 
-            if (empty($TabTech)){
+            if (empty($TabTech)) {
                 throw new NotFoundException("La liste est vide ou aucun technicien n'existe");
             }
 
             return $TabTech;
-        }catch (\PDOException $e){
+
+        } catch (\PDOException $e) {
             throw new DatabaseException($e->getMessage(), 0);
         }
     }

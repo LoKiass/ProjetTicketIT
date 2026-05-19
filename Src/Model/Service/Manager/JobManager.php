@@ -4,6 +4,7 @@ namespace DISEUMAT\Model\Service\Manager;
 
 use DISEUMAT\Exception\DatabaseException;
 use DISEUMAT\Exception\LinkExistBetween;
+use DISEUMAT\Exception\NotCreatedInDatabase;
 use DISEUMAT\Exception\NotFoundException;
 use DISEUMAT\Model\Entity\JobEntity;
 use PDO;
@@ -11,37 +12,82 @@ use PDO;
 class JobManager
 {
     private $pdb;
+
     public function __construct(){
         $this->pdb = DBManager::getInstance();
     }
+    /*
+     * Permet de de lire la liste des jobs en BDD, pour les afficher dans le menu prévue à cette effet
+     */
     public function list() : array {
-        $query = $this->pdb->prepare("SELECT * FROM Job");
-        $query->execute();
+        try{
+            $query = $this->pdb->prepare("SELECT * FROM Job");
+            $query->execute();
 
-        $TabJob = array();
-        while ($record = $query->fetch(PDO::FETCH_ASSOC)){
-            $TabJob[] = JobEntity::fromArray($record);
+            $TabJob = array();
+            while ($record = $query->fetch(PDO::FETCH_ASSOC)){
+                $TabJob[] = JobEntity::fromArray($record);
+            }
+
+            if(empty($TabJob)){
+                throw new NotFoundException("Aucun jobs trouver au niveau de la BDD");
+            }
+
+            return $TabJob;
+        } catch (\PDOException $e){
+            throw new DatabaseException("Erreur lors l'authentification");
         }
-        return $TabJob;
     }
+    /*
+     * Permet de lire un jobs, avec la pk fournite
+     */
     public function read(int $pk){
-        $query = $this->pdb->prepare("SELECT * FROM Job WHERE Pk_Job = ?");
-        $query->execute([$pk]);
+        try{
+            $query = $this->pdb->prepare("SELECT * FROM Job WHERE Pk_Job = ?");
+            $query->execute([$pk]);
 
-        return JobEntity::fromArray($query->fetch(PDO::FETCH_ASSOC));
+            if ($query->rowCount() === 0){
+                throw new NotFoundException("Le job n'existe pas");
+            }
+
+            return JobEntity::fromArray($query->fetch(PDO::FETCH_ASSOC));
+        } catch (\PDOException $e){
+            throw new DatabaseException("Erreur lors de la lecture du job");
+        }
     }
-
+    /*
+     * Permet de crée un job en BDD
+     */
     public function create(JobEntity $jobEntity) : int {
-        $query = $this->pdb->prepare("INSERT INTO Job (Fk_Project, Titre, Status, Prior, Dstart, Dech, Dclot, Dscr) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-        $query->execute([$jobEntity->getFk_project(), $jobEntity->getTitre(), $jobEntity->getStatus(), $jobEntity->getPrior(), $jobEntity->getDstart(), $jobEntity->getDech(), $jobEntity->getDclot(), $jobEntity->getDscr()]);
+       try{
+           $query = $this->pdb->prepare("INSERT INTO Job (Fk_Project, Titre, Status, Prior, Dstart, Dech, Dclot, Dscr) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+           $query->execute([$jobEntity->getFk_project(), $jobEntity->getTitre(), $jobEntity->getStatus(), $jobEntity->getPrior(), $jobEntity->getDstart(), $jobEntity->getDech(), $jobEntity->getDclot(), $jobEntity->getDscr()]);
 
-        return (int)$this->pdb->lastInsertId();
+           if ($query->rowCount() === 0){
+               throw new NotCreatedInDatabase("Le jobs n'a pas été crée en base de donné");
+           }
+
+           return (int)$this->pdb->lastInsertId();
+       } catch (\PDOException $e){
+           throw new DatabaseException("Erreur lors de l'authentification");
+       }
     }
 
+    /*
+     * Permet de lier un téchniciens à un jobs en BDD, via la table de jointure tech_jobs
+     */
     public function linkToTech(int $Pk_Job, int $Pk_Tech) : void {
-        $query = $this->pdb->prepare("INSERT INTO tech_jobs (Fk_Job, Fk_Tech) VALUES (?, ?)");
-        $query->execute([$Pk_Job, $Pk_Tech]);
+        try{
+            $query = $this->pdb->prepare("INSERT INTO tech_jobs (Fk_Job, Fk_Tech) VALUES (?, ?)");
+            $query->execute([$Pk_Job, $Pk_Tech]);
+        } catch (\PDOException $e){
+            throw new DatabaseException("Erreur lors de l'insertion dans la table tech_fonction");
+        }
     }
+
+    /*
+     * Permet de supprimer tous les liens entre un technicien et un job
+     */
     public function unlinkAllTech(int $Pk_Jobs) : void {
         try{
             $query = "DELETE FROM tech_jobs WHERE Fk_Job = ?";
@@ -51,9 +97,10 @@ class JobManager
             throw new DatabaseException("Erreur lors de la suppression des fonctions du technicien");
         }
     }
+
     /*
- * Cette méthode permet de modifier un téchnciens déjà existant en BDD
- */
+     * Cette méthode permet de modifier un jobs déjà existant en BDD
+     */
     public function update(JobEntity $entity) : void {
         try {
             $check = $this->pdb->prepare("SELECT 1 FROM job WHERE Pk_Job = ?");
@@ -93,8 +140,8 @@ class JobManager
         }
     }
     /*
- * Cette méthode permet de supprimer une fonction de la BD si aucun liens n'existe entre elle et un technicien (Via checklink)
- */
+    * Cette méthode permet de supprimer une jobs de la BD si aucun liens n'existe entre elle et un technicien (Via checklink)
+    */
     public function delete(int $pk) : void {
         try {
             $this->checkLink($pk);
@@ -111,7 +158,7 @@ class JobManager
     }
 
     /*
-     * Cette méthode permet de verifier si un liens existe au niveau BD entre un téchniciens & une fonction
+     * Cette méthode permet de verifier si un liens existe au niveau BD entre un téchniciens & un jobs
      */
     public function checkLink(int $pk) : void {
         try {

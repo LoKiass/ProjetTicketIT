@@ -2,6 +2,8 @@
 
 namespace DISEUMAT\Model\Entity;
 
+use DISEUMAT\Exception\MissingInformation;
+
 class FonctionEntity
 {
     private int $Pk;
@@ -42,11 +44,15 @@ class FonctionEntity
     }
 
     public static function fromArray(array $data) : FonctionEntity {
-        $instance = new self();
-        $instance->setPk($data['Pk_Fonction'] ?? null);
-        $instance->setDescr($data['Descr'] ?? null);
-        $instance->setNiveau($data['Niveau'] ?? null);
-        //$instance->setTechs($data['Techs'] ?? null);
-        return $instance;
+        try{
+            $instance = new self();
+            $instance->setPk($data['Pk_Fonction'] ?? null);
+            $instance->setDescr($data['Descr'] ?? null);
+            $instance->setNiveau($data['Niveau'] ?? null);
+            //$instance->setTechs($data['Techs'] ?? null);
+            return $instance;
+        } catch (\Throwable ){
+            throw new MissingInformation("Il manque des informations");
+        }
     }
 }

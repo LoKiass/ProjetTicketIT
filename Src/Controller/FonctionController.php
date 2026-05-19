@@ -5,6 +5,7 @@ namespace DISEUMAT\Controller;
 use DISEUMAT\Controller\BaseController;
 use DISEUMAT\Exception\DatabaseException;
 use DISEUMAT\Exception\LinkExistBetween;
+use DISEUMAT\Exception\MissingInformation;
 use DISEUMAT\Exception\NotCreatedInDatabase;
 use DISEUMAT\Exception\NotFoundException;
 use DISEUMAT\Model\Entity\FonctionEntity;
@@ -72,7 +73,7 @@ class FonctionController extends BaseController
             } else {
                 echo $this->TemplateEngine->render("Fonction/CreateFonction.twig");
             }
-        } catch (DatabaseException|NotCreatedInDatabase $e) {
+        } catch (DatabaseException|NotCreatedInDatabase|MissingInformation $e) {
             echo $this->TemplateEngine->render("Fonction/CreateFonction.twig", [
                 'success' => false,
                 'error'   => $e->getMessage(),
@@ -109,7 +110,7 @@ class FonctionController extends BaseController
                 header('Location: getFonction');
                 exit;
             }
-        } catch (NotFoundException|DatabaseException $e) {
+        } catch (NotFoundException|DatabaseException|MissingInformation $e) {
             header("Location: getFonction?errorMessage=" . $e->getMessage());
             exit;
         }

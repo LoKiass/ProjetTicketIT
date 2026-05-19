@@ -2,6 +2,7 @@
 
 namespace DISEUMAT\Controller;
 
+use DISEUMAT\Exception\MissingInformation;
 use DISEUMAT\Model\Entity\TechEntity;
 use DISEUMAT\Model\Service\Manager\FonctionManager;
 use DISEUMAT\Model\Service\Manager\TechManager;
@@ -86,7 +87,7 @@ class TechController extends BaseController
                 $TabFonction = $this->FM->list();
                 echo $this->TemplateEngine->render("Tech/CreateTech.twig", ['TabFonction' => $TabFonction]);
             }
-        } catch (DatabaseException|NotCreatedInDatabase $e) {
+        } catch (DatabaseException|NotCreatedInDatabase|MissingInformation $e) {
             echo $this->TemplateEngine->render("Tech/CreateTech.twig", [
                 'success' => false,
                 'error' => $e->getMessage()
@@ -132,7 +133,7 @@ class TechController extends BaseController
                     );
                 }
             }
-        } catch (NotFoundException|DatabaseException $e){
+        } catch (NotFoundException|DatabaseException|MissingInformation $e){
             echo $this->TemplateEngine->render("Tech/UpdateTech.twig", [
                 'TechEntity' => null,
                 'errorMessage' => $e->getMessage()

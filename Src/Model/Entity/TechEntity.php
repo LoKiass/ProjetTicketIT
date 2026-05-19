@@ -2,6 +2,8 @@
 
 namespace DISEUMAT\Model\Entity;
 
+use DISEUMAT\Exception\MissingInformation;
+
 class TechEntity
 {
     private int $Pk;
@@ -69,14 +71,18 @@ class TechEntity
     }
     public static function fromArray(array $data) : TechEntity
     {
-        $instance = new self();
+        try{
+            $instance = new self();
 
-        $instance->setPk($data['Pk_Tech'] ?? null);
-        $instance->setNom($data['Nom'] ?? null);
-        $instance->setPrenom($data['Pren'] ?? null);
-        $instance->setEmail($data['Email'] ?? null);
-        $instance->setActif((bool)($data['Actif'] ?? 0));
+            $instance->setPk($data['Pk_Tech'] ?? null);
+            $instance->setNom($data['Nom']);
+            $instance->setPrenom($data['Pren']);
+            $instance->setEmail($data['Email']);
+            $instance->setActif((bool)($data['Actif']));
 
-        return $instance;
+            return $instance;
+        }catch (\Throwable){
+            throw new MissingInformation("Des informations sont manquantes");
+        }
     }
 }

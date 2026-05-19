@@ -2,6 +2,8 @@
 
 namespace DISEUMAT\Model\Entity;
 
+use DISEUMAT\Exception\MissingInformation;
+
 class UserEntity
 {
     private string $Login;
@@ -45,14 +47,18 @@ class UserEntity
 
     public static function fromArray(array $data) : UserEntity
     {
-        $instance = new self();
+        try{
+            $instance = new self();
 
-        $instance->setLogin($data['Login'] ?? null);
-        $instance->setPswd($data['Pswd'] ?? null);
-        $instance->setStatut($data['Statut'] ?? null);
-        $instance->setActif((bool)($data['Actif'] ?? 0));
+            $instance->setLogin($data['Login']);
+            $instance->setPswd($data['Pswd']);
+            $instance->setStatut($data['Statut']);
+            $instance->setActif((bool)($data['Actif']));
 
-        return $instance;
+            return $instance;
+        } catch (\Throwable $th){
+            throw new MissingInformation("Des informations sont manquantes");
+        }
     }
 
 }

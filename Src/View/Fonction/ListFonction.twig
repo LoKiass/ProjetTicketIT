@@ -15,6 +15,9 @@
                     <p class="text-muted small mb-0">Liste de toutes les fonctions enregistrés</p>
                 </div>
 
+                {% if successMessage is defined and successMessage != "" %}
+                    <p class="alert alert-success">{{ successMessage }}</p>
+                {% endif %}
                 {% if errorMessage is defined and errorMessage is not null%}
                     <div class="alert alert-danger">{{ errorMessage }}</div>
                 {% endif %}
@@ -50,13 +53,6 @@
                             </tbody>
                         </table>
                     </div>
-                    {% if successUpdate is defined and successUpdate %}
-                        <p class="text-success text-center bg-light p-1">Fonction modifier aves succès</p>
-                    {% endif %}
-                    {% if successDelete is defined and successDelete %}
-                        <p class="text-success text-center bg-light p-1">Fonction supprimer aves succès</p>
-                    {% endif %}
-
                 {% endif %}
 
             </div>

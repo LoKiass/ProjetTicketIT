@@ -37,15 +37,17 @@ class JobController extends BaseController
                 $TabJob = $this->JM->list();
 
                 // Gestion des logs des actions
-                $successUpdate = isset($_GET['successUpdate']);
-                $successDelete  = isset($_GET['successDelete']);
+                if (isset($_GET['successMessage'])) {
+                    $successMessageFromUrl = $_GET['successMessage'];
+                } else {
+                    $successMessageFromUrl = null;
+                }
                 $errorMessage  = $_GET['errorMessage'] ?? null;
 
                 echo $this->TemplateEngine->render('/Job/ListJob.twig', [
                     'TabJob' => $TabJob,
-                    'successDelete' => $successDelete,
+                    'successMessage' => $successMessageFromUrl,
                     'errorMessage' => $errorMessage,
-                    'successUpdate' => $successUpdate,
                 ]);
             }
         } catch (DatabaseException|NotFoundException $e) {
@@ -107,7 +109,7 @@ class JobController extends BaseController
                         }
                     }
 
-                    header('Location: getJob?successUpdate=true');
+                    header('Location: getJob?successMessage=' . urlencode("La modifications du jobs à reussis"));
                 } else if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                     $tempJob = $this->JM->read($_GET['Pk']);
                     $jobTech = $this->TM->listByJob($_GET['Pk']);
@@ -120,7 +122,7 @@ class JobController extends BaseController
                 }
             }
         } catch (DatabaseException|NotFoundException|MissingInformation $e) {
-            header('Location: getJob?errorMessage=' . $e->getMessage());
+            header('Location: getJob?errorMessage=' . urlencode($e->getMessage()));
         }
     }
 
@@ -129,11 +131,10 @@ class JobController extends BaseController
         try {
             if (isset($_GET['Pk'])) {
                 $this->JM->delete($_GET['Pk']);
-                header('Location: getJob?successDelete=true');
+                header('Location: getJob?successMessage=' . urlencode("Le jobs à bien été supprimé"));
             }
-            header('Location: getJob');
         } catch (NotFoundException|DatabaseException|LinkExistBetween $e) {
-            header('Location: getJob?errorMessage=' . $e->getMessage());
+            header('Location: getJob?errorMessage=' . urlencode($e->getMessage())) ;
         }
     }
 }

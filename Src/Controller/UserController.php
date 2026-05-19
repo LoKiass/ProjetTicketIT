@@ -8,6 +8,7 @@ namespace DISEUMAT\Controller;
 
 use DISEUMAT\Exception\DatabaseException;
 use DISEUMAT\Exception\InvalidCredentialException;
+use DISEUMAT\Exception\MissingInformation;
 use DISEUMAT\Exception\NotFoundException;
 use DISEUMAT\Model\Entity\UserEntity as UserEntity;
 use DISEUMAT\Model\Service\Manager\UserManager;
@@ -131,7 +132,7 @@ class UserController extends BaseController
                     ]);
                 }
             }
-        } catch (DatabaseException|NotFoundException|InvalidCredentialException $e) {
+        } catch (DatabaseException|NotFoundException|InvalidCredentialException|MissingInformation $e) {
             echo $this->TemplateEngine->render('/User/UpdateUser.twig', [
                 'UserEntity' => $userToEdit,
                 'errorMessage' => $e->getMessage(),

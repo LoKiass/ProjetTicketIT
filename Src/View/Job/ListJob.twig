@@ -20,10 +20,9 @@
                 {% if errorMessage is defined and errorMessage %}
                     <div class="alert alert-danger">{{ errorMessage }}</div>
                 {% endif %}
-                {% if successUpdate is defined and successUpdate %}
-                    <div class="alert alert-success">Jobs modifier avec succès</div>
+                {% if successMessage is defined and successMessage != "" %}
+                    <div class="alert alert-success">{{ successMessage }}</div>
                 {% endif %}
-
                 {% if TabJob is not null %}
                     <div class="table-responsive">
                         <table class="table table-hover align-middle mb-0 small">
@@ -46,13 +45,7 @@
                                     <td class="fw-semibold text-nowrap">{{ job.getFk_project() }}</td>
                                     <td class="fw-semibold text-nowrap">{{ job.getTitre() }}</td>
                                     <td class="fw-semibold text-nowrap">{{ job.getDscr() }}</td>
-                                    <td class="text-nowrap">
-                                        {% if job.getStatus %}
-                                            <span class="badge bg-success">Actif</span>
-                                        {% else %}
-                                            <span class="badge bg-secondary">Inactif</span>
-                                        {% endif %}
-                                    </td>
+                                    <td class="text-nowrap"><span class="badge bg-info">{{ job.getStatus() }}</span></td>
                                     <td class="fw-semibold text-nowrap">{{ job.getPrior() }}</td>
                                     <td class="fw-semibold text-nowrap">{{ job.getDstart() }}</td>
                                     <td class="fw-semibold text-nowrap">{{ job.getDclot() }}</td>

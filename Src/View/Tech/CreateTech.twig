@@ -16,9 +16,9 @@
 
                 <div class="mt-4 text-center">
                     {% if errorMessage is defined and error %}
-                        <p class="text-danger">ERREUR : {{ error }}</p>
+                        <p class="alert alert-danger">ERREUR : {{ error }}</p>
                     {% elseif success is defined and success %}
-                        <p class="text-success text-center bg-light p-1">Technicien crée avec succès</p>
+                        <p class="alert alert-success">Technicien crée avec succès</p>
                     {% endif %}
                 </div>
 

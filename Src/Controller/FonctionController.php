@@ -5,6 +5,7 @@ namespace DISEUMAT\Controller;
 use DISEUMAT\Controller\BaseController;
 use DISEUMAT\Exception\DatabaseException;
 use DISEUMAT\Exception\LinkExistBetween;
+use DISEUMAT\Exception\MissingInformation;
 use DISEUMAT\Exception\NotCreatedInDatabase;
 use DISEUMAT\Exception\NotFoundException;
 use DISEUMAT\Model\Entity\FonctionEntity;
@@ -34,14 +35,12 @@ class FonctionController extends BaseController
             } else {
                 $TabFonction = $this->FM->list();
 
-                $successUpdate = isset($_GET['successUpdate']);
-                $succesDelete  = isset($_GET['successDelete']);
+                $succesMessageFromUrl = $_GET['successMessage'] ?? null;
                 $errorFromUrl  = $_GET['errorMessage'] ?? null; // Si erreur recu de update ou delete depuis l'url0
 
                 echo $this->TemplateEngine->render("Fonction/ListFonction.twig", [
                     'TabFonction'   => $TabFonction,
-                    'successUpdate' => $successUpdate,
-                    'succesDelete'  => $succesDelete,
+                    'successMessage' => $succesMessageFromUrl,
                     'errorMessage'  => $errorFromUrl,
                 ]);
             }
@@ -72,7 +71,7 @@ class FonctionController extends BaseController
             } else {
                 echo $this->TemplateEngine->render("Fonction/CreateFonction.twig");
             }
-        } catch (DatabaseException|NotCreatedInDatabase $e) {
+        } catch (DatabaseException|NotCreatedInDatabase|MissingInformation $e) {
             echo $this->TemplateEngine->render("Fonction/CreateFonction.twig", [
                 'success' => false,
                 'error'   => $e->getMessage(),
@@ -97,7 +96,7 @@ class FonctionController extends BaseController
                     $_POST['Pk_Fonction'] = $pk;
                     $this->FM->update(FonctionEntity::fromArray($_POST));
 
-                    header('Location: getFonction?successUpdate=true');
+                    header('Location: getFonction?successMessage=' . urlencode("Le modifications à reussis"));
                     exit;
                 } else { // Si on passe par la Navbar
                     $tempFonction = $this->FM->read($pk);
@@ -109,7 +108,7 @@ class FonctionController extends BaseController
                 header('Location: getFonction');
                 exit;
             }
-        } catch (NotFoundException|DatabaseException $e) {
+        } catch (NotFoundException|DatabaseException|MissingInformation $e) {
             header("Location: getFonction?errorMessage=" . $e->getMessage());
             exit;
         }
@@ -127,12 +126,8 @@ class FonctionController extends BaseController
         try {
             if (isset($_GET['Pk'])) {
                 $this->FM->delete($_GET['Pk']);
-                header('Location: getFonction?successDelete=true');
-                exit;
+                header('Location: getFonction?successMessage=' . urlencode("La fonction à bien étais supprimer"));
             }
-            header('Location: getFonction');
-            exit;
-
         } catch (NotFoundException|DatabaseException|LinkExistBetween $e) {
             header('Location: getFonction?errorMessage=' . $e->getMessage());
         }

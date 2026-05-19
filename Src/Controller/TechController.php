@@ -2,6 +2,7 @@
 
 namespace DISEUMAT\Controller;
 
+use DISEUMAT\Exception\MissingInformation;
 use DISEUMAT\Model\Entity\TechEntity;
 use DISEUMAT\Model\Service\Manager\FonctionManager;
 use DISEUMAT\Model\Service\Manager\TechManager;
@@ -9,11 +10,10 @@ use DISEUMAT\Exception\NotFoundException;
 use DISEUMAT\Exception\DatabaseException;
 use DISEUMAT\Exception\NotCreatedInDatabase;
 
-
 class TechController extends BaseController
 {
     private TechManager $TM;
-    private FonctionManager $FM; // Pour lectutre fonction
+    private FonctionManager $FM;
 
     public function __construct(){
         $this->TM = new TechManager();
@@ -23,11 +23,9 @@ class TechController extends BaseController
 
     /**
      * Affiche la liste de tous les techniciens ou les détails d'un technicien spécifique.
-     * Si le paramètre GET 'Pk' est fourni, affiche la fiche du technicien correspondant.
-     * Sinon, affiche la liste complète avec un éventuel message de succès suite à une mise à jour.
      */
     public function getTech() : void {
-        try{
+        try {
             $this->requireLogin();
 
             if (isset($_GET['Pk'])) {
@@ -38,25 +36,28 @@ class TechController extends BaseController
                     'TechEntity' => $Tech
                 ]);
             }
-            else{
+            else {
                 $TabTech = $this->TM->list();
-                $success = isset($_GET['success']) && $_GET['success'] === 'true'; // Succes uniquement comme log au niveau de l'action update
 
-                unset($_GET['success']);
-                echo $this->TemplateEngine->render("Tech/ListTech.twig", ['TabTech' => $TabTech, 'success' => $success]);
+                $successMessageFromUrl = $_GET['successMessage'] ?? null;
+                $errorMessage  = $_GET['errorMessage'] ?? null;
+
+                echo $this->TemplateEngine->render("Tech/ListTech.twig", [
+                    'TabTech'        => $TabTech,
+                    'successMessage' => $successMessageFromUrl,
+                    'errorMessage'   => $errorMessage
+                ]);
             }
-        } catch (NotFoundException $e){
-            echo $this->TemplateEngine->render("Tech/ListTech.twig", ['TabTech' => null, 'errorMessage' => $e->getMessage()]);
-        } catch (DatabaseException $e){
-            echo $this->TemplateEngine->render("Tech/ListTech.twig", ['TabTech' => null, 'errorMessage' => $e->getMessage()]);
+        } catch (NotFoundException|DatabaseException $e) {
+            echo $this->TemplateEngine->render("Tech/ListTech.twig", [
+                'TabTech'      => null,
+                'errorMessage' => $e->getMessage()
+            ]);
         }
     }
 
     /**
      * Gère la création d'un nouveau technicien.
-     * En GET : affiche le formulaire de création vierge.
-     * En POST (si 'Pren' est présent) : construit un TechEntity depuis les données du formulaire
-     * et l'insère en base de données, puis affiche le résultat (succès ou erreur).
      */
     public function createTech() : void {
         $this->requireLogin();
@@ -86,57 +87,51 @@ class TechController extends BaseController
                 $TabFonction = $this->FM->list();
                 echo $this->TemplateEngine->render("Tech/CreateTech.twig", ['TabFonction' => $TabFonction]);
             }
-        } catch (DatabaseException|NotCreatedInDatabase $e) {
+        } catch (DatabaseException|NotCreatedInDatabase|MissingInformation|NotFoundException $e) {
+            $TabFonction = $this->FM->list();
             echo $this->TemplateEngine->render("Tech/CreateTech.twig", [
-                'success' => false,
-                'error' => $e->getMessage()
+                'TabFonction'  => $TabFonction,
+                'errorMessage' => $e->getMessage() // Changé pour cohérence avec ListTech
             ]);
+
         }
     }
 
     /**
-     * Gère la modification d'un technicien existant identifié par le paramètre GET 'Pk'.
-     * En GET : récupère le technicien en base et affiche le formulaire pré-rempli.
-     * En POST : met à jour le technicien avec les nouvelles données du formulaire,
-     * puis redirige vers la liste avec un indicateur de succès.
+     * Gère la modification d'un technicien existant.
      */
     public function updateTech() : void {
         $this->requireLogin();
-        try{
-            if (isset($_GET['Pk'])){
+        try {
+            if (isset($_GET['Pk'])) {
                 $pk = $_GET['Pk'];
 
-                if ($_SERVER['REQUEST_METHOD'] === 'POST'){
+                if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $_POST['Pk_Tech'] = $pk;
                     $_POST['Actif'] = $_POST['Actif'] ?? 0;
 
                     $this->TM->update(TechEntity::fromArray($_POST));
                     $this->TM->unlinkAllFunctions($pk);
 
-
                     if (isset($_POST['fonctions']) && is_array($_POST['fonctions'])) {
                         foreach ($_POST['fonctions'] as $idFonction) {
                             $this->TM->LinkToFunction($pk, $idFonction);
                         }
                     }
-
-                    header('Location: getTech?success=true');
+                    header('Location: getTech?successMessage=' . urlencode("La modification du technicien a réussi"));
                 }
                 else if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                     $tempTech = $this->TM->read($_GET['Pk']);
                     $userFonction = $this->FM->listByTech($_GET['Pk']);
                     $tempTech->setFonctions($userFonction);
-                    echo $this->TemplateEngine->render("Tech/UpdateTech.twig",
-                        ['TechEntity' => $tempTech
-                        , 'TabFonction' => $this->FM->list()]
-                    );
+                    echo $this->TemplateEngine->render("Tech/UpdateTech.twig", [
+                        'TechEntity'  => $tempTech,
+                        'TabFonction' => $this->FM->list()
+                    ]);
                 }
             }
-        } catch (NotFoundException|DatabaseException $e){
-            echo $this->TemplateEngine->render("Tech/UpdateTech.twig", [
-                'TechEntity' => null,
-                'errorMessage' => $e->getMessage()
-            ]);
+        } catch (NotFoundException|DatabaseException|MissingInformation $e) {
+            header('Location: getTech?errorMessage=' . urlencode($e->getMessage()));
         }
     }
 }

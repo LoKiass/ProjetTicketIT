@@ -1,12 +1,15 @@
 {% extends 'baseTemplate.twig' %}
 {% block pagetitle %}TicketSystem - Création technicien{% endblock %}
+
 {% block navbar %}
     {% include 'Navbar/Navbar.twig' %}
-{% endblock%}
+{% endblock %}
+
 {% block content %}
     <div class="min-vh-100 d-flex justify-content-center bg-light py-5">
         <div class="card shadow-sm border-0 w-100" style="max-width: 650px; border-radius: 12px;">
             <div class="card-body p-4">
+
                 <div class="mb-4">
                     <h1 class="h4 fw-semibold mb-1">
                         <i class="bi bi-shield-check me-2"></i>Création d'un jobs
@@ -15,56 +18,62 @@
                 </div>
 
                 <form method="post">
+
                     <div class="row mb-3 align-items-center">
-                        <label for="Fk_Project" class="col-sm-3 col-form-label fw-medium">Fk_Project</label>
+                        <label for="Fk_Project" class="col-sm-3 col-form-label fw-medium">Projet associer</label>
                         <div class="col-sm-9">
                             <input type="text" name="Fk_Project" id="Fk_Project" class="form-control">
                         </div>
                     </div>
+
                     <div class="row mb-3 align-items-center">
                         <label for="Titre" class="col-sm-3 col-form-label fw-medium">Titre</label>
                         <div class="col-sm-9">
                             <input type="text" name="Titre" id="Titre" class="form-control">
                         </div>
                     </div>
+
                     <div class="row mb-3 align-items-center">
                         <label for="Dscr" class="col-sm-3 col-form-label fw-medium">Description</label>
                         <div class="col-sm-9">
                             <input type="text" name="Dscr" id="Dscr" class="form-control">
                         </div>
                     </div>
+
                     <div class="row mb-3 align-items-center">
                         <label for="Status" class="col-sm-3 col-form-label fw-medium">Status</label>
                         <div class="col-sm-9">
                             <input type="text" name="Status" id="Status" class="form-control">
                         </div>
                     </div>
+
                     <div class="row mb-3 align-items-center">
                         <label for="Prior" class="col-sm-3 col-form-label fw-medium">Priorité</label>
                         <div class="col-sm-9">
                             <input type="text" name="Prior" id="Prior" class="form-control">
                         </div>
                     </div>
+
                     <div class="row mb-3 align-items-center">
                         <label for="Dstart" class="col-sm-3 col-form-label fw-medium">Date début</label>
                         <div class="col-sm-9">
                             <input type="date" name="Dstart" id="Dstart" class="form-control">
                         </div>
                     </div>
+
                     <div class="row mb-3 align-items-center">
-                        <label for="Dech" class="col-sm-3 col-form-label fw-medium">Date échehance</label>
+                        <label for="Dech" class="col-sm-3 col-form-label fw-medium">Date échéance</label>
                         <div class="col-sm-9">
-                            {# Changement du type "text" en "date" #}
                             <input type="date" name="Dech" id="Dech" class="form-control">
                         </div>
                     </div>
+
                     <div class="row mb-3 align-items-center">
                         <label for="Dclot" class="col-sm-3 col-form-label fw-medium">Date clôture</label>
                         <div class="col-sm-9">
                             <input type="date" name="Dclot" id="Dclot" class="form-control">
                         </div>
                     </div>
-
 
                     <div class="row mb-3 align-items-center">
                         <label class="col-sm-3 col-form-label fw-medium">Techs</label>
@@ -80,7 +89,10 @@
                                     {% for Techs in TabTech %}
                                         <li>
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" name="Tech[]" value="{{ Techs.getPk() }}" id="f_{{ Techs.getPk() }}">
+                                                <input class="form-check-input" type="checkbox"
+                                                       name="Tech[]"
+                                                       value="{{ Techs.getPk() }}"
+                                                       id="f_{{ Techs.getPk() }}">
                                                 <label class="form-check-label w-100" for="f_{{ Techs.getPk() }}">
                                                     {{ Techs.getNom() }}
                                                 </label>
@@ -93,23 +105,27 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row">
+
+                    <div class="row mb-3">
                         <div class="col-12 text-center d-flex justify-content-center gap-2">
                             <button class="btn btn-dark px-4" type="submit">Envoyer</button>
                             <a class="btn btn-dark px-4" href="getTech">Retour</a>
                         </div>
                     </div>
-                    <div class="mt-4 text-center">
-                        {% if error is defined and error %}
+
+                    {% if error is defined and error %}
+                        <div class="mt-4 text-center">
                             <p class="text-danger">ERREUR : {{ error }}</p>
-                        {% elseif success is defined and success %}
-                            <p class="text-success text-center bg-light p-1">Technicien crée avec succès</p>
-                        {% endif %}
-                    </div>
+                        </div>
+                    {% elseif success is defined and success %}
+                        <div class="mt-4 text-center">
+                            <p class="text-success bg-light p-1">Technicien crée avec succès</p>
+                        </div>
+                    {% endif %}
 
                 </form>
+
             </div>
         </div>
     </div>
-
 {% endblock %}

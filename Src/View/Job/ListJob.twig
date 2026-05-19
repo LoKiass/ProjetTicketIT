@@ -1,12 +1,13 @@
 {% extends 'baseTemplate.twig' %}
 {% block pagetitle %}TicketSystem - Liste technicien{% endblock %}
+
 {% block navbar %}
     {% include 'Navbar/Navbar.twig' %}
 {% endblock %}
 
 {% block content %}
     <div class="min-vh-100 d-flex justify-content-center bg-light py-5">
-        <div class="card shadow-sm border-0 w-100" style="max-width: 800px; border-radius: 12px;">
+        <div class="card shadow-sm border-0 w-100 mx-3" style="border-radius: 12px;">
             <div class="card-body p-4">
 
                 <div class="mb-4">
@@ -20,46 +21,48 @@
                     <div class="alert alert-danger">{{ errorMessage }}</div>
                 {% endif %}
 
-
                 {% if TabJob is not null %}
                     <div class="table-responsive">
-                        <table class="table table-hover align-middle mb-0">
+                        <table class="table table-hover align-middle mb-0 small">
                             <thead class="table-light">
                             <tr>
-                                <th class="text-uppercase small text-muted fw-semibold">Projet associer</th>
-                                <th class="text-uppercase small text-muted fw-semibold">Titre</th>
-                                <th class="text-uppercase small text-muted fw-semibold">Description</th>
-                                <th class="text-uppercase small text-muted fw-semibold">Status</th>
-                                <th class="text-uppercase small text-muted fw-semibold">Priorité</th>
-                                <th class="text-uppercase small text-muted fw-semibold">Date de début</th>
-                                <th class="text-uppercase small text-muted fw-semibold">Date de cloture</th>
-                                <th class="text-uppercase small text-muted fw-semibold">Date d'échéance</th>
-                                <th class="text-uppercase small text-muted fw-semibold">Actions</th>
+                                <th class="text-uppercase text-muted fw-semibold text-nowrap">Projet</th>
+                                <th class="text-uppercase text-muted fw-semibold text-nowrap">Titre</th>
+                                <th class="text-uppercase text-muted fw-semibold text-nowrap">Description</th>
+                                <th class="text-uppercase text-muted fw-semibold text-nowrap">Status</th>
+                                <th class="text-uppercase text-muted fw-semibold text-nowrap">Priorité</th>
+                                <th class="text-uppercase text-muted fw-semibold text-nowrap">Début</th>
+                                <th class="text-uppercase text-muted fw-semibold text-nowrap">Clôture</th>
+                                <th class="text-uppercase text-muted fw-semibold text-nowrap">Échéance</th>
+                                <th class="text-uppercase text-muted fw-semibold text-nowrap">Actions</th>
                             </tr>
                             </thead>
                             <tbody>
                             {% for job in TabJob %}
                                 <tr>
-                                    <td class="fw-semibold">{{ job.getFk_project() }}</td>
-                                    <td class="fw-semibold">{{ job.getTitre() }}</td>
-                                    <td class="fw-semibold">{{ job.getDscr()}}</td>
-                                    <td>
+                                    <td class="fw-semibold text-nowrap">{{ job.getFk_project() }}</td>
+                                    <td class="fw-semibold text-nowrap">{{ job.getTitre() }}</td>
+                                    <td class="fw-semibold text-nowrap">{{ job.getDscr() }}</td>
+                                    <td class="text-nowrap">
                                         {% if job.getStatus %}
                                             <span class="badge bg-success">Actif</span>
                                         {% else %}
                                             <span class="badge bg-secondary">Inactif</span>
                                         {% endif %}
                                     </td>
-                                    <td class="fw-semibold">{{ job.getPrior() }}</td>
-                                    <td class="fw-semibold">{{ job.getDstart() }}</td>
-                                    <td class="fw-semibold">{{ job.getDclot() }}</td>
-                                    <td class="fw-semibold">{{ job.getDech() }}</td>
-                                    <td>
+                                    <td class="fw-semibold text-nowrap">{{ job.getPrior() }}</td>
+                                    <td class="fw-semibold text-nowrap">{{ job.getDstart() }}</td>
+                                    <td class="fw-semibold text-nowrap">{{ job.getDclot() }}</td>
+                                    <td class="fw-semibold text-nowrap">{{ job.getDech() }}</td>
+                                    <td class="text-nowrap">
                                         <a href="updateJob?Pk={{ job.getPk() }}" class="btn btn-sm btn-outline-primary me-1">
-                                            <i class="bi bi-pencil"></i> Modifier
+                                            Modification
                                         </a>
-                                        <a href="getTech?Pk={{ job.getPk() }}" class="btn btn-sm btn-outline-secondary">
-                                            <i class="bi bi-info-circle"></i> Infos
+                                        <a href="getJob?Pk={{ job.getPk() }}" class="btn btn-sm btn-outline-secondary me-1">
+                                            Information
+                                        </a>
+                                        <a href="deleteJob?Pk={{ job.getPk }}" class="btn btn-sm btn-outline-danger">
+                                            Suppresions
                                         </a>
                                     </td>
                                 </tr>
@@ -67,8 +70,9 @@
                             </tbody>
                         </table>
                     </div>
+
                     {% if success is defined and success %}
-                        <p class="text-success text-center bg-light p-1">Techniciens modifier aves succès</p>
+                        <p class="text-success text-center bg-light p-1 mt-3">Techniciens modifiés avec succès</p>
                     {% endif %}
                 {% endif %}
 

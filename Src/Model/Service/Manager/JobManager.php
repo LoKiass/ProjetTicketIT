@@ -3,6 +3,8 @@
 namespace DISEUMAT\Model\Service\Manager;
 
 use DISEUMAT\Exception\DatabaseException;
+use DISEUMAT\Exception\LinkExistBetween;
+use DISEUMAT\Exception\NotFoundException;
 use DISEUMAT\Model\Entity\JobEntity;
 use PDO;
 
@@ -32,7 +34,6 @@ class JobManager
     public function create(JobEntity $jobEntity) : int {
         $query = $this->pdb->prepare("INSERT INTO Job (Fk_Project, Titre, Status, Prior, Dstart, Dech, Dclot, Dscr) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
         $query->execute([$jobEntity->getFk_project(), $jobEntity->getTitre(), $jobEntity->getStatus(), $jobEntity->getPrior(), $jobEntity->getDstart(), $jobEntity->getDech(), $jobEntity->getDclot(), $jobEntity->getDscr()]);
-        $query->execute();
 
         return (int)$this->pdb->lastInsertId();
     }
@@ -89,6 +90,39 @@ class JobManager
             ]);
         } catch (\PDOException $e) {
             throw new DatabaseException($e->getMessage(), 0);
+        }
+    }
+    /*
+ * Cette méthode permet de supprimer une fonction de la BD si aucun liens n'existe entre elle et un technicien (Via checklink)
+ */
+    public function delete(int $pk) : void {
+        try {
+            $this->checkLink($pk);
+
+            $query = $this->pdb->prepare("DELETE FROM job WHERE Pk_Job = ?");
+            $query->execute([$pk]);
+
+            if ($query->rowCount() === 0) {
+                throw new NotFoundException("Le job n'existe pas");
+            }
+        } catch (PDOException $e) {
+            throw new DatabaseException("Erreur lors de la suppression", 0, $e);
+        }
+    }
+
+    /*
+     * Cette méthode permet de verifier si un liens existe au niveau BD entre un téchniciens & une fonction
+     */
+    public function checkLink(int $pk) : void {
+        try {
+            $query = $this->pdb->prepare("SELECT COUNT(*) FROM tech_jobs WHERE Fk_Job = ?");
+            $query->execute([$pk]);
+
+            if ($query->fetchColumn() > 0) {
+                throw new LinkExistBetween("Un lien existe entre le jobs et un technicien");
+            }
+        } catch (PDOException $e) {
+            throw new DatabaseException("Le lien n'a pas pu être vérifié", 0, $e);
         }
     }
 

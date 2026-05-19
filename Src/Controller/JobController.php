@@ -4,6 +4,7 @@ namespace DISEUMAT\Controller;
 
 use DISEUMAT\Controller\BaseController;
 use DISEUMAT\Exception\DatabaseException;
+use DISEUMAT\Exception\LinkExistBetween;
 use DISEUMAT\Exception\NotFoundException;
 use DISEUMAT\Model\Entity\JobEntity;
 use DISEUMAT\Model\Entity\TechEntity;
@@ -25,8 +26,10 @@ class JobController extends BaseController
         if (isset($_GET['Pk'])){
             $pk = $_GET['Pk'];
             $JobEntity = $this->JM->read($pk);
+            $listTech = $this->TM->listByJob($pk);
+            $JobEntity->setTech($listTech);
             // $techRelated =
-            echo $this->TemplateEngine->render('/Job/Job.twig', ['Pk' => $pk]);
+            echo $this->TemplateEngine->render('/Job/InfoJob.twig', ['JobEntity' => $JobEntity]);
         }
         else{
             $TabJob = $this->JM->list();
@@ -54,6 +57,8 @@ class JobController extends BaseController
                     $this->JM->linkToTech($techId, $idTech);
                 }
             }
+
+            header('Location: getJob');
 
         }
         else{
@@ -94,5 +99,17 @@ class JobController extends BaseController
                     );
                 }
             }
+    }
+    public function deleteJob() : void {
+        $this->requireLogin();
+        try {
+            if (isset($_GET['Pk'])) {
+                $this->JM->delete($_GET['Pk']);
+                header('Location: getJob?successDelete=true');
+            }
+            header('Location: getJob');
+        } catch (NotFoundException|DatabaseException|LinkExistBetween $e) {
+            header('Location: getJob?errorMessage=' . $e->getMessage());
+        }
     }
 }

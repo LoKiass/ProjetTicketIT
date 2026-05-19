@@ -1,12 +1,15 @@
 {% extends 'baseTemplate.twig' %}
 {% block pagetitle %}TicketSystem - Modification Jobs{% endblock %}
+
 {% block navbar %}
     {% include 'Navbar/Navbar.twig' %}
-{% endblock%}
+{% endblock %}
+
 {% block content %}
     <div class="min-vh-100 d-flex justify-content-center bg-light py-5">
         <div class="card shadow-sm border-0 w-100" style="max-width: 650px; border-radius: 12px;">
             <div class="card-body p-4">
+
                 <div class="mb-4">
                     <h1 class="h4 fw-semibold mb-1">
                         <i class="bi bi-shield-check me-2"></i>Modification Jobs
@@ -15,55 +18,72 @@
                 </div>
 
                 <form method="post">
+
                     <div class="row mb-3 align-items-center">
                         <label for="Fk_Project" class="col-sm-3 col-form-label fw-medium">Projet Associer</label>
                         <div class="col-sm-9">
-                            <input type="text" name="Fk_Project" id="Fk_Project" class="form-control" value="{{ JobEntity.getFk_project() }}">
+                            <input type="text" name="Fk_Project" id="Fk_Project" class="form-control"
+                                   value="{{ JobEntity.getFk_project() }}">
                         </div>
                     </div>
+
                     <div class="row mb-3 align-items-center">
                         <label for="Titre" class="col-sm-3 col-form-label fw-medium">Titre</label>
                         <div class="col-sm-9">
-                            <input type="text" name="Titre" id="Titre" class="form-control" value="{{ JobEntity.getTitre() }}">
+                            <input type="text" name="Titre" id="Titre" class="form-control"
+                                   value="{{ JobEntity.getTitre() }}">
                         </div>
                     </div>
+
                     <div class="row mb-3 align-items-center">
                         <label for="Dscr" class="col-sm-3 col-form-label fw-medium">Description</label>
                         <div class="col-sm-9">
-                            <input type="text" name="Dscr" id="Dscr" class="form-control" value="{{ JobEntity.getDscr() }}">
+                            <input type="text" name="Dscr" id="Dscr" class="form-control"
+                                   value="{{ JobEntity.getDscr() }}">
                         </div>
                     </div>
-                    // LISTE DEROULANTE ? 
+
+                    {# LISTE DEROULANTE ? #}
                     <div class="row mb-3 align-items-center">
                         <label for="Status" class="col-sm-3 col-form-label fw-medium">Status</label>
                         <div class="col-sm-9">
-                            <input type="text" name="Status" id="Status" class="form-control" value="{{ JobEntity.getStatus() }}">
+                            <input type="text" name="Status" id="Status" class="form-control"
+                                   value="{{ JobEntity.getStatus() }}">
                         </div>
                     </div>
+
                     <div class="row mb-3 align-items-center">
                         <label for="Prior" class="col-sm-3 col-form-label fw-medium">Priorité</label>
                         <div class="col-sm-9">
-                            <input type="text" name="Prior" id="Prior" class="form-control" value="{{ JobEntity.getPrior() }}">
+                            <input type="text" name="Prior" id="Prior" class="form-control"
+                                   value="{{ JobEntity.getPrior() }}">
                         </div>
                     </div>
+
                     <div class="row mb-3 align-items-center">
                         <label for="Dstart" class="col-sm-3 col-form-label fw-medium">Date début</label>
                         <div class="col-sm-9">
-                            <input type="date" name="Dstart" id="Dstart" class="form-control" value="{{ JobEntity.getDstart() }}">
+                            <input type="date" name="Dstart" id="Dstart" class="form-control"
+                                   value="{{ JobEntity.getDstart() }}">
                         </div>
                     </div>
+
                     <div class="row mb-3 align-items-center">
-                        <label for="Dech" class="col-sm-3 col-form-label fw-medium">Date échehance</label>
+                        <label for="Dech" class="col-sm-3 col-form-label fw-medium">Date échéance</label>
                         <div class="col-sm-9">
-                            <input type="date" name="Dech" id="Dech" class="form-control" value="{{ JobEntity.getDech() }}">
+                            <input type="date" name="Dech" id="Dech" class="form-control"
+                                   value="{{ JobEntity.getDech() }}">
                         </div>
                     </div>
+
                     <div class="row mb-3 align-items-center">
                         <label for="Dclot" class="col-sm-3 col-form-label fw-medium">Date clôture</label>
                         <div class="col-sm-9">
-                            <input type="date" name="Dclot" id="Dclot" class="form-control" value="{{ JobEntity.getDclot() }}">
+                            <input type="date" name="Dclot" id="Dclot" class="form-control"
+                                   value="{{ JobEntity.getDclot() }}">
                         </div>
                     </div>
+
                     <div class="row mb-3 align-items-center">
                         <label class="col-sm-3 col-form-label fw-medium">Technicien</label>
                         <div class="col-sm-9">
@@ -78,7 +98,10 @@
                                     {% for tech in TabTech %}
                                         <li>
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" name="tech[]" value="{{ tech.getPk() }}" id="f_{{ tech.getPk() }}"
+                                                <input class="form-check-input" type="checkbox"
+                                                       name="tech[]"
+                                                       value="{{ tech.getPk() }}"
+                                                       id="f_{{ tech.getPk() }}"
                                                         {% set isChecked = false %}
                                                         {% for jobsTech in JobEntity.getTech() %}
                                                             {% if jobsTech.getPk() == tech.getPk() %}
@@ -98,23 +121,24 @@
                                 </ul>
                             </div>
                         </div>
+                    </div>
 
-                        <div class="row-cols-sm-5 p-4">
-                            <div class="col-12 text-center d-flex justify-content-center gap-2">
-                                <button class="btn btn-dark px-4" type="submit">Envoyer</button>
-                                <a class="btn btn-dark px-4" href="getJob">Retour</a>
-                            </div>
+                    <div class="row mb-3">
+                        <div class="col-12 text-center d-flex justify-content-center gap-2">
+                            <button class="btn btn-dark px-4" type="submit">Envoyer</button>
+                            <a class="btn btn-dark px-4" href="getJob">Retour</a>
                         </div>
                     </div>
 
-                    <div class="mt-4 text-center">
-                        {% if error is defined and error %}
+                    {% if error is defined and error %}
+                        <div class="mt-4 text-center">
                             <p class="text-danger">ERREUR : {{ error }}</p>
-                        {% endif %}
-                    </div>
+                        </div>
+                    {% endif %}
+
                 </form>
+
             </div>
         </div>
     </div>
-
 {% endblock %}

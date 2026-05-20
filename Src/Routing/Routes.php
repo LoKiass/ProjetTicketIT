@@ -38,8 +38,8 @@ return [
     /*
      * Partie projet
      */
-    'getProj' => ['Project' => 'getProj'],
-    'createProj' => ['Project' => 'createProj'],
-    'updateProj' => ['Project' => 'updateProj'],
-    'deleteProj' => ['Project' => 'deleteProj'],
+    'getProject' => ['Project' => 'getProject'],
+    'createProject' => ['Project' => 'createProject'],
+    'updateProject' => ['Project' => 'updateProject'],
+    'deleteProject' => ['Project' => 'deleteProject'],
 ];

@@ -9,6 +9,7 @@ use DISEUMAT\Exception\NotCreatedInDatabase;
 use DISEUMAT\Exception\NotFoundException;
 use DISEUMAT\Model\Entity\ProjectEntity;
 use DISEUMAT\Model\Service\Manager\ProjectManager;
+use mysql_xdevapi\Exception;
 
 class ProjectController extends BaseController
 {
@@ -18,10 +19,36 @@ class ProjectController extends BaseController
         $this->PM = new ProjectManager();
     }
 
-    public function getProj() : void{
-        echo "test";
+    public function getProject() : void {
+        try {
+            $this->requireLogin();
+
+            if (isset($_GET['Pk'])) {
+                $Project = $this->PM->read($_GET['Pk']);
+                echo $this->TemplateEngine->render("Project/InfoProject.twig", [
+                    'ProjectEntity' => $Project
+                ]);
+            }
+            else {
+                $TabProject = $this->PM->list();
+
+                $successMessageFromUrl = $_GET['successMessage'] ?? null;
+                $errorMessage  = $_GET['errorMessage'] ?? null;
+
+                echo $this->TemplateEngine->render("Project/ListProject.twig", [
+                    'TabProject'        => $TabProject,
+                    'successMessage' => $successMessageFromUrl,
+                    'errorMessage'   => $errorMessage
+                ]);
+            }
+        } catch (NotFoundException|DatabaseException $e) {
+            echo $this->TemplateEngine->render("Project/ListProject.twig", [
+                'TabProject'      => null,
+                'errorMessage' => $e->getMessage()
+            ]);
+        }
     }
-    public function createProj() : void{
+    public function createProject() : void{
         $this->requireLogin();
         try{
             if( isset($_POST['Ident'])){
@@ -38,10 +65,10 @@ class ProjectController extends BaseController
             ]);
         }
     }
-    public function updateProj() : void{
+    public function updateProject() : void{
         echo "test";
     }
-    public function deleteProj() : void{
+    public function deleteProject() : void{
         echo "test";
     }
 }

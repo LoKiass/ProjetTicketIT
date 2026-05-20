@@ -6,6 +6,7 @@ use DISEUMAT\Exception\NotCreatedInDatabase;
 use DISEUMAT\Exception\NotFoundException;
 use DISEUMAT\Model\Entity\FonctionEntity;
 use DISEUMAT\Model\Entity\TechEntity;
+use PDOException;
 
 class TechManager
 {
@@ -42,50 +43,33 @@ class TechManager
 
     /*
      * Cette methode permet de lire tous les technicien de la BDD
-     * Et de recuper leurs fonctions relatifs
      */
     public function list() : array {
-        try {
-            // Recuperer tous les technicien
-            $sqlTech = <<< SQL
+        try{
+            $query = <<< SQL
             SELECT Pk_Tech, Nom, Pren, Email, Actif
             FROM tech;
         SQL;
-            $stmtTech = $this->pdb->prepare($sqlTech);
-            $stmtTech->execute();
 
-            // Recuperer les fonctions relatifs aux technicien
-            $sqlFonctions = <<< SQL
-            SELECT f.Pk_Fonction, f.Descr
-            FROM fonction f
-            INNER JOIN fonction_tech ft ON f.Pk_Fonction = ft.Fk_Fonction
-            WHERE ft.Fk_Tech = ?; 
-        SQL;
-            $stmtFonctions = $this->pdb->prepare($sqlFonctions);
+            $query = $this->pdb->prepare($query);
+            $query->execute();
 
             $TabTech = array();
-            while ($record = $stmtTech->fetch()) {
+            while ($record = $query->fetch())
+            {
                 $tempTech = TechEntity::fromArray($record);
-
-                $stmtFonctions->execute([$record['Pk_Tech']]);
-                $tabFonctionsTech = $stmtFonctions->fetchAll();
-
-                $tempTech->setFonctions($tabFonctionsTech);
-
-                $TabTech[] = $tempTech;
+                $TabTech[] = clone $tempTech;
             }
 
-            if (empty($TabTech)) {
+            if (empty($TabTech)){
                 return [];
             }
 
             return $TabTech;
-
-        } catch (\PDOException $e) {
+        }catch (\PDOException $e){
             throw new DatabaseException($e->getMessage(), 0);
         }
     }
-
     /*
      * Cette méthode permet de créé un technicien en BDD
      */

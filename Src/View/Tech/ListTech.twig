@@ -36,7 +36,6 @@
                                 <th class="text-uppercase small text-muted fw-semibold">Prénom</th>
                                 <th class="text-uppercase small text-muted fw-semibold">Email</th>
                                 <th class="text-uppercase small text-muted fw-semibold">Statut</th>
-                                <th class="text-uppercase small text-muted fw-semibold">Fonction</th>
                                 <th class="text-uppercase small text-muted fw-semibold">Actions</th>
                             </tr>
                             </thead>
@@ -52,15 +51,6 @@
                                         {% else %}
                                             <span class="badge bg-secondary">Inactif</span>
                                         {% endif %}
-                                    </td>
-                                    <td class="fw-semibold">
-                                        {% for fonction in tech.getFonctions() %}
-                                            <span class="badge bg-warning">
-                                                {{ fonction.Descr }}
-                                            </span>
-                                        {% else %}
-                                            <span class="badge bg-danger">Aucune fonction</span>
-                                        {% endfor %}
                                     </td>
                                     <td class="text-nowrap">
                                         <a href="updateTech?Pk={{ tech.getPk }}" class="btn btn-sm btn-outline-primary me-1">

@@ -2,6 +2,8 @@
 
 namespace DISEUMAT\Model\Entity;
 
+use DISEUMAT\Exception\MissingInformation;
+
 class ProjectEntity
 {
     private int $Pk;
@@ -88,6 +90,24 @@ class ProjectEntity
     public function setDstart(string $Dstart): void
     {
         $this->Dstart = $Dstart;
+    }
+
+    public static function fromArray(array $data) : ProjectEntity
+    {
+        try{
+            $instance = new self();
+
+            $instance->setPk($data['Pk_Project'] ?? null);
+            $instance->setIdent($data['Ident']);
+            $instance->setDescr($data['Descr']);
+            $instance->setDstart($data['Dstart']);
+            $instance->setDClotEst($data['DClotEst']);
+            $instance->setBudget($data['Budget']);
+
+            return $instance;
+        } catch (\Exception $e){
+            throw new MissingInformation("Des informations sont manquantes");
+        }
     }
 
 }

@@ -18,12 +18,13 @@ class ProjectManager
 
     public function create(ProjectEntity $entity) : int{
         try{
-            $query = $this->pdb->prepare("INSERT INTO projet (Ident, Descr, Dstart, DClotEst, Budget) VALUES (?, ?, ?, ?, ?)");
+            $query = $this->pdb->prepare("INSERT INTO project (Ident, Descr, Dstart, DClotEst, Budget) VALUES (?, ?, ?, ?, ?)");
             $query->execute([
                 $entity->getIdent(),
                 $entity->getDescr(),
                 $entity->getDstart(),
                 $entity->getDClotEst(),
+                $entity->getBudget(),
             ]);
 
             return (int)$this->pdb->lastInsertId();
@@ -33,7 +34,7 @@ class ProjectManager
     }
     public function list() : array{
         try{
-            $query = $this->pdb->prepare("SELECT * FROM projet");
+            $query = $this->pdb->prepare("SELECT * FROM project");
             $query->execute();
 
             $TabProject = array();
@@ -54,7 +55,7 @@ class ProjectManager
     }
     public function read(int $pk) : ProjectEntity{
         try{
-            $query = $this->pdb->prepare("SELECT * FROM projet WHERE Pk_Projet = ?");
+            $query = $this->pdb->prepare("SELECT * FROM project WHERE Pk_Projet = ?");
             $query->execute([$pk]);
 
             if ($query->rowCount() === 0){
@@ -68,7 +69,7 @@ class ProjectManager
     }
     public function update(ProjectEntity $entity) : void {
         try{
-            $query = $this->pdb->prepare("UPDATE projet SET Ident = ?, Descr = ?, Dstart = ?, DClotEst = ?, Budget = ? WHERE Pk_Projet = ?");
+            $query = $this->pdb->prepare("UPDATE project SET Ident = ?, Descr = ?, Dstart = ?, DClotEst = ?, Budget = ? WHERE Pk_Projet = ?");
             $query->execute([
                 $entity->getIdent(),
                 $entity->getDescr(),
@@ -85,7 +86,7 @@ class ProjectManager
         try{
             $this->isLinkedToJob($pk);
 
-            $query = $this->pdb->prepare("DELETE FROM projet WHERE Pk_Projet = ?");
+            $query = $this->pdb->prepare("DELETE FROM project WHERE Pk_Projet = ?");
             $query->execute([$pk]);
 
             if ($query->rowCount() === 0) {

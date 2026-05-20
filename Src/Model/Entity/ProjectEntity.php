@@ -27,8 +27,9 @@ class ProjectEntity
         return $this->Pk;
     }
 
-    public function setPk(int $Pk): void
+    public function setPk(?int $Pk): void
     {
+        if ($Pk == null) $Pk = 0;
         $this->Pk = $Pk;
     }
 

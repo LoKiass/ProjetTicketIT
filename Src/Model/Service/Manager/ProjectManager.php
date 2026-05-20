@@ -55,7 +55,7 @@ class ProjectManager
     }
     public function read(int $pk) : ProjectEntity{
         try{
-            $query = $this->pdb->prepare("SELECT * FROM project WHERE Pk_Projet = ?");
+            $query = $this->pdb->prepare("SELECT * FROM project WHERE Pk_Project = ?");
             $query->execute([$pk]);
 
             if ($query->rowCount() === 0){
@@ -69,7 +69,7 @@ class ProjectManager
     }
     public function update(ProjectEntity $entity) : void {
         try{
-            $query = $this->pdb->prepare("UPDATE project SET Ident = ?, Descr = ?, Dstart = ?, DClotEst = ?, Budget = ? WHERE Pk_Projet = ?");
+            $query = $this->pdb->prepare("UPDATE project SET Ident = ?, Descr = ?, Dstart = ?, DClotEst = ?, Budget = ? WHERE Pk_Project = ?");
             $query->execute([
                 $entity->getIdent(),
                 $entity->getDescr(),
@@ -86,7 +86,7 @@ class ProjectManager
         try{
             $this->isLinkedToJob($pk);
 
-            $query = $this->pdb->prepare("DELETE FROM project WHERE Pk_Projet = ?");
+            $query = $this->pdb->prepare("DELETE FROM project WHERE Pk_Project = ?");
             $query->execute([$pk]);
 
             if ($query->rowCount() === 0) {

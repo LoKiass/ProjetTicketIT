@@ -35,4 +35,11 @@ return [
     'createJob' => ['Job' => 'createJob'],
     'updateJob' => ['Job' => 'updateJob'],
     'deleteJob' => ['Job' => 'deleteJob'],
+    /*
+     * Partie projet
+     */
+    'getProj' => ['Project' => 'getProj'],
+    'createProj' => ['Project' => 'createProj'],
+    'updateProj' => ['Project' => 'updateProj'],
+    'deleteProj' => ['Project' => 'deleteProj'],
 ];

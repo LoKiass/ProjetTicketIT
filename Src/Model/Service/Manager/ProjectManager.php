@@ -5,6 +5,7 @@ namespace DISEUMAT\Model\Service\Manager;
 use DISEUMAT\Exception\DatabaseException;
 use DISEUMAT\Exception\LinkExistBetween;
 use DISEUMAT\Exception\NotFoundException;
+use DISEUMAT\Model\Entity\JobEntity;
 use DISEUMAT\Model\Entity\ProjectEntity;
 use PDO;
 use PDOException;
@@ -108,6 +109,23 @@ class ProjectManager
 
         } catch (PDOException $e){
             throw new DatabaseException("Erreur lors de l'authentifications");
+        }
+    }
+    public function listByJobs(int $Pk): array
+    {
+        try{
+            $query = $this->pdb->prepare("SELECT * FROM job WHERE Fk_Project = ?");
+            $query->execute([$Pk]);
+
+            $TabJob = array();
+
+            while ($record = $query->fetch(PDO::FETCH_ASSOC)){
+                $TabJob[] = JobEntity::fromArray($record);
+            }
+
+            return $TabJob;
+        }catch (\PDOException $e){
+
         }
     }
 }

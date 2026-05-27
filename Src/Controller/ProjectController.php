@@ -25,8 +25,10 @@ class ProjectController extends BaseController
         try {
             if (isset($_GET['Pk'])) {
                 $Project = $this->PM->read($_GET['Pk']);
+                $jobLinkToProject = $this->PM->listByJobs($_GET['Pk']);
                 echo $this->TemplateEngine->render("Project/InfoProject.twig", [
-                    'ProjectEntity' => $Project
+                    'ProjectEntity' => $Project,
+                    'JobsList' => $jobLinkToProject,
                 ]);
             }
             else {

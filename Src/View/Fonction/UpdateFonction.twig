@@ -18,20 +18,20 @@
                     <div class="row mb-3 align-items-center">
                         <label for="Descr" class="col-sm-3 col-form-label fw-medium">Descr</label>
                         <div class="col-sm-9">
-                            <input type="text" name="Descr" id="Descr" value="{{ FonctionEntity.getDescr() }}" required>
+                            <input class="form-control" type="text" name="Descr" id="Descr" value="{{ FonctionEntity.getDescr() }}" required>
                         </div>
                     </div>
 
                     <div class="row mb-3 align-items-center">
                         <label for="Niveau" class="col-sm-3 col-form-label fw-medium">Niveau</label>
                         <div class="col-sm-9">
-                            <input type="text" name="Niveau" id="Niveau" value="{{ FonctionEntity.getNiveau() }}" required>
+                            <input class="form-control" type="text" name="Niveau" id="Niveau" value="{{ FonctionEntity.getNiveau() }}" required>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-12 text-center d-flex justify-content-center gap-2">
-                            <button class="btn btn-dark px-4" type="submit">Envoyer</button>
-                            <a class="btn btn-dark px-4" href="getFonction">Retour</a>
+                            <button class="btn btn-outline-success px-4" type="submit">Envoyer</button>
+                            <a class="btn btn-outline-warning px-4" href="getFonction">Retour</a>
                         </div>
                     </div>
                 </form>

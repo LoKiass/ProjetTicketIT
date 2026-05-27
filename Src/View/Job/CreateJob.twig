@@ -29,7 +29,11 @@
                     <div class="row mb-3 align-items-center">
                         <label for="Fk_Project" class="col-sm-3 col-form-label fw-medium">Projet associer</label>
                         <div class="col-sm-9">
-                            <input type="text" name="Fk_Project" id="Fk_Project" class="form-control" required>
+                            {% if PkProject is defined and PkProject is not null %}
+                                <input READONLY type="text" name="Fk_Project" id="Fk_Project" class="form-control" required value="{{ PkProject }}">
+                            {% else %}
+                                <input type="text" name="Fk_Project" id="Fk_Project" class="form-control" required>
+                            {% endif %}
                         </div>
                     </div>
 

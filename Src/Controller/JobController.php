@@ -70,16 +70,18 @@ class JobController extends BaseController
                         $this->JM->linkToTech($techId, $idTech);
                     }
                 }
-
-                $TabTech = $this->TM->list();
                 echo $this->TemplateEngine->render('Job/CreateJob.twig', [
                     'success' => true,
                     'TabTech' => $TabTech,
                 ]);
             } else {
+                if (isset($_GET['Pk'])){
+                    $PkProject = $_GET['Pk'];
+                }
                 $TabTech = $this->TM->list();
                 echo $this->TemplateEngine->render('/Job/CreateJob.twig', [
                     'TabTech' => $TabTech,
+                    'PkProject' => $PkProject ?? null,
                 ]);
             }
         } catch (DatabaseException|NotCreatedInDatabase|NotFoundException|MissingInformation $e) {

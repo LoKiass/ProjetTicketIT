@@ -71,28 +71,33 @@
                         <p class="form-control-plaintext">{{ JobEntity.getDclot() }}</p>
                     </div>
                 </div>
-
-                <div class="row mb-4 align-items-top">
-                    <span class="col-sm-3 col-form-label fw-medium">Téchniciens attitré</span>
-                    <div class="col-sm-9">
-                        <div class="d-flex flex-wrap gap-2 pt-2">
-                            {% for tech in JobEntity.getTech %}
-                                <span class="badge rounded-pill bg-info text-dark border">
-                                <i class="bi bi-gear-fill me-1"></i>
-                                {{ tech.getNom }}
-                            </span>
-                            {% else %}
-                                <p class="form-control-plaintext text-muted italic small">
-                                    Aucune tech assignée
-                                </p>
+                <div class="row mb-3 align-items-center">
+                    <table class="table table-hover">
+                        <tr>
+                            <th>Tech attitré</th>
+                            <th></th>
+                        </tr>
+                        {% for tech in JobEntity.getTech %}
+                        <tr>
+                            <th>{{ tech.getNom() }}</th>
+                            <th>
+                                <a href="getTech?Pk={{ tech.getPk() }}" class="btn btn-sm btn-outline-info">
+                                    Informations
+                                </a>
+                            </th>
                             {% endfor %}
-                        </div>
-                    </div>
+                        </tr>
+{#                        <tr class="text-center ">#}
+{#                            <th colspan="2"><a class="btn btn-sm btn-outline-success" href="">Ajout téchniciens</a></th>#}
+{#                        </tr>#}
+                    </table>
                 </div>
 
                 <div class="row">
                     <div class="col-12 text-center">
-                        <a class="btn btn-dark px-4" href="getJob">Retour</a>
+                        <a class="btn btn-outline-success px-4" href="getJob">Retour</a>
+                        <a class="btn btn-outline-danger px-4" href="deleteJob?Pk={{ JobEntity.getPk() }}">Supprimer</a>
+                        <a class="btn btn-outline-info px-4" href="updateJob?Pk={{ JobEntity.getPk() }}">Modifier</a>
                     </div>
                 </div>
             </div>

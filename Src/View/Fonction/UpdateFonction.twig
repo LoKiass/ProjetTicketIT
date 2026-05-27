@@ -1,8 +1,10 @@
 {% extends 'baseTemplate.twig' %}
 {% block pagetitle %}TicketSystem - Modification fonction{% endblock %}
+
 {% block navbar %}
     {% include 'Navbar/Navbar.twig' %}
 {% endblock%}
+
 {% block content %}
     <div class="min-vh-100 d-flex justify-content-center bg-light py-5">
         <div class="card shadow-sm border-0 w-100" style="max-width: 650px; border-radius: 12px;">
@@ -15,6 +17,7 @@
                 </div>
 
                 <form method="post">
+                    {# Partie description #}
                     <div class="row mb-3 align-items-center">
                         <label for="Descr" class="col-sm-3 col-form-label fw-medium">Descr</label>
                         <div class="col-sm-9">
@@ -22,12 +25,15 @@
                         </div>
                     </div>
 
+                    {# Partie niveau #}
                     <div class="row mb-3 align-items-center">
                         <label for="Niveau" class="col-sm-3 col-form-label fw-medium">Niveau</label>
                         <div class="col-sm-9">
                             <input class="form-control" type="text" name="Niveau" id="Niveau" value="{{ FonctionEntity.getNiveau() }}" required>
                         </div>
                     </div>
+
+                    {# Partie actions formulaire #}
                     <div class="row">
                         <div class="col-12 text-center d-flex justify-content-center gap-2">
                             <button class="btn btn-outline-success px-4" type="submit">Envoyer</button>
@@ -38,5 +44,4 @@
             </div>
         </div>
     </div>
-
 {% endblock %}

@@ -1,8 +1,10 @@
 {% extends 'baseTemplate.twig' %}
 {% block pagetitle %}TicketSystem - Information fonction{% endblock %}
+
 {% block navbar %}
     {% include 'Navbar/Navbar.twig' %}
 {% endblock%}
+
 {% block content %}
     <div class="min-vh-100 d-flex justify-content-center bg-light py-5">
         <div class="card shadow-sm border-0 w-100" style="max-width: 650px; border-radius: 12px;">
@@ -14,6 +16,7 @@
                     <p class="text-muted small mb-0">Détails du compte technicien</p>
                 </div>
 
+                {# Partie description #}
                 <div class="row mb-3 align-items-center">
                     <span class="col-sm-3 col-form-label fw-medium">Description</span>
                     <div class="col-sm-9">
@@ -21,18 +24,22 @@
                     </div>
                 </div>
 
+                {# Partie niveau #}
                 <div class="row mb-3 align-items-center">
                     <span class="col-sm-3 col-form-label fw-medium">Niveau</span>
                     <div class="col-sm-9">
                         <p class="form-control-plaintext">{{ FonctionEntity.getNiveau }}</p>
                     </div>
                 </div>
+
+                {# Partie actions formulaire #}
                 <div class="row">
                     <div class="col-12 text-center">
                         <a class="btn btn-dark px-4" href="getFonction">Retour</a>
                     </div>
                 </div>
 
+                {# Gestion erreur #}
                 {% if errorMessage is defined %}
                     <div class="mt-4 text-center">
                         <p class="text-danger">{{ errorMessage }}</p>

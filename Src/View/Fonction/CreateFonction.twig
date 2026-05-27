@@ -1,8 +1,10 @@
 {% extends 'baseTemplate.twig' %}
 {% block pagetitle %}TicketSystem - Création fonction{% endblock %}
+
 {% block navbar %}
     {% include 'Navbar/Navbar.twig' %}
 {% endblock%}
+
 {% block content %}
     <div class="min-vh-100 d-flex justify-content-center bg-light py-5">
         <div class="card shadow-sm border-0 w-100" style="max-width: 650px; border-radius: 12px;">
@@ -13,6 +15,8 @@
                     </h1>
                     <p class="text-muted small mb-0">Veuillez fournir toutes les informations ci-dessous</p>
                 </div>
+
+                {# Gestion des erreurs et messages #}
                 <div class="mt-4 text-center">
                     {% if error is defined and error %}
                         <p class="text-danger">ERREUR : {{ error }}</p>
@@ -20,7 +24,9 @@
                         <p class="alert alert-success">Fonction crée avec succès</p>
                     {% endif %}
                 </div>
+
                 <form method="post">
+                    {# Partie description #}
                     <div class="row mb-3 align-items-center">
                         <label for="Descr" class="col-sm-3 col-form-label fw-medium">Description</label>
                         <div class="col-sm-9">
@@ -28,12 +34,15 @@
                         </div>
                     </div>
 
+                    {# Partie niveau #}
                     <div class="row mb-3 align-items-center">
                         <label for="Niveau" class="col-sm-3 col-form-label fw-medium">Niveau</label>
                         <div class="col-sm-9">
                             <input type="text" name="Niveau" id="Niveau" class="form-control" required>
                         </div>
                     </div>
+
+                    {# Partie actions formulaire #}
                     <div class="row">
                         <div class="col-12 text-center d-flex justify-content-center gap-2">
                             <button class="btn btn-dark px-4" type="submit">Envoyer</button>
@@ -44,5 +53,4 @@
             </div>
         </div>
     </div>
-
 {% endblock %}

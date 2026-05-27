@@ -19,6 +19,7 @@
 
                 <form method="post">
 
+                    {# Partie projet associé #}
                     <div class="row mb-3 align-items-center">
                         <label for="Fk_Project" class="col-sm-3 col-form-label fw-medium">Projet Associer</label>
                         <div class="col-sm-9">
@@ -27,6 +28,7 @@
                         </div>
                     </div>
 
+                    {# Partie titre #}
                     <div class="row mb-3 align-items-center">
                         <label for="Titre" class="col-sm-3 col-form-label fw-medium">Titre</label>
                         <div class="col-sm-9">
@@ -35,6 +37,7 @@
                         </div>
                     </div>
 
+                    {# Partie description #}
                     <div class="row mb-3 align-items-center">
                         <label for="Dscr" class="col-sm-3 col-form-label fw-medium">Description</label>
                         <div class="col-sm-9">
@@ -43,6 +46,7 @@
                         </div>
                     </div>
 
+                    {# Partie statut #}
                     <div class="row mb-3 align-items-center">
                         <label for="Status" class="col-sm-3 col-form-label fw-medium">Terminé</label>
                         <div class="col-sm-9">
@@ -56,6 +60,7 @@
                         </div>
                     </div>
 
+                    {# Partie priorité #}
                     <div class="row mb-3 align-items-center">
                         <label for="Prior" class="col-sm-3 col-form-label fw-medium">Priorité</label>
                         <div class="col-sm-9">
@@ -64,6 +69,7 @@
                         </div>
                     </div>
 
+                    {# Partie date début #}
                     <div class="row mb-3 align-items-center">
                         <label for="Dstart" class="col-sm-3 col-form-label fw-medium">Date début</label>
                         <div class="col-sm-9">
@@ -72,6 +78,7 @@
                         </div>
                     </div>
 
+                    {# Partie date échéance #}
                     <div class="row mb-3 align-items-center">
                         <label for="Dech" class="col-sm-3 col-form-label fw-medium">Date échéance</label>
                         <div class="col-sm-9">
@@ -80,6 +87,7 @@
                         </div>
                     </div>
 
+                    {# Partie date clôture #}
                     <div class="row mb-3 align-items-center">
                         <label for="Dclot" class="col-sm-3 col-form-label fw-medium">Date clôture</label>
                         <div class="col-sm-9">
@@ -87,47 +95,47 @@
                                    value="{{ JobEntity.getDclot() }}" required>
                         </div>
                     </div>
-
-                    <div class="row mb-3 align-items-center">
-                        <label class="col-sm-3 col-form-label fw-medium">Technicien</label>
-                        <div class="col-sm-9">
-                            <div class="dropdown">
-                                <button class="btn btn-outline-secondary dropdown-toggle w-100 text-start"
-                                        type="button"
-                                        data-bs-toggle="dropdown"
-                                        data-bs-auto-close="outside">
-                                    Choisir les technicien...
-                                </button>
-                                <ul class="dropdown-menu p-3 w-100">
-                                    {% for tech in TabTech %}
-                                        <li>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox"
-                                                       name="tech[]"
-                                                       value="{{ tech.getPk() }}"
-                                                       id="f_{{ tech.getPk() }}"
-                                                        {% set isChecked = false %}
-                                                        {% for jobsTech in JobEntity.getTech() %}
-                                                            {% if jobsTech.getPk() == tech.getPk() %}
-                                                                {% set isChecked = true %}
-                                                            {% endif %}
-                                                        {% endfor %}
-                                                        {{ isChecked ? 'checked' : '' }}
-                                                >
-                                                <label class="form-check-label w-100" for="f_{{ tech.getPk() }}">
-                                                    {{ tech.getNom() }}
-                                                </label>
-                                            </div>
-                                        </li>
-                                    {% else %}
-                                        <li class="text-muted small ps-2">Aucune fonction disponible</li>
-                                    {% endfor %}
-                                </ul>
-                            </div>
-                        </div>
+                    {# Listing des techniciens #}
+                    <div class="border rounded-3 overflow-hidden">
+                        <table class="table table-hover mb-0">
+                            <thead>
+                            <tr>
+                                <th>Technicien</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for tech in TabTech %}
+                                <tr>
+                                    <td>
+                                        <div class="form-check mb-0">
+                                            <input class="form-check-input" type="checkbox" name="tech[]" value="{{ tech.getPk() }}" id="t_{{ tech.getPk() }}"
+                                                    {% set isChecked = false %}
+                                                    {% for jobsTech in JobEntity.getTech() %}
+                                                        {% if jobsTech.getPk() == tech.getPk() %}
+                                                            {% set isChecked = true %}
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                    {{ isChecked ? 'checked' : '' }}
+                                            >
+                                            <label class="form-check-label" for="t_{{ tech.getPk() }}">
+                                                {{ tech.getNom() }}
+                                            </label>
+                                        </div>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td colspan="2" class="text-center text-muted">Aucun technicien disponible</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
                     </div>
 
-                    <div class="row mb-3">
+                    {# Partie actions formulaire #}
+                    <div class="row mb-3 p-3">
                         <div class="col-12 text-center d-flex justify-content-center gap-2">
                             <button class="btn btn-dark px-4" type="submit">Envoyer</button>
                             <a class="btn btn-dark px-4" href="getJob">Retour</a>

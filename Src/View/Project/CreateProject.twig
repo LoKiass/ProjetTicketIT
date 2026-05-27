@@ -16,6 +16,8 @@
                     </h1>
                     <p class="text-muted small mb-0">Veuillez fournir toutes les informations ci-dessous</p>
                 </div>
+
+                {# Gestion des erreurs #}
                 {% if errorMessage is defined and errorMessage %}
                     <div class="mt-4 text-center">
                         <p class="alert alert-danger">ERREUR : {{ errorMessage }}</p>
@@ -25,7 +27,9 @@
                         <p class="alert alert-success">Projet crée avec succès</p>
                     </div>
                 {% endif %}
+
                 <form method="post">
+                    {# Partie identifiant #}
                     <div class="row mb-3 align-items-center">
                         <label for="Ident" class="col-sm-3 col-form-label fw-medium">Identifiant</label>
                         <div class="col-sm-9">
@@ -33,18 +37,23 @@
                         </div>
                     </div>
 
+                    {# Partie description #}
                     <div class="row mb-3 align-items-center">
                         <label for="Descr" class="col-sm-3 col-form-label fw-medium">Description</label>
                         <div class="col-sm-9">
                             <input type="text" name="Descr" id="Descr" class="form-control" required>
                         </div>
                     </div>
+
+                    {# Partie date début #}
                     <div class="row mb-3 align-items-center">
                         <label for="Dstart" class="col-sm-3 col-form-label fw-medium">Date début</label>
                         <div class="col-sm-9">
                             <input type="date" name="Dstart" id="Dstart" class="form-control" required>
                         </div>
                     </div>
+
+                    {# Partie date de clôture #}
                     <div class="row mb-3 align-items-center">
                         <label for="DClotEst" class="col-sm-3 col-form-label fw-medium">Date de clôture</label>
                         <div class="col-sm-9">
@@ -52,16 +61,19 @@
                         </div>
                     </div>
 
+                    {# Partie budget #}
                     <div class="row mb-3 align-items-center">
                         <label for="Budget" class="col-sm-3 col-form-label fw-medium">Budget</label>
                         <div class="col-sm-9">
                             <input type="text" name="Budget" id="Budget" class="form-control" required>
                         </div>
                     </div>
-                    <div class="row mb-3">
+
+                    {# Partie actions formulaire #}
+                    <div class="row">
                         <div class="col-12 text-center d-flex justify-content-center gap-2">
                             <button class="btn btn-dark px-4" type="submit">Envoyer</button>
-                            <a class="btn btn-dark px-4" href="getProj">Retour</a>
+                            <a class="btn btn-dark px-4" href="getProject">Retour</a>
                         </div>
                     </div>
                 </form>

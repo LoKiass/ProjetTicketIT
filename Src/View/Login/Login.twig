@@ -13,27 +13,32 @@
                 </div>
 
                 <form method="post">
+                    {# Partie nom d'utilisateur #}
                     <div class="mb-3">
                         <label for="Login" class="form-label fw-medium">Nom d'utilisateur</label>
                         <input type="text" name="Login" id="Login" class="form-control">
                     </div>
 
+                    {# Partie mot de passe #}
                     <div class="mb-4">
                         <label for="Pswd" class="form-label fw-medium">Mot de passe</label>
                         <input type="password" name="Pswd" id="Pswd" class="form-control">
                     </div>
 
+                    {# Partie action formulaire #}
                     <div class="d-grid">
                         <button type="submit" class="btn btn-dark">Connexion</button>
                     </div>
                 </form>
 
+                {# Gestion des erreurs #}
                 {% if errorMessage is defined %}
                     <div class="alert alert-danger mt-3 mb-0">
                         <i class="bi bi-exclamation-triangle me-2"></i>{{ errorMessage }}
                     </div>
                 {% endif %}
 
+                {# Notification de déconnexion / modification utilisateur #}
                 {% if userChanged is defined and userChanged == 1 %}
                     <div class="alert alert-warning mt-3 mb-0">
                         <i class="bi bi-info-circle me-2"></i>

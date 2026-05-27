@@ -17,12 +17,14 @@
                     <p class="text-muted small mb-0">Détails du jobs</p>
                 </div>
 
+                {# Gestion erreur #}
                 {% if errorMessage is defined %}
                     <div class="mt-4 text-center">
                         <p class="text-danger">{{ errorMessage }}</p>
                     </div>
                 {% endif %}
 
+                {# Partie projet associé #}
                 <div class="row mb-3 align-items-center">
                     <span class="col-sm-3 col-form-label fw-medium">Projet associer</span>
                     <div class="col-sm-9">
@@ -30,6 +32,7 @@
                     </div>
                 </div>
 
+                {# Partie titre #}
                 <div class="row mb-3 align-items-center">
                     <span class="col-sm-3 col-form-label fw-medium">Titre</span>
                     <div class="col-sm-9">
@@ -37,6 +40,7 @@
                     </div>
                 </div>
 
+                {# Partie statut #}
                 <div class="row mb-3 align-items-center">
                     <span class="col-sm-3 col-form-label fw-medium">Status</span>
                     <div class="col-sm-9">
@@ -44,6 +48,7 @@
                     </div>
                 </div>
 
+                {# Partie priorité #}
                 <div class="row mb-3 align-items-center">
                     <span class="col-sm-3 col-form-label fw-medium">Priorité</span>
                     <div class="col-sm-9">
@@ -51,6 +56,7 @@
                     </div>
                 </div>
 
+                {# Partie date début #}
                 <div class="row mb-3 align-items-center">
                     <span class="col-sm-3 col-form-label fw-medium">DStart</span>
                     <div class="col-sm-9">
@@ -58,6 +64,7 @@
                     </div>
                 </div>
 
+                {# Partie date échéance #}
                 <div class="row mb-3 align-items-center">
                     <span class="col-sm-3 col-form-label fw-medium">Date écheance</span>
                     <div class="col-sm-9">
@@ -65,12 +72,15 @@
                     </div>
                 </div>
 
+                {# Partie date clôture #}
                 <div class="row mb-3 align-items-center">
                     <span class="col-sm-3 col-form-label fw-medium">Date cloture</span>
                     <div class="col-sm-9">
                         <p class="form-control-plaintext">{{ JobEntity.getDclot() }}</p>
                     </div>
                 </div>
+
+                {# Listing des techniciens attitrés #}
                 <div class="row mb-3">
                     <div class="col-12">
 
@@ -80,7 +90,7 @@
                                 data-bs-target="#techCollapse"
                                 aria-expanded="false"
                                 aria-controls="techCollapse">
-                            <span><i class="bi bi-people me-2"></i>Techniciens attitrés {{ JobEntity.getTech()|length }}</span>
+                            <span><i class="bi bi-people me-2"></i>Techniciens attitrés ({{ JobEntity.getTech()|length }})</span>
                             <i class="bi bi-chevron-down"></i>
                         </button>
 
@@ -113,6 +123,8 @@
 
                     </div>
                 </div>
+
+                {# Partie actions formulaire #}
                 <div class="row">
                     <div class="col-12 text-center">
                         <a class="btn btn-outline-success px-4" href="getJob">Retour</a>
@@ -120,6 +132,7 @@
                         <a class="btn btn-outline-info px-4" href="updateJob?Pk={{ JobEntity.getPk() }}">Modifier</a>
                     </div>
                 </div>
+
             </div>
         </div>
     </div>

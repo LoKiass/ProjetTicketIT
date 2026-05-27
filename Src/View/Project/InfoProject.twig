@@ -17,12 +17,14 @@
                     <p class="text-muted small mb-0">Détails du projet</p>
                 </div>
 
+                {# Gestion erreur #}
                 {% if errorMessage is defined %}
                     <div class="mt-4 text-center">
                         <p class="text-danger">{{ errorMessage }}</p>
                     </div>
                 {% endif %}
 
+                {# Partie identifiant #}
                 <div class="row mb-3 align-items-center">
                     <span class="col-sm-3 col-form-label fw-medium">Identifiant</span>
                     <div class="col-sm-9">
@@ -30,6 +32,7 @@
                     </div>
                 </div>
 
+                {# Partie description #}
                 <div class="row mb-3 align-items-center">
                     <span class="col-sm-3 col-form-label fw-medium">Description</span>
                     <div class="col-sm-9">
@@ -37,6 +40,7 @@
                     </div>
                 </div>
 
+                {# Partie date de début #}
                 <div class="row mb-3 align-items-center">
                     <span class="col-sm-3 col-form-label fw-medium">Date de début</span>
                     <div class="col-sm-9">
@@ -44,6 +48,7 @@
                     </div>
                 </div>
 
+                {# Partie date de clôture #}
                 <div class="row mb-3 align-items-center">
                     <span class="col-sm-3 col-form-label fw-medium">Date de clôture</span>
                     <div class="col-sm-9">
@@ -51,12 +56,15 @@
                     </div>
                 </div>
 
+                {# Partie budget #}
                 <div class="row mb-3 align-items-center">
                     <span class="col-sm-3 col-form-label fw-medium">Budget</span>
                     <div class="col-sm-9">
                         <p class="form-control-plaintext">{{ ProjectEntity.getBudget() }}</p>
                     </div>
                 </div>
+
+                {# Listing des jobs #}
                 <div class="row mb-3">
                     <div class="col-12">
 
@@ -102,7 +110,7 @@
                     </div>
                 </div>
 
-
+                {# Partie actions formulaire #}
                 <div class="row">
                     <div class="col-12 text-center">
                         <a class="btn btn-outline-success px-4" href="getProject">Retour</a>

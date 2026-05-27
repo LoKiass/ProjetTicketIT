@@ -17,6 +17,7 @@
                     <p class="text-muted small mb-0">Liste de tous les jobs enregistrés</p>
                 </div>
 
+                {# Gestion des erreurs et messages #}
                 {% if errorMessage is defined and errorMessage %}
                     <div class="alert alert-danger">{{ errorMessage }}</div>
                 {% endif %}
@@ -26,6 +27,8 @@
                 {% if TabJob is empty %}
                     <div class="alert alert-danger">Aucun jobs encore enregistré</div>
                 {% endif %}
+
+                {# Tableau des jobs #}
                 {% if TabJob is not null %}
                     <div class="table-responsive">
                         <table class="table table-hover align-middle mb-0 small">
@@ -53,6 +56,8 @@
                                     <td class="fw-semibold text-nowrap">{{ job.getDstart() }}</td>
                                     <td class="fw-semibold text-nowrap">{{ job.getDclot() }}</td>
                                     <td class="fw-semibold text-nowrap">{{ job.getDech() }}</td>
+
+                                    {# Actions disponibles #}
                                     <td class="text-nowrap">
                                         <a href="updateJob?Pk={{ job.getPk() }}" class="btn btn-sm btn-outline-primary me-1">
                                             Modification

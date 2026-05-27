@@ -16,6 +16,8 @@
                     </h1>
                     <p class="text-muted small mb-0">Veuillez fournir toutes les informations ci-dessous</p>
                 </div>
+
+                {# Gestion des erreurs #}
                 {% if errorMessage is defined and errorMessage %}
                     <div class="mt-4 text-center">
                         <p class="alert alert-danger">ERREUR : {{ errorMessage }}</p>
@@ -25,7 +27,9 @@
                         <p class="alert alert-success">Jobs crée avec succès</p>
                     </div>
                 {% endif %}
+
                 <form method="post">
+                    {# Partie projet associé #}
                     <div class="row mb-3 align-items-center">
                         <label for="Fk_Project" class="col-sm-3 col-form-label fw-medium">Projet associer</label>
                         <div class="col-sm-9">
@@ -37,6 +41,7 @@
                         </div>
                     </div>
 
+                    {# Partie titre #}
                     <div class="row mb-3 align-items-center">
                         <label for="Titre" class="col-sm-3 col-form-label fw-medium">Titre</label>
                         <div class="col-sm-9">
@@ -44,6 +49,7 @@
                         </div>
                     </div>
 
+                    {# Partie description #}
                     <div class="row mb-3 align-items-center">
                         <label for="Dscr" class="col-sm-3 col-form-label fw-medium">Description</label>
                         <div class="col-sm-9">
@@ -51,6 +57,7 @@
                         </div>
                     </div>
 
+                    {# Partie statut #}
                     <div class="row mb-3 align-items-center">
                         <label for="Status" class="col-sm-3 col-form-label fw-medium">Status</label>
                         <div class="col-sm-9">
@@ -58,6 +65,7 @@
                         </div>
                     </div>
 
+                    {# Partie priorité #}
                     <div class="row mb-3 align-items-center">
                         <label for="Prior" class="col-sm-3 col-form-label fw-medium">Priorité</label>
                         <div class="col-sm-9">
@@ -65,6 +73,7 @@
                         </div>
                     </div>
 
+                    {# Partie date début #}
                     <div class="row mb-3 align-items-center">
                         <label for="Dstart" class="col-sm-3 col-form-label fw-medium">Date début</label>
                         <div class="col-sm-9">
@@ -72,6 +81,7 @@
                         </div>
                     </div>
 
+                    {# Partie date échéance #}
                     <div class="row mb-3 align-items-center">
                         <label for="Dech" class="col-sm-3 col-form-label fw-medium">Date échéance</label>
                         <div class="col-sm-9">
@@ -79,6 +89,7 @@
                         </div>
                     </div>
 
+                    {# Partie date clôture #}
                     <div class="row mb-3 align-items-center">
                         <label for="Dclot" class="col-sm-3 col-form-label fw-medium">Date clôture</label>
                         <div class="col-sm-9">
@@ -86,6 +97,7 @@
                         </div>
                     </div>
 
+                    {# Listing des techniciens #}
                     <div class="row mb-3 align-items-center">
                         <label class="col-sm-3 col-form-label fw-medium">Techs</label>
                         <div class="col-sm-9">
@@ -117,6 +129,7 @@
                         </div>
                     </div>
 
+                    {# Partie actions formulaire #}
                     <div class="row mb-3">
                         <div class="col-12 text-center d-flex justify-content-center gap-2">
                             <button class="btn btn-dark px-4" type="submit">Envoyer</button>

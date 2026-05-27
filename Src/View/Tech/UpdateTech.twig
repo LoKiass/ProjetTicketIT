@@ -18,70 +18,72 @@
                     <div class="row mb-3 align-items-center">
                         <label for="Nom" class="col-sm-3 col-form-label fw-medium">Nom</label>
                         <div class="col-sm-9">
-                            <input type="text" name="Nom" id="Nom" value="{{ TechEntity.getNom() }}" required>
+                            <input class="form-control" type="text" name="Nom" id="Nom" value="{{ TechEntity.getNom() }}" required>
                         </div>
                     </div>
 
                     <div class="row mb-3 align-items-center">
                         <label for="Pren" class="col-sm-3 col-form-label fw-medium">Prenom</label>
                         <div class="col-sm-9">
-                            <input type="text" name="Pren" id="Pren" value="{{ TechEntity.getPrenom() }}" required>
+                            <input class="form-control" type="text" name="Pren" id="Pren" value="{{ TechEntity.getPrenom() }}" required>
                         </div>
                     </div>
 
                     <div class="row mb-3 align-items-center">
                         <label for="Email" class="col-sm-3 col-form-label fw-medium">Email</label>
                         <div class="col-sm-9">
-                            <input type="text" name="Email" id="Email" value="{{ TechEntity.getEmail() }}" required>
+                            <input class="form-control" name="Email" id="Email" value="{{ TechEntity.getEmail() }}" required>
                         </div>
                     </div>
-                    <div class="row mb-3 align-items-center">
-                        <label class="col-sm-3 col-form-label fw-medium">Fonctions</label>
+                    <div class="row mb-4 align-items-center">
+                        <label class="col-sm-3 col-form-label fw-medium">Actif</label>
                         <div class="col-sm-9">
-                            <div class="dropdown">
-                                <button class="btn btn-outline-secondary dropdown-toggle w-100 text-start"
-                                        type="button"
-                                        data-bs-toggle="dropdown"
-                                        data-bs-auto-close="outside">
-                                    Choisir les fonctions...
-                                </button>
-                                <ul class="dropdown-menu p-3 w-100">
-                                    {% for fonction in TabFonction %}
-                                        <li>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" name="fonctions[]" value="{{ fonction.getPk() }}" id="f_{{ fonction.getPk() }}"
-                                                        {% set isChecked = false %}
-                                                        {% for userFonction in TechEntity.getFonctions() %}
-                                                            {% if userFonction.getPk() == fonction.getPk() %}
-                                                                {% set isChecked = true %}
-                                                            {% endif %}
-                                                        {% endfor %}
-                                                        {{ isChecked ? 'checked' : '' }}
-                                                >
-                                                <label class="form-check-label w-100" for="f_{{ fonction.getPk() }}">
-                                                    {{ fonction.getDescr() }}
-                                                </label>
-                                            </div>
-                                        </li>
-                                    {% else %}
-                                        <li class="text-muted small ps-2">Aucune fonction disponible</li>
-                                    {% endfor %}
-                                </ul>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" name="Actif" id="Actif" value="1" {{ TechEntity.getActif() ? 'checked' : '' }}>
                             </div>
                         </div>
-                        <div class="row mb-4">
-                            <div class="col-sm-9 offset-sm-3">
-                                <div class="form-check">
-                                    <label for="Actif"> Actif
-                                        <input class="form-check-input" type="checkbox" name="Actif" id="Actif" value="1" {{ TechEntity.getActif() ? 'checked' : '' }}>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
+                    </div>
+                    <div class="border rounded-3 overflow-hidden">
+                        <table class="table table-hover mb-0">
+                            <thead>
+                            <tr>
+                                <th>Fonction</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for fonction in TabFonction %}
+                                <tr>
+                                    <td>
+                                        <div class="form-check mb-0">
+                                            <input class="form-check-input" type="checkbox" name="fonctions[]" value="{{ fonction.getPk() }}" id="f_{{ fonction.getPk() }}"
+                                                    {% set isChecked = false %}
+                                                    {% for userFonction in TechEntity.getFonctions() %}
+                                                        {% if userFonction.getPk() == fonction.getPk() %}
+                                                            {% set isChecked = true %}
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                    {{ isChecked ? 'checked' : '' }}
+                                            >
+                                            <label class="form-check-label" for="f_{{ fonction.getPk() }}">
+                                                {{ fonction.getDescr() }}
+                                            </label>
+                                        </div>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td colspan="2" class="text-center text-muted">Aucune fonction disponible</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
                         <div class="row-cols-sm-5 p-4">
                             <div class="col-12 text-center d-flex justify-content-center gap-2">
-                                <button class="btn btn-dark px-4" type="submit">Envoyer</button>
-                                <a class="btn btn-dark px-4" href="getTech">Retour</a>
+                                <button class="btn btn-outline-success px-4" type="submit">Envoyer</button>
+                                <a class="btn btn-outline-warning px-4" href="getTech">Retour</a>
                             </div>
                         </div>
                     </div>

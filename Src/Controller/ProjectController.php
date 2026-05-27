@@ -4,6 +4,7 @@ namespace DISEUMAT\Controller;
 
 use DISEUMAT\Controller\BaseController;
 use DISEUMAT\Exception\DatabaseException;
+use DISEUMAT\Exception\LinkExistBetween;
 use DISEUMAT\Exception\MissingInformation;
 use DISEUMAT\Exception\NotCreatedInDatabase;
 use DISEUMAT\Exception\NotFoundException;
@@ -20,9 +21,8 @@ class ProjectController extends BaseController
     }
 
     public function getProject() : void {
+        $this->requireLogin();
         try {
-            $this->requireLogin();
-
             if (isset($_GET['Pk'])) {
                 $Project = $this->PM->read($_GET['Pk']);
                 echo $this->TemplateEngine->render("Project/InfoProject.twig", [
@@ -66,9 +66,38 @@ class ProjectController extends BaseController
         }
     }
     public function updateProject() : void{
-        echo "test";
+        $this->requireLogin();
+        try {
+            if (isset($_GET['Pk'])) {
+                $pk = $_GET['Pk'];
+
+                if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                    $_POST['Pk_Project'] = $pk;
+
+                    $this->PM->update(ProjectEntity::fromArray($_POST));
+
+                    header('Location: getProject?successMessage=' . urlencode("La modifications du jobs à reussis"));
+                } else if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+                    $tempProject = $this->PM->read($_GET['Pk']);
+
+                    echo $this->TemplateEngine->render('Project/UpdateProject.twig', [
+                        'ProjectEntity' => $tempProject,
+                    ]);
+                }
+            }
+        } catch (DatabaseException|NotFoundException|MissingInformation $e) {
+            header('Location: getProject?errorMessage=' . urlencode($e->getMessage()));
+        }
     }
     public function deleteProject() : void{
-        echo "test";
+        $this->requireLogin();
+        try {
+            if (isset($_GET['Pk'])) {
+                $this->PM->delete($_GET['Pk']);
+                header('Location: getProject?successMessage=' . urlencode("Le project à bien été supprimé"));
+            }
+        } catch (NotFoundException|DatabaseException|LinkExistBetween $e) {
+            header('Location: getProject?errorMessage=' . urlencode($e->getMessage())) ;
+        }
     }
 }

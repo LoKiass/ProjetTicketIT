@@ -1,0 +1,75 @@
+{% extends 'baseTemplate.twig' %}
+{% block pagetitle %}TicketSystem - Modification Projet{% endblock %}
+
+{% block navbar %}
+    {% include 'Navbar/Navbar.twig' %}
+{% endblock %}
+
+{% block content %}
+    <div class="min-vh-100 d-flex justify-content-center bg-light py-5">
+        <div class="card shadow-sm border-0 w-100" style="max-width: 650px; border-radius: 12px;">
+            <div class="card-body p-4">
+
+                <div class="mb-4">
+                    <h1 class="h4 fw-semibold mb-1">
+                        <i class="bi bi-shield-check me-2"></i>Modification projet
+                    </h1>
+                    <p class="text-muted small mb-0">Veuillez fournir toutes les informations ci-dessous</p>
+                </div>
+
+                <form method="post">
+
+                    <div class="row mb-3 align-items-center">
+                        <label for="Ident" class="col-sm-3 col-form-label fw-medium">Identifiant</label>
+                        <div class="col-sm-9">
+                            <input type="text" name="Ident" id="Ident" class="form-control"
+                                   value="{{ ProjectEntity.getIdent() }}" required>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3 align-items-center">
+                        <label for="Descr" class="col-sm-3 col-form-label fw-medium">Description</label>
+                        <div class="col-sm-9">
+                            <input type="text" name="Descr" id="Descr" class="form-control"
+                                   value="{{ ProjectEntity.getDescr() }}" required>
+                        </div>
+                    </div>
+
+
+
+                    <div class="row mb-3 align-items-center">
+                        <label for="Dstart" class="col-sm-3 col-form-label fw-medium">Date début</label>
+                        <div class="col-sm-9">
+                            <input type="date" name="Dstart" id="Dstart" class="form-control"
+                                   value="{{ ProjectEntity.getDstart() }}" required>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3 align-items-center">
+                        <label for="DClotEst" class="col-sm-3 col-form-label fw-medium">Date cloture</label>
+                        <div class="col-sm-9">
+                            <input type="date" name="DClotEst" id="DClotEst" class="form-control"
+                                   value="{{ ProjectEntity.getDClotEst() }}" required>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3 align-items-center">
+                        <label for="Budget" class="col-sm-3 col-form-label fw-medium">Budget</label>
+                        <div class="col-sm-9">
+                            <input type="text" name="Budget" id="Budget" class="form-control"
+                                   value="{{ ProjectEntity.getBudget() }}" required>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-12 text-center d-flex justify-content-center gap-2">
+                            <button class="btn btn-dark px-4" type="submit">Envoyer</button>
+                            <a class="btn btn-dark px-4" href="getProject">Retour</a>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+{% endblock %}

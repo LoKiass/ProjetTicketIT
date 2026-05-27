@@ -65,10 +65,13 @@ class JobController extends BaseController
     public function createJob() : void {
         $this->requireLogin();
 
-        $Project = $this->PM->read($_POST['Fk_Project']);
+        $projectId = $_GET['Pk'] ?? $_POST['Fk_Project'] ?? null;
+        $Project = $this->PM->read($projectId);
+
         $tabDate = array();
         $tabDate['Dstart'] = $Project->getDstart();
         $tabDate['DClotEst'] = $Project->getDClotEst();
+
 
         try {
             if (isset($_POST['Fk_Project'])) {
@@ -76,8 +79,12 @@ class JobController extends BaseController
 
                 // Verification si la date n'est pas dans le futur du projet
 
-                if ($Jobs->getDstart() > $Project->getDClotEst() || $Jobs->getDstart() < $Project->getDstart()){
-                    throw new JobsDateFurtherThanProject("La date du projet ne correspont pas !");
+                if ($Jobs->getDstart() > $Project->getDClotEst() || $Jobs->getDclot() > $Project->getDClotEst()){
+                    throw new JobsDateFurtherThanProject(
+                        "La date du jobs ne correspond pas (Inférieur ou supérieur) !\n" .
+                        "Date de début du projet : " . $Project->getDstart() . "\n" .
+                        "Date de fin du projet : " . $Project->getDClotEst()
+                    );
                 }
 
                 $techId = $this->JM->create($Jobs);
@@ -99,9 +106,9 @@ class JobController extends BaseController
                 if (isset($_GET['Pk'])){
                     $PkProject = $_GET['Pk'];
                 }
-                $TabTech = $this->TM->list();
 
-                // Permet d'afficher les date de debut et de fin de projet lors du jobs pour simplifications de la creation
+
+                $TabTech = $this->TM->list();
 
                 echo $this->TemplateEngine->render('/Job/CreateJob.twig', [
                     'TabTech' => $TabTech,
@@ -121,6 +128,7 @@ class JobController extends BaseController
 
     public function updateJob() : void {
         $this->requireLogin();
+
         try {
             if (isset($_GET['Pk'])) {
                 $pk = $_GET['Pk'];
@@ -132,9 +140,14 @@ class JobController extends BaseController
                     }
                     else $_POST['Status'] = 'En cours';
 
+                    // Verification si la date n'est pas dans le futur du projet
                     $Project = $this->PM->read($_POST['Fk_Project']);
-                    if ($_POST['Dstart'] > $Project->getDClotEst()){
-                        throw new JobsDateFurtherThanProject("La date du projet ne correspont pas !");
+                    if ($_POST['Dstart'] > $Project->getDClotEst() || $_POST['DClotEst'] > $Project->getDClotEst()){
+                        throw new JobsDateFurtherThanProject(
+                            "La date du jobs ne correspond pas (Inférieur ou supérieur) !\n" .
+                            "Date de début du projet : " . $Project->getDstart() . "\n" .
+                            "Date de fin du projet : " . $Project->getDClotEst()
+                        );
                     }
 
                     $this->JM->update(JobEntity::fromArray($_POST));
@@ -147,7 +160,6 @@ class JobController extends BaseController
                     }
 
                     header('Location: getJob?successMessage=' . urlencode("La modifications du jobs à reussis"));
-                    var_dump($_POST);
                 } else if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                     $tempJob = $this->JM->read($_GET['Pk']);
                     $jobTech = $this->TM->listByJob($_GET['Pk']);

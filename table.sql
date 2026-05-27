@@ -60,7 +60,7 @@ CREATE TABLE Tech_Jobs (
 -- 7. Table UserEntity
 CREATE TABLE User (
                       Login VARCHAR(32) PRIMARY KEY,
-                      Pswd VARCHAR(256),
+                      Pswd VARBINARY(256),
                       Statut VARCHAR(32),
                       Actif BOOL
 ) COMMENT='Table indépendante';

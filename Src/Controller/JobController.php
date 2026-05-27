@@ -70,6 +70,7 @@ class JobController extends BaseController
                         $this->JM->linkToTech($techId, $idTech);
                     }
                 }
+                $TabTech = $this->TM->list();
                 echo $this->TemplateEngine->render('Job/CreateJob.twig', [
                     'success' => true,
                     'TabTech' => $TabTech,
@@ -101,6 +102,10 @@ class JobController extends BaseController
 
                 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $_POST['Pk_Job'] = $pk;
+                    if ($_POST['Status'] === "on"){
+                        $_POST['Status'] = 'Terminer';
+                    }
+                    else $_POST['Status'] = 'En cours';
 
                     $this->JM->update(JobEntity::fromArray($_POST));
                     $this->JM->unlinkAllTech($pk);

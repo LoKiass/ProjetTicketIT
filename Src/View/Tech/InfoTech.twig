@@ -46,21 +46,28 @@
                     </div>
                 </div>
 
-                <div class="row mb-4 align-items-top">
-                    <span class="col-sm-3 col-form-label fw-medium">Fonctions</span>
-                    <div class="col-sm-9">
-                        <div class="d-flex flex-wrap gap-2 pt-2">
-                            {% for fonction in TechEntity.getFonctions %}
-                                <span class="badge rounded-pill bg-info text-dark border">
-                    <i class="bi bi-gear-fill me-1"></i>
-                    {{ fonction.getDescr }}
-                </span>
-                            {% else %}
-                                <p class="form-control-plaintext text-muted italic small">
-                                    Aucune fonction assignée
-                                </p>
-                            {% endfor %}
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <button class="btn btn-outline-primary w-100 d-flex justify-content-between align-items-center"
+                                type="button"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#fonctionsCollapse"
+                                aria-expanded="false"
+                                aria-controls="fonctionsCollapse">
+                            <span><i class="bi bi-gear me-2"></i>Fonctions</span>
+                            <i class="bi bi-chevron-down"></i>
+                        </button>
+
+                        <div class="collapse mt-2" id="fonctionsCollapse">
+                            <div class="d-flex flex-wrap gap-2 pt-2 px-2">
+                                {% for fonction in TechEntity.getFonctions %}
+                                    <i class="bi bi-gear-fill me-1"></i>{{ fonction.getDescr }}
+                                {% else %}
+                                    <p class="text-muted small fst-italic mb-0">Aucune fonction assignée</p>
+                                {% endfor %}
+                            </div>
                         </div>
+
                     </div>
                 </div>
 

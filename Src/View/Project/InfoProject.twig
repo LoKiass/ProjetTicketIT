@@ -57,31 +57,50 @@
                         <p class="form-control-plaintext">{{ ProjectEntity.getBudget() }}</p>
                     </div>
                 </div>
-                <div class="row mb-3 align-items-center">
-                        <table class="table table-striped table-hover">
-                            <tr>
-                                <th>Jobs</th>
-                                <th></th>
-                            </tr>
-                            <tr>
+                <div class="row mb-3">
+                    <div class="col-12">
+
+                        <button class="btn btn-outline-primary w-100 d-flex justify-content-between align-items-center"
+                                type="button"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#jobsCollapse"
+                                aria-expanded="false"
+                                aria-controls="jobsCollapse">
+                            <span><i class="bi bi-list-task me-2"></i>Jobs ({{ JobsList|length }})</span>
+                            <i class="bi bi-chevron-down"></i>
+                        </button>
+
+                        <div class="collapse mt-2" id="jobsCollapse">
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                <tr>
+                                    <th>Jobs</th>
+                                    <th>Status</th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+                                <tbody>
                                 {% for jobs in JobsList %}
-                                    <th>{{ jobs.getTitre() }}</th>
-                                    <th>
-                                        <a href="getJob?Pk={{ jobs.getPk() }}" class="btn btn-sm btn-outline-info">
-                                            Informations
-                                        </a>
-                                    </th>
+                                    <tr>
+                                        <td>{{ jobs.getTitre() }}</td>
+                                        <td>{{ jobs.getStatus() }}</td>
+                                        <td>
+                                            <a href="getJob?Pk={{ jobs.getPk() }}" class="btn btn-sm btn-outline-info">
+                                                Informations
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% else %}
+                                    <tr>
+                                        <td colspan="3" class="text-center text-muted">Aucun job</td>
+                                    </tr>
                                 {% endfor %}
-                            </tr>
-                            <tr>
-                                <th class="text-center" colspan="2">
-                                    <a href="createJob?Pk={{ ProjectEntity.getPk() }}" class="btn btn-sm btn-outline-success">
-                                        Ajouter un job
-                                    </a>
-                                </th>
-                            </tr>
-                        </table>
+                                </tbody>
+                            </table>
+                        </div>
+
                     </div>
+                </div>
 
 
                 <div class="row">
@@ -89,6 +108,7 @@
                         <a class="btn btn-outline-success px-4" href="getProject">Retour</a>
                         <a class="btn btn-outline-primary px-4" href="updateProject?Pk={{ ProjectEntity.getPk() }}">Modifier</a>
                         <a class="btn btn-outline-danger px-4" href="deleteProject?Pk={{ ProjectEntity.getPk() }}">Supprimer</a>
+                        <a class="btn btn-outline-info px-4" href="createJob?Pk={{ ProjectEntity.getPk() }}">Ajouter un job</a>
                     </div>
                 </div>
             </div>

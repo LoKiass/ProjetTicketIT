@@ -8,15 +8,19 @@ use DISEUMAT\Exception\LinkExistBetween;
 use DISEUMAT\Exception\MissingInformation;
 use DISEUMAT\Exception\NotCreatedInDatabase;
 use DISEUMAT\Exception\NotFoundException;
+use DISEUMAT\Model\Entity\JobEntity;
 use DISEUMAT\Model\Entity\ProjectEntity;
+use DISEUMAT\Model\Service\Manager\JobManager;
 use DISEUMAT\Model\Service\Manager\ProjectManager;
 use mysql_xdevapi\Exception;
 
 class ProjectController extends BaseController
 {
     private ProjectManager $PM;
+    private JobManager $JM;
     public function __construct(){
         parent::__construct();
+        $this->JM = new JobManager();
         $this->PM = new ProjectManager();
     }
 
@@ -78,9 +82,22 @@ class ProjectController extends BaseController
 
                     $this->PM->update(ProjectEntity::fromArray($_POST));
 
-                    header('Location: getProject?successMessage=' . urlencode("La modifications du jobs à reussis"));
+                    $projectJobs = $this->PM->listByJobs($pk);
+
+                    foreach ($projectJobs as $job) {
+                        $pkJob = $job->getPk();
+                        $newStatus = isset($_POST['status_' . $pkJob]) ? 'Terminer' : 'En cours';
+                        if ($job->getStatus() !== $newStatus) {
+                            $job->setStatus($newStatus);
+                            $this->JM->update($job);
+                        }
+                        header('Location: getProject?successMessage=' . urlencode("La modifications du projet à reussis"));
+                    }
+
                 } else if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                     $tempProject = $this->PM->read($_GET['Pk']);
+                    $projectJobs = $this->PM->listByJobs($_GET['Pk']);
+                    $tempProject->setJobs($projectJobs);
 
                     echo $this->TemplateEngine->render('Project/UpdateProject.twig', [
                         'ProjectEntity' => $tempProject,

@@ -60,6 +60,26 @@
                                    value="{{ ProjectEntity.getBudget() }}" required>
                         </div>
                     </div>
+                    <div class="row mb-3 align-items-center">
+                        <table class="table table-striped table-hover">
+                            <tr>
+                                <th>Jobs</th>
+                                <th>Status</th>
+                            </tr>
+                            {% for jobs in ProjectEntity.getJobs() %}
+                            <tr>
+                                    <th>{{ jobs.getTitre() }}</th>
+                                    <th>
+                                        <label>
+                                            <input type="checkbox"
+                                                   name="status_{{ jobs.getPk }}"
+                                                    {{ jobs.getStatus() == 'Terminer' ? 'checked' : '' }}>
+                                        </label>
+                                    </th>
+                                {% endfor %}
+                            </tr>
+                        </table>
+                    </div>
 
                     <div class="row mb-3">
                         <div class="col-12 text-center d-flex justify-content-center gap-2">

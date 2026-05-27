@@ -28,7 +28,7 @@
                     </div>
                 {% endif %}
 
-                <form method="post">
+                <form method="post" id="projectForm">
                     {# Partie identifiant #}
                     <div class="row mb-3 align-items-center">
                         <label for="Ident" class="col-sm-3 col-form-label fw-medium">Identifiant</label>
@@ -58,6 +58,7 @@
                         <label for="DClotEst" class="col-sm-3 col-form-label fw-medium">Date de clôture</label>
                         <div class="col-sm-9">
                             <input type="date" name="DClotEst" id="DClotEst" class="form-control" required>
+                            <div class="invalid-feedback">La date de clôture doit être postérieure ou égale à la date de début.</div>
                         </div>
                     </div>
 
@@ -81,4 +82,8 @@
             </div>
         </div>
     </div>
+
+
+    <script src="/DISEUMAT/public/js/checkDate.js"></script>
+
 {% endblock %}

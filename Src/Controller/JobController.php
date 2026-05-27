@@ -4,23 +4,27 @@ namespace DISEUMAT\Controller;
 
 use DISEUMAT\Controller\BaseController;
 use DISEUMAT\Exception\DatabaseException;
+use DISEUMAT\Exception\JobsDateFurtherThanProject;
 use DISEUMAT\Exception\LinkExistBetween;
 use DISEUMAT\Exception\MissingInformation;
 use DISEUMAT\Exception\NotCreatedInDatabase;
 use DISEUMAT\Exception\NotFoundException;
 use DISEUMAT\Model\Entity\JobEntity;
 use DISEUMAT\Model\Service\Manager\JobManager;
+use DISEUMAT\Model\Service\Manager\ProjectManager;
 use DISEUMAT\Model\Service\Manager\TechManager;
 
 class JobController extends BaseController
 {
     private JobManager $JM;
     private TechManager $TM;
+    private ProjectManager $PM;
 
     public function __construct(){
         parent::__construct();
         $this->JM = new JobManager();
         $this->TM = new TechManager();
+        $this->PM = new ProjectManager();
     }
 
     public function getJob() : void {
@@ -60,9 +64,22 @@ class JobController extends BaseController
 
     public function createJob() : void {
         $this->requireLogin();
+
+        $Project = $this->PM->read($_POST['Fk_Project']);
+        $tabDate = array();
+        $tabDate['Dstart'] = $Project->getDstart();
+        $tabDate['DClotEst'] = $Project->getDClotEst();
+
         try {
             if (isset($_POST['Fk_Project'])) {
                 $Jobs = JobEntity::fromArray($_POST);
+
+                // Verification si la date n'est pas dans le futur du projet
+
+                if ($Jobs->getDstart() > $Project->getDClotEst() || $Jobs->getDstart() < $Project->getDstart()){
+                    throw new JobsDateFurtherThanProject("La date du projet ne correspont pas !");
+                }
+
                 $techId = $this->JM->create($Jobs);
 
                 if (isset($_POST['Tech']) && is_array($_POST['Tech'])) {
@@ -70,26 +87,34 @@ class JobController extends BaseController
                         $this->JM->linkToTech($techId, $idTech);
                     }
                 }
+
                 $TabTech = $this->TM->list();
+
                 echo $this->TemplateEngine->render('Job/CreateJob.twig', [
                     'success' => true,
                     'TabTech' => $TabTech,
+                    'tabDate' => $tabDate,
                 ]);
             } else {
                 if (isset($_GET['Pk'])){
                     $PkProject = $_GET['Pk'];
                 }
                 $TabTech = $this->TM->list();
+
+                // Permet d'afficher les date de debut et de fin de projet lors du jobs pour simplifications de la creation
+
                 echo $this->TemplateEngine->render('/Job/CreateJob.twig', [
                     'TabTech' => $TabTech,
                     'PkProject' => $PkProject ?? null,
+                    'tabDate' => $tabDate,
                 ]);
             }
-        } catch (DatabaseException|NotCreatedInDatabase|NotFoundException|MissingInformation $e) {
+        } catch (DatabaseException|NotCreatedInDatabase|NotFoundException|MissingInformation|JobsDateFurtherThanProject $e) {
             $TabTech = $this->TM->list();
             echo $this->TemplateEngine->render('/Job/CreateJob.twig', [
                 'TabTech' => $TabTech,
                 'errorMessage'   => $e->getMessage(),
+                'tabDate' => $tabDate,
             ]);
         }
     }
@@ -107,6 +132,11 @@ class JobController extends BaseController
                     }
                     else $_POST['Status'] = 'En cours';
 
+                    $Project = $this->PM->read($_POST['Fk_Project']);
+                    if ($_POST['Dstart'] > $Project->getDClotEst()){
+                        throw new JobsDateFurtherThanProject("La date du projet ne correspont pas !");
+                    }
+
                     $this->JM->update(JobEntity::fromArray($_POST));
                     $this->JM->unlinkAllTech($pk);
 
@@ -117,6 +147,7 @@ class JobController extends BaseController
                     }
 
                     header('Location: getJob?successMessage=' . urlencode("La modifications du jobs à reussis"));
+                    var_dump($_POST);
                 } else if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                     $tempJob = $this->JM->read($_GET['Pk']);
                     $jobTech = $this->TM->listByJob($_GET['Pk']);
@@ -128,7 +159,7 @@ class JobController extends BaseController
                     ]);
                 }
             }
-        } catch (DatabaseException|NotFoundException|MissingInformation $e) {
+        } catch (DatabaseException|NotFoundException|MissingInformation|JobsDateFurtherThanProject $e) {
             header('Location: getJob?errorMessage=' . urlencode($e->getMessage()));
         }
     }

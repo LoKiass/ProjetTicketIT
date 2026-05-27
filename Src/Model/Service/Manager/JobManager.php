@@ -103,6 +103,7 @@ class JobManager
      * Cette méthode permet de modifier un jobs déjà existant en BDD
      */
     public function update(JobEntity $entity) : void {
+
         try {
             $check = $this->pdb->prepare("SELECT 1 FROM job WHERE Pk_Job = ?");
             $check->execute([$entity->getPk()]);

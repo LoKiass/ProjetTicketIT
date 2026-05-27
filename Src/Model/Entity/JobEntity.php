@@ -103,7 +103,12 @@ class JobEntity
             $instance->setDscr($data['Dscr']);
             $instance->setDstart($data['Dstart']);
             $instance->setDech($data['Dech']);
-            $instance->setDclot($data['Dclot']);
+
+            if (isset($data['DClotEst'])) {
+                $instance->setDclot($data['DClotEst']);
+            } elseif (isset($data['Dclot'])) {
+                $instance->setDclot($data['Dclot']);
+            }
 
             return $instance;
         } catch (\Throwable $e){

@@ -16,6 +16,7 @@
                     <p class="text-muted small mb-0">Liste de tous les techniciens enregistrés</p>
                 </div>
 
+                {# Gestion Erreur#}
                 {% if errorMessage is defined and errorMessage != null %}
                     <div class="alert alert-danger">{{ errorMessage }}</div>
                 {% endif %}
@@ -29,6 +30,7 @@
 
                 {% if TabTech is not null %}
                     <div class="table-responsive">
+                        {# Tableau techniciens#}
                         <table class="table table-hover align-middle mb-0">
                             <thead class="table-light">
                             <tr>
@@ -40,6 +42,7 @@
                             </tr>
                             </thead>
                             <tbody>
+                            {# Informations techniciens #}
                             {% for tech in TabTech %}
                                 <tr>
                                     <td class="fw-semibold">{{ tech.getNom }}</td>

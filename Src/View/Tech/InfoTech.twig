@@ -14,6 +14,12 @@
                     <p class="text-muted small mb-0">Détails du compte technicien</p>
                 </div>
 
+                {# Gestion erreur #}
+                {% if errorMessage is defined and error %}
+                    <p class="alert alert-danger">ERREUR : {{ error }}</p>
+                {% endif %}
+
+                {# Partie nom #}
                 <div class="row mb-3 align-items-center">
                     <span class="col-sm-3 col-form-label fw-medium">Nom</span>
                     <div class="col-sm-9">
@@ -21,6 +27,7 @@
                     </div>
                 </div>
 
+                {# Partie prénom #}
                 <div class="row mb-3 align-items-center">
                     <span class="col-sm-3 col-form-label fw-medium">Prénom</span>
                     <div class="col-sm-9">
@@ -28,6 +35,7 @@
                     </div>
                 </div>
 
+                {# Partie e-mail #}
                 <div class="row mb-3 align-items-center">
                     <span class="col-sm-3 col-form-label fw-medium">Email</span>
                     <div class="col-sm-9">
@@ -35,6 +43,7 @@
                     </div>
                 </div>
 
+                {# Partie Status #}
                 <div class="row mb-3 align-items-center">
                     <span class="col-sm-3 col-form-label fw-medium">Statut</span>
                     <div class="col-sm-9">
@@ -46,6 +55,7 @@
                     </div>
                 </div>
 
+                {# Listing des fonctions #}
                 <div class="row mb-3">
                     <div class="col-12">
                         <button class="btn btn-outline-primary w-100 d-flex justify-content-between align-items-center"
@@ -71,18 +81,12 @@
                     </div>
                 </div>
 
+                {# Partie action formulaire #}
                 <div class="row">
                     <div class="col-12 text-center">
                         <a class="btn btn-dark px-4" href="getTech">Retour</a>
                     </div>
                 </div>
-
-                {% if errorMessage is defined %}
-                    <div class="mt-4 text-center">
-                        <p class="text-danger">{{ errorMessage }}</p>
-                    </div>
-                {% endif %}
-
             </div>
         </div>
     </div>

@@ -44,11 +44,13 @@ class FonctionController extends BaseController
                     'errorMessage'  => $errorFromUrl,
                 ]);
             }
-        } catch (NotFoundException|DatabaseException $e) {
+        } catch (DatabaseException $e) {
             echo $this->TemplateEngine->render("Fonction/ListFonction.twig", [
                 'TabFonction'  => null,
                 'errorMessage' => $e->getMessage(),
             ]);
+        } catch (NotFoundException $e){
+            header('Location: error404');
         }
     }
 
@@ -76,6 +78,8 @@ class FonctionController extends BaseController
                 'success' => false,
                 'error'   => $e->getMessage(),
             ]);
+        } catch (NotFoundException $e){
+            header('Location: error404');
         }
     }
 
@@ -108,9 +112,11 @@ class FonctionController extends BaseController
                 header('Location: getFonction');
                 exit;
             }
-        } catch (NotFoundException|DatabaseException|MissingInformation $e) {
+        } catch (DatabaseException|MissingInformation $e) {
             header("Location: getFonction?errorMessage=" . $e->getMessage());
             exit;
+        } catch (NotFoundException $e){
+            header('Location: error404');
         }
     }
 
@@ -128,8 +134,10 @@ class FonctionController extends BaseController
                 $this->FM->delete($_GET['Pk']);
                 header('Location: getFonction?successMessage=' . urlencode("La fonction à bien étais supprimer"));
             }
-        } catch (NotFoundException|DatabaseException|LinkExistBetween $e) {
+        } catch (DatabaseException|LinkExistBetween $e) {
             header('Location: getFonction?errorMessage=' . $e->getMessage());
+        } catch (NotFoundException $e){
+            header('Location: error404');
         }
     }
 }

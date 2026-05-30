@@ -48,11 +48,13 @@ class TechController extends BaseController
                     'errorMessage'   => $errorMessage
                 ]);
             }
-        } catch (NotFoundException|DatabaseException $e) {
+        } catch (DatabaseException $e) {
             echo $this->TemplateEngine->render("Tech/ListTech.twig", [
                 'TabTech'      => null,
                 'errorMessage' => $e->getMessage()
             ]);
+        } catch (NotFoundException $e){
+            header('Location: error404');
         }
     }
 
@@ -87,7 +89,7 @@ class TechController extends BaseController
                 $TabFonction = $this->FM->list();
                 echo $this->TemplateEngine->render("Tech/CreateTech.twig", ['TabFonction' => $TabFonction]);
             }
-        } catch (DatabaseException|NotCreatedInDatabase|MissingInformation|NotFoundException $e) {
+        } catch (DatabaseException|NotCreatedInDatabase|MissingInformation $e) {
             $TabFonction = $this->FM->list();
             echo $this->TemplateEngine->render("Tech/CreateTech.twig", [
                 'TabFonction'  => $TabFonction,
@@ -130,8 +132,10 @@ class TechController extends BaseController
                     ]);
                 }
             }
-        } catch (NotFoundException|DatabaseException|MissingInformation $e) {
+        } catch (DatabaseException|MissingInformation $e) {
             header('Location: getTech?errorMessage=' . urlencode($e->getMessage()));
+        } catch (NotFoundException $e){
+            header('Location: error404');
         }
     }
 }

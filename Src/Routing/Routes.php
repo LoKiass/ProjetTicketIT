@@ -2,6 +2,10 @@
 // Routes du sites
 return [
     /*
+     * Erreur
+     */
+    'error404' => ['Base' => 'error404'],
+    /*
      * Partie login
      */
     'formLogin' => ['User' => 'formLogin'],

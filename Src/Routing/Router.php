@@ -15,7 +15,7 @@ class Router
     {
         $this->routes = require_once 'Routes.php';
         $requestUri = $_SERVER['REQUEST_URI'];
-        $regexp = "/.*\/DISEUMAT\/([^?]*)[?]?.*/";
+        $regexp = "#.*/DISEUMAT/?([^?]*)#";
 
         if (preg_match($regexp, $requestUri, $matches)) {
             $this->uri = $matches[1] ?? '';

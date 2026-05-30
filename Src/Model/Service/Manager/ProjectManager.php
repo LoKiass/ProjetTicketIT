@@ -94,7 +94,7 @@ class ProjectManager
                 throw new NotFoundException("Le projet n'existe pas");
             }
         } catch (PDOException $e){
-
+            throw new DatabaseException("Erreur lors de l'authentifications");
         }
     }
 

@@ -103,10 +103,6 @@ class TechManager
             $check = $this->pdb->prepare("SELECT 1 FROM tech WHERE Pk_Tech = ?");
             $check->execute([$entity->getPk()]);
 
-            if ($check->rowCount() === 0) {
-                throw new NotFoundException("Tech introuvable", 0);
-            }
-
             $query = <<<SQL
                 UPDATE tech SET 
                     Nom   = ?,

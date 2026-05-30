@@ -8,11 +8,8 @@ class DBManager
     private static $instance;
 
     private function __construct(){
-        try {
-            $this->pdo = new \PDO('mysql:host=localhost;dbname=DISEUMAT', 'root', '');
-        } catch (\PDOException $e) {
-
-        }
+        require 'config.php';
+        $this->pdo = new \PDO($dsn, $dbuser, $dbpass);
     }
 
     public static function getInstance(){

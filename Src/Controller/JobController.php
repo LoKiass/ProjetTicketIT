@@ -54,11 +54,13 @@ class JobController extends BaseController
                     'errorMessage' => $errorMessage,
                 ]);
             }
-        } catch (DatabaseException|NotFoundException $e) {
+        } catch (DatabaseException $e) {
             echo $this->TemplateEngine->render('/Job/ListJob.twig', [
                 'TabJob'       => null,
                 'errorMessage' => $e->getMessage(),
             ]);
+        } catch (NotFoundException $e){
+            header('Location: error404');
         }
     }
 
@@ -116,7 +118,7 @@ class JobController extends BaseController
                     'tabDate' => $tabDate,
                 ]);
             }
-        } catch (DatabaseException|NotCreatedInDatabase|NotFoundException|MissingInformation|JobsDateFurtherThanProject $e) {
+        } catch (DatabaseException|NotCreatedInDatabase|MissingInformation|JobsDateFurtherThanProject $e) {
             $TabTech = $this->TM->list();
             echo $this->TemplateEngine->render('/Job/CreateJob.twig', [
                 'TabTech' => $TabTech,
@@ -171,8 +173,10 @@ class JobController extends BaseController
                     ]);
                 }
             }
-        } catch (DatabaseException|NotFoundException|MissingInformation|JobsDateFurtherThanProject $e) {
+        } catch (DatabaseException|MissingInformation|JobsDateFurtherThanProject $e) {
             header('Location: getJob?errorMessage=' . urlencode($e->getMessage()));
+        } catch (NotFoundException $e){
+            header('Location: error404');
         }
     }
 
@@ -183,8 +187,10 @@ class JobController extends BaseController
                 $this->JM->delete($_GET['Pk']);
                 header('Location: getJob?successMessage=' . urlencode("Le jobs à bien été supprimé"));
             }
-        } catch (NotFoundException|DatabaseException|LinkExistBetween $e) {
+        } catch (DatabaseException|LinkExistBetween $e) {
             header('Location: getJob?errorMessage=' . urlencode($e->getMessage())) ;
+        } catch (NotFoundException $e){
+            header('Location: error404');
         }
     }
 }

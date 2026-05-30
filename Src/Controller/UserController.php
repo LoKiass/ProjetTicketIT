@@ -88,7 +88,7 @@ class UserController extends BaseController
         try{
             $TabUser = $this->UM->list();
             echo $this->TemplateEngine->render('/User/ListUser.twig', ['TabUser' => $TabUser]);
-        } catch (DatabaseException|NotFoundException $e){
+        } catch (DatabaseException $e){
             echo $this->TemplateEngine->render('/User/ListUser.twig', [
                 'errorMessage' => $e->getMessage(),
                 'userChanged' => 0
@@ -148,11 +148,13 @@ class UserController extends BaseController
                     ]);
                 }
             }
-        } catch (DatabaseException|NotFoundException|InvalidCredentialException|MissingInformation $e) {
+        } catch (DatabaseException|InvalidCredentialException $e) {
             echo $this->TemplateEngine->render('/User/UpdateUser.twig', [
                 'UserEntity' => $userToEdit,
                 'errorMessage' => $e->getMessage(),
             ]);
+        } catch (NotFoundException $e){
+            header('Location: error404');
         }
 
     }

@@ -24,9 +24,13 @@ class BaseController
     }
     protected function requireLogin(): void {
         if (empty($_SESSION['userLogged'])) {
-            header("HTTP/1.0 404 Not Found");
+            header('Location: error404');
             exit;
         }
+    }
+
+    public function error404() : void{
+        echo $this->TemplateEngine->render("/Error/error404.twig");
     }
 
 }

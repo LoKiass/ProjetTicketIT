@@ -47,11 +47,13 @@ class ProjectController extends BaseController
                     'errorMessage'   => $errorMessage
                 ]);
             }
-        } catch (NotFoundException|DatabaseException $e) {
+        } catch (DatabaseException $e) {
             echo $this->TemplateEngine->render("Project/ListProject.twig", [
                 'TabProject'      => null,
                 'errorMessage' => $e->getMessage()
             ]);
+        } catch (NotFoundException $e){
+            header('Location: error404');
         }
     }
     public function createProject() : void{
@@ -104,8 +106,10 @@ class ProjectController extends BaseController
                     ]);
                 }
             }
-        } catch (DatabaseException|NotFoundException|MissingInformation $e) {
+        } catch (DatabaseException|MissingInformation $e) {
             header('Location: getProject?errorMessage=' . urlencode($e->getMessage()));
+        } catch (NotFoundException $e){
+            header('Location: error404');
         }
     }
     public function deleteProject() : void{
@@ -115,8 +119,10 @@ class ProjectController extends BaseController
                 $this->PM->delete($_GET['Pk']);
                 header('Location: getProject?successMessage=' . urlencode("Le project à bien été supprimé"));
             }
-        } catch (NotFoundException|DatabaseException|LinkExistBetween $e) {
-            header('Location: getProject?errorMessage=' . urlencode($e->getMessage())) ;
+        } catch (NotFoundException $e){
+            header('Location: error404');
+        } catch (DatabaseException $e) {
+            header('Location: getProject?errorMessage=' . urlencode($e->getMessage()));
         }
     }
 }

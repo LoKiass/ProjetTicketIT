@@ -1,6 +1,5 @@
 <?php
-$isProd = true;
-
-if ($isProd === true) {
-    $rootDir = "DISEUMAT";
-}
+$rootDir = "DISEUMAT";
+$dsn = "mysql:host=localhost;dbname=diseumat";
+$dbuser = "root";
+$dbpass = "";

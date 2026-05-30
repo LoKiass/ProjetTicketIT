@@ -1,4 +1,4 @@
-<?php
+        <?php
 session_start();
 require_once 'vendor/autoload.php'; // Auto-loader php
 require_once 'config.php'; // Fichier de configuration production et hors production
@@ -21,7 +21,8 @@ try {
             echo "Erreur : La méthode $Action n'existe pas dans la classe $controllerClassName.";
         }
     } else { // Dans le cas ou l'utilisateur fournit un controller qui n'existe pas
-        header("HTTP/1.0 404 Not Found");
+        header("Location: error404");
+        exit();
     }
 } catch (Exception $e) { // Gestion des exceptions
     echo "Erreur système : " . $e->getMessage();

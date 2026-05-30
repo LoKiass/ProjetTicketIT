@@ -21,7 +21,7 @@ class UserSession
      * @param int|null $id
      * @return UserEntity|null
      */
-    public function read(? int $id) : ?UserEntity
+    public function read() : ?UserEntity
     {
         if(isset($_SESSION['userLogged'])) return unserialize($_SESSION['userLogged']);
         else return null;

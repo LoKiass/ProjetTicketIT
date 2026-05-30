@@ -127,7 +127,10 @@ class UserController extends BaseController
                     $this->UM->updatePassword($loginTarget, $newPswd);
 
 
-                    $loginLogged = $_SESSION['userLogged']['Login'];
+                    $loginLogged = $_SESSION['userLogged'];
+                    $tempLog = $this->US->read();
+                    $loginLogged = $tempLog->getLogin();
+
                     if ($loginLogged === $loginTarget) { // Si le user qui modifie ce modifie lui même, alors on le déconnecte pour eviter
                         // d'avoir la variable sessions valide avec les credentiales de l'ancien user'
                         session_abort();

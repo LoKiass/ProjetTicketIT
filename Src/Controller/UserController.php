@@ -33,11 +33,13 @@ class UserController extends BaseController
      * En cas d'erreur (identifiants invalides, erreur base), réaffiche le formulaire avec un message d'erreur.
      */
     public function formLogin() : void {
+        $accountSuccess = false;
         $userChangedParam = isset($_GET['userChanged']) ? 1 : 0;
 
         if(isset($_SESSION['userLogged'])){
             unset($_SESSION['userLogged']);
         }
+
         try{
             if(isset($_POST['Login'])){
                 $userTmp = new UserEntity();
@@ -52,9 +54,21 @@ class UserController extends BaseController
 
             }
             else {
-                echo $this->TemplateEngine->render('/Login/Login.twig', [
-                    'userChanged' => $userChangedParam
-                ]);
+                $checkIfUserInDb = $this->UM->list();
+                if (empty($checkIfUserInDb)){ // Si aucun utilisateurs trouver
+                    header("Location: addFirstUser");
+                }
+                else {
+                    if (isset($_GET['accountSuccess'])){
+                        $accountSuccess = true;
+                    }
+
+                    echo $this->TemplateEngine->render('/Login/Login.twig', [
+                        'userChanged' => $userChangedParam,
+                        'accountSuccess' => $accountSuccess,
+                    ]);
+                }
+
             }
         } catch (DatabaseException|InvalidCredentialException $e){
             echo $this->TemplateEngine->render('/Login/Login.twig', [
@@ -138,5 +152,33 @@ class UserController extends BaseController
             ]);
         }
 
+    }
+    public function addFirstUser() : void{
+            try{
+                if (isset($_SESSION['userLogged']) || !empty($this->UM->list()) ){
+                    header("Location: page404");
+                }
+
+                if (isset($_POST['Login']) && isset($_POST['Pswd'])){
+                    if ($_POST['Pswd'] != $_POST['PswdConfirm']){
+                        throw new InvalidCredentialException("Les mots de passe ne correspondent pas");
+                    }
+
+                    $userTmp = new UserEntity();
+                    $userTmp->setLogin($_POST['Login']);
+                    $userTmp->setPswd($_POST['Pswd']);
+                    $userTmp->setStatut($_POST['Statut']);
+                    $userTmp->setActif(true);
+
+                    $this->UM->create($userTmp);
+
+                    header("Location: formLogin?accountSuccess=true");
+                }
+                else {
+                    echo $this->TemplateEngine->render('/Login/AddFirstUser.twig');
+                }
+            } catch (DatabaseException|InvalidCredentialException $e){
+                echo $this->TemplateEngine->render('/Login/AddFirstUser.twig', ['errorMessage' => $e->getMessage()]);
+            }
     }
 }

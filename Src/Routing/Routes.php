@@ -11,6 +11,7 @@ return [
      */
     'getUser' => ['User' => 'getUser'],
     'updateUser' => ['User' => 'updateUser'],
+    'addFirstUser' => ['User' => 'addFirstUser'],
     /*
      * Partie accueil
      */

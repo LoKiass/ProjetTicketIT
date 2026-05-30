@@ -15,7 +15,7 @@ class UserManager
 
     public function __construct(){
         $this->pdb = DBManager::getInstance();
-        $this->keyString = 'x';
+        $this->keyString = 'CG6eeGK0jaKUU2U7';
     }
 
     public function checkUser(UserEntity $entity) : UserEntity
@@ -59,7 +59,7 @@ class UserManager
                 }
 
                 if (empty($TabUser)){
-                    throw new NotFoundException("Aucun user trouver");
+                    return [];
                 }
                 return $TabUser;
             } catch (PDOException $e){
@@ -94,6 +94,15 @@ class UserManager
 
         } catch (PDOException $e){
             throw new DatabaseException("Impossible de mettre à jours le mots de passe", 0);
+        }
+    }
+
+    public function create(UserEntity $entity) : void {
+        try{
+            $query = $this->pdb->prepare("INSERT INTO user (Login, Pswd, Actif, Statut) VALUES (?, AES_ENCRYPT(?, ?), ?, ?)");
+            $query->execute([$entity->getLogin(), $this->keyString, $entity->getPswd(), $entity->getActif(), $entity->getStatut()]);
+        } catch (PDOException $e){
+            throw new DatabaseException("Erreur lors de l'insertion dans la table user");
         }
     }
 

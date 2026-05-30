@@ -15,7 +15,6 @@ class JobEntity
     private string $Dstart;
     private string $Dech;
     private string $Dclot;
-    // private array $Project;
     private array $Techs;
     // private jobs $Parent;
 

@@ -27,6 +27,7 @@ class JobController extends BaseController
         $this->PM = new ProjectManager();
     }
 
+
     public function getJob() : void {
         $this->requireLogin();
 
@@ -36,20 +37,27 @@ class JobController extends BaseController
                 $JobEntity = $this->JM->read($pk);
                 $listTech = $this->TM->listByJob($pk);
                 $JobEntity->setTech($listTech);
-                echo $this->TemplateEngine->render('/Job/InfoJob.twig', ['JobEntity' => $JobEntity]);
+
+                $projectName = $this->JM->getIdentById($JobEntity->getFk_Project());
+
+                echo $this->TemplateEngine->render('/Job/InfoJob.twig', [
+                    'JobEntity' => $JobEntity,
+                    'nameOfProject' => $projectName
+                ]);
             } else {
+                $nameOfProject = array();
                 $TabJob = $this->JM->list();
 
-                // Gestion des logs des actions
-                if (isset($_GET['successMessage'])) {
-                    $successMessageFromUrl = $_GET['successMessage'];
-                } else {
-                    $successMessageFromUrl = null;
+                foreach ($TabJob as $job){
+                    $nameOfProject[$job->getPk()] = $this->JM->getIdentById($job->getFk_Project());
                 }
+
+                $successMessageFromUrl = $_GET['successMessage'] ?? null;
                 $errorMessage  = $_GET['errorMessage'] ?? null;
 
                 echo $this->TemplateEngine->render('/Job/ListJob.twig', [
                     'TabJob' => $TabJob,
+                    'nameOfProject' => $nameOfProject,
                     'successMessage' => $successMessageFromUrl,
                     'errorMessage' => $errorMessage,
                 ]);
@@ -77,6 +85,7 @@ class JobController extends BaseController
 
         try {
             if (isset($_POST['Fk_Project'])) {
+                $_POST['Fk_Project'] = $this->JM->getidByIdent($_POST['Fk_Project']);
                 $Jobs = JobEntity::fromArray($_POST);
 
                 // Verification si la date n'est pas dans le futur du projet
@@ -101,20 +110,24 @@ class JobController extends BaseController
 
                 echo $this->TemplateEngine->render('Job/CreateJob.twig', [
                     'success' => true,
-                    'TabTech' => $TabTech,
+                     'TabTech' => $TabTech,
                     'tabDate' => $tabDate,
                 ]);
             } else {
                 if (isset($_GET['Pk'])){
                     $PkProject = $_GET['Pk'];
                 }
-
+                else {
+                    $PkProject = null;
+                }
 
                 $TabTech = $this->TM->list();
 
+                $nameOfProject = $this->JM->getIdentById($PkProject);
+
                 echo $this->TemplateEngine->render('/Job/CreateJob.twig', [
                     'TabTech' => $TabTech,
-                    'PkProject' => $PkProject ?? null,
+                    'nameOfProject' => $nameOfProject ?? null,
                     'tabDate' => $tabDate,
                 ]);
             }
@@ -142,6 +155,8 @@ class JobController extends BaseController
                     }
                     else $_POST['Status'] = 'En cours';
 
+                    $_POST['Fk_Project'] = $this->JM->getidByIdent($_POST['Fk_Project']);
+
                     // Verification si la date n'est pas dans le futur du projet
                     $Project = $this->PM->read($_POST['Fk_Project']);
                     if ($_POST['Dstart'] > $Project->getDClotEst() || $_POST['DClotEst'] > $Project->getDClotEst()){
@@ -165,9 +180,12 @@ class JobController extends BaseController
                 } else if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                     $tempJob = $this->JM->read($_GET['Pk']);
                     $jobTech = $this->TM->listByJob($_GET['Pk']);
+                    $nameProject = $this->JM->getIdentById($tempJob->getFk_Project());
+
                     $tempJob->setTech($jobTech);
 
                     echo $this->TemplateEngine->render('Job/UpdateJob.twig', [
+                        'nameOfProject' => $nameProject,
                         'JobEntity' => $tempJob,
                         'TabTech'   => $this->TM->list(),
                     ]);

@@ -12,7 +12,7 @@
 
                 <div class="mb-4">
                     <h1 class="h4 fw-semibold mb-1">
-                        <i class="bi bi-people me-2"></i>Liste des Job
+                        <i class="bi bi-list-task me-2"></i>Liste des Jobs par Projet
                     </h1>
                     <p class="text-muted small mb-0">Liste de tous les jobs enregistrés</p>
                 </div>
@@ -28,52 +28,73 @@
                     <div class="alert alert-danger">Aucun jobs encore enregistré</div>
                 {% endif %}
 
-                {# Tableau des jobs #}
-                {% if TabJob is not null %}
-                    <div class="table-responsive">
-                        <table class="table table-hover align-middle mb-0 small">
-                            <thead class="table-light">
-                            <tr>
-                                <th class="text-uppercase text-muted fw-semibold text-nowrap">Projet</th>
-                                <th class="text-uppercase text-muted fw-semibold text-nowrap">Titre</th>
-                                <th class="text-uppercase text-muted fw-semibold text-nowrap">Description</th>
-                                <th class="text-uppercase text-muted fw-semibold text-nowrap">Status</th>
-                                <th class="text-uppercase text-muted fw-semibold text-nowrap">Priorité</th>
-                                <th class="text-uppercase text-muted fw-semibold text-nowrap">Début</th>
-                                <th class="text-uppercase text-muted fw-semibold text-nowrap">Clôture</th>
-                                <th class="text-uppercase text-muted fw-semibold text-nowrap">Échéance</th>
-                                <th class="text-uppercase text-muted fw-semibold text-nowrap">Actions</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {% for job in TabJob %}
-                                <tr>
-                                    <td class="fw-semibold text-nowrap">{{ job.getFk_project() }}</td>
-                                    <td class="fw-semibold text-nowrap">{{ job.getTitre() }}</td>
-                                    <td class="fw-semibold text-nowrap">{{ job.getDscr() }}</td>
-                                    <td class="text-nowrap"><span class="badge bg-info">{{ job.getStatus() }}</span></td>
-                                    <td class="fw-semibold text-nowrap">{{ job.getPrior() }}</td>
-                                    <td class="fw-semibold text-nowrap">{{ job.getDstart() }}</td>
-                                    <td class="fw-semibold text-nowrap">{{ job.getDclot() }}</td>
-                                    <td class="fw-semibold text-nowrap">{{ job.getDech() }}</td>
+                {% if TabJob is not null and nameOfProject is defined %}
 
-                                    {# Actions disponibles #}
-                                    <td class="text-nowrap">
-                                        <a href="updateJob?Pk={{ job.getPk() }}" class="btn btn-sm btn-outline-primary me-1">
-                                            Modification
-                                        </a>
-                                        <a href="getJob?Pk={{ job.getPk() }}" class="btn btn-sm btn-outline-secondary me-1">
-                                            Information
-                                        </a>
-                                        <a href="deleteJob?Pk={{ job.getPk }}" class="btn btn-sm btn-outline-danger">
-                                            Suppresions
-                                        </a>
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
+                    {% set uniqueProjects = [] %}
+                    {% for job in TabJob %}
+                        {% set currentProjectName = nameOfProject[job.getPk()] %}
+                        {% if currentProjectName not in uniqueProjects %}
+                            {% set uniqueProjects = uniqueProjects|merge([currentProjectName]) %}
+                        {% endif %}
+                    {% endfor %}
+
+                    {% for projectName in uniqueProjects %}
+                        <div class="project-section mb-5">
+
+                            {# Titre du projet + tableau des jobs #}
+                            <div class="d-flex align-items-center mb-2 bg-light p-2 border-start border-primary border-3 rounded-end">
+                                <h2 class="h5 fw-bold mb-0 text-dark">
+                                    <i class="bi bi-folder2-open me-2 text-primary"></i>{{ projectName }}
+                                </h2>
+                            </div>
+
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle mb-0 small border-bottom">
+                                    <thead class="table-light">
+                                    <tr>
+                                        <th class="text-uppercase text-muted fw-semibold text-nowrap">Titre</th>
+                                        <th class="text-uppercase text-muted fw-semibold text-nowrap ">Description</th>
+                                        <th class="text-uppercase text-muted fw-semibold text-nowrap">Status</th>
+                                        <th class="text-uppercase text-muted fw-semibold text-nowrap">Priorité</th>
+                                        <th class="text-uppercase text-muted fw-semibold text-nowrap">Début</th>
+                                        <th class="text-uppercase text-muted fw-semibold text-nowrap">Clôture</th>
+                                        <th class="text-uppercase text-muted fw-semibold text-nowrap">Échéance</th>
+                                        <th class="text-uppercase text-muted fw-semibold text-nowrap">Actions</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for job in TabJob %}
+                                        {% if nameOfProject[job.getPk()] == projectName %}
+                                            <tr>
+                                                <td class="fw-semibold text-nowrap">{{ job.getTitre() }}</td>
+                                                <td class="fw-semibold text-nowrap">{{ job.getDscr() }}</td>
+                                                <td class="text-nowrap"><span class="badge bg-info">{{ job.getStatus() }}</span></td>
+                                                <td class="fw-semibold text-nowrap">{{ job.getPrior() }}</td>
+                                                <td class="fw-semibold text-nowrap">{{ job.getDstart() }}</td>
+                                                <td class="fw-semibold text-nowrap">{{ job.getDclot() }}</td>
+                                                <td class="fw-semibold text-nowrap">{{ job.getDech() }}</td>
+
+                                                {# Actions disponibles #}
+                                                <td class="text-nowrap">
+                                                    <a href="updateJob?Pk={{ job.getPk() }}" class="btn btn-sm btn-outline-primary me-1">
+                                                        Modification
+                                                    </a>
+                                                    <a href="getJob?Pk={{ job.getPk() }}" class="btn btn-sm btn-outline-secondary me-1">
+                                                        Information
+                                                    </a>
+                                                    <a href="deleteJob?Pk={{ job.getPk() }}" class="btn btn-sm btn-outline-danger">
+                                                        Suppression
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        {% endif %}
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    {% endfor %}
+
                 {% endif %}
 
             </div>

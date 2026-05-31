@@ -15,9 +15,11 @@
                     <p class="text-muted small mb-0">Liste de tous les utilisateurs enregistrés</p>
                 </div>
 
-                {% if errorMessage is defined %}
+                {% if errorMessage is defined and errorMessage != null %}
                     <div class="alert alert-danger">{{ errorMessage }}</div>
-                {% else %}
+                {% endif %}
+
+                {% if TabUser is defined and TabUser is not empty %}
                     <div class="table-responsive">
                         <table class="table table-hover align-middle mb-0">
                             <thead class="table-light">
@@ -33,7 +35,7 @@
                                 <tr>
                                     <td class="fw-semibold">{{ user.getLogin() }}</td>
                                     <td>
-                                <span class="badge bg-dark">
+                                <span class="badge bg-primary">
                                     {{ user.getStatut() }}
                                 </span>
                                     </td>
@@ -55,7 +57,6 @@
                         </table>
                     </div>
                 {% endif %}
-
             </div>
         </div>
     </div>

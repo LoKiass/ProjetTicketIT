@@ -71,7 +71,7 @@
                         <div class="collapse mt-2" id="fonctionsCollapse">
                             <div class="d-flex flex-wrap gap-2 pt-2 px-2">
                                 {% for fonction in TechEntity.getFonctions %}
-                                    <i class="bi bi-gear-fill me-1"></i>{{ fonction.getDescr }}
+                                    <span class="bg-primary text-white px-2 py-1 rounded-pill">{{ fonction.getDescr() }}</span>
                                 {% else %}
                                     <p class="text-muted small fst-italic mb-0">Aucune fonction assignée</p>
                                 {% endfor %}

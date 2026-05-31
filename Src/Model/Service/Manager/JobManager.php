@@ -175,5 +175,27 @@ class JobManager
         }
     }
 
+    public function getIdentById(int $id) : string {
+        try{
+            $query = $this->pdb->prepare("SELECT Ident FROM project WHERE Pk_Project = ?");
+            $query->execute([$id]);
+
+            return $query->fetchColumn();
+        } catch (\PDOException $e){
+            throw new DatabaseException("Erreur lors de la lecture de l'identifiant du projet");
+        }
+    }
+
+    public function getIdByIdent(string $ident) : int {
+        try{
+            $query = $this->pdb->prepare("SELECT Pk_Project FROM project WHERE Ident = ?");
+            $query->execute([$ident]);
+
+            return $query->fetchColumn();
+        } catch (pdoException $e){
+            throw new DatabaseException("Erreur lors de la lecture de l'identifiant du projet");
+        }
+    }
+
 
 }

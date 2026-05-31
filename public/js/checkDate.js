@@ -5,7 +5,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function checkValidDate() {
         let hasError = false;
-        print("test");
 
         if (dateDebut && dateDebut.value) {
             if (dateDech) dateDech.min = dateDebut.value;
@@ -68,4 +67,4 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     }
-});
+})

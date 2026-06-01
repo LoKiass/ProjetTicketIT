@@ -2,21 +2,39 @@
 
 namespace DISEUMAT\Model\Service\Manager;
 use DISEUMAT\Exception\DatabaseException;
+use DISEUMAT\Exception\MissingInformation;
 use DISEUMAT\Exception\NotCreatedInDatabase;
 use DISEUMAT\Exception\NotFoundException;
-use DISEUMAT\Model\Entity\FonctionEntity;
 use DISEUMAT\Model\Entity\TechEntity;
+use PDO;
 use PDOException;
 
+/**
+ *
+ */
 class TechManager
 {
-    private $pdb;
+    /**
+     * @var PDO
+     */
+    private PDO $pdb;
+
+    /**
+     *
+     */
     public function __construct(){
         $this->pdb = DBManager::getInstance();
     }
 
     /*
      * Cette méthode permet de lire un technicien en fonction de son id en BDD
+     */
+    /**
+     * @param int $id
+     * @return TechEntity
+     * @throws DatabaseException
+     * @throws MissingInformation
+     * @throws NotFoundException
      */
     public function read(int $id) : TechEntity {
         try{
@@ -35,14 +53,21 @@ class TechManager
 
             return TechEntity::fromArray($query->fetch());
 
-        } catch (\PDOException $e){
-            throw new DatabaseException($e->getMessage(), 0);
+        } catch (\PDOException){
+            throw new DatabaseException("Erreur lors de l'authentifications à la DB");
+        } catch (MissingInformation){
+            throw new MissingInformation("Des informations sont manquantes");
         }
 
     }
 
     /*
      * Cette methode permet de lire tous les technicien de la BDD
+     */
+    /**
+     * @return array
+     * @throws DatabaseException
+     * @throws MissingInformation
      */
     public function list() : array {
         try{
@@ -66,12 +91,18 @@ class TechManager
             }
 
             return $TabTech;
-        }catch (\PDOException $e){
-            throw new DatabaseException($e->getMessage(), 0);
+        }catch (PDOException){
+            throw new DatabaseException("Erreur lors de l'authentification");
         }
     }
     /*
      * Cette méthode permet de créé un technicien en BDD
+     */
+    /**
+     * @param $entity
+     * @return int
+     * @throws DatabaseException
+     * @throws NotCreatedInDatabase
      */
     public function create($entity) : int {
        try{
@@ -86,17 +117,22 @@ class TechManager
            ]);
 
            if ($query->rowCount() === 0){
-                throw new NotCreatedInDatabase("Le techniciens n'a pas été crée", 0);
+                throw new NotCreatedInDatabase("Le techniciens n'a pas été crée");
            }
 
            return (int)$this->pdb->lastInsertId();
-       } catch (\PDOException $e){
-            throw new DatabaseException($e->getMessage(), 0);
+       } catch (PDOException){
+            throw new DatabaseException();
        }
     }
 
     /*
      * Cette méthode permet de modifier un téchnciens déjà existant en BDD
+     */
+    /**
+     * @param TechEntity $entity
+     * @return void
+     * @throws DatabaseException
      */
     public function update(TechEntity $entity) : void {
         try {
@@ -120,30 +156,52 @@ class TechManager
                 (int)$entity->getActif(),
                 $entity->getPk()
             ]);
-        } catch (\PDOException $e) {
-            throw new DatabaseException($e->getMessage(), 0);
+        } catch (PDOException) {
+            throw new DatabaseException("Erreur lors de l'authentification");
         }
     }
+    /*
+     * Cette méthode permet de lier une fonction à un technicien
+     */
+    /**
+     * @param int $Pk_Tech
+     * @param int $Pk_Fonction
+     * @return void
+     * @throws DatabaseException
+     */
     public function LinkToFunction(int $Pk_Tech, int $Pk_Fonction) : void {
         try{
             $query = "INSERT IGNORE INTO fonction_tech (Fk_Tech, Fk_Fonction) VALUES (?, ?)";
             $query = $this->pdb->prepare($query);
             $query->execute([$Pk_Tech, $Pk_Fonction]);
 
-        } catch (\PDOException $e){
+        } catch (PDOException){
             throw new DatabaseException("Erreur lors de l'insertion dans la table tech_fonction");
         }
     }
+    /*
+     * Cette fonction permet de
+     * -de supprimer tous les liens entre un technicien et une fonction choici par la pk
+     */
+    /**
+     * @param int $Pk_Tech
+     * @return void
+     * @throws DatabaseException
+     */
     public function unlinkAllFunctions(int $Pk_Tech) : void {
         try{
             $query = "DELETE FROM fonction_tech WHERE Fk_Tech = ?";
             $query = $this->pdb->prepare($query);
             $query->execute([$Pk_Tech]);
-        } catch (\PDOException $e){
+        } catch (PDOException){
             throw new DatabaseException("Erreur lors de la suppression des fonctions du technicien");
         }
     }
 
+    /**
+     * @throws MissingInformation
+     * @throws DatabaseException
+     */
     public function listByJob(int $Pk): array
     {
         try{
@@ -161,8 +219,10 @@ class TechManager
                 $TabTech[] = TechEntity::fromArray($record);
             }
             return $TabTech;
-        } catch (PDOException $e){
+        } catch (PDOException){
             throw new DatabaseException("Erreur lors de l'authentifications");
+        } catch (MissingInformation){
+            throw new MissingInformation("Des informations sont manquantes");
         }
     }
 }

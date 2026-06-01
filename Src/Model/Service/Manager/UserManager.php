@@ -10,11 +10,23 @@ use DISEUMAT\Model\Entity\UserEntity as UserEntity;
 use PDO;
 use PDOException;
 
+/**
+ *
+ */
 class UserManager
 {
+    /**
+     * @var PDO
+     */
     private PDO $pdb;
+    /**
+     * @var string
+     */
     private string $keyString;
 
+    /**
+     *
+     */
     public function __construct(){
         $this->pdb = DBManager::getInstance();
         $this->keyString = 'CG6eeGK0jaKUU2U7'; // Clé de chiffrement pour le mot de passe
@@ -24,9 +36,11 @@ class UserManager
      * Cette méthode permet de vérifier si les credentials fournis sont valides en BDDà partir du login et du mot de passe
      */
     /**
-     * @throws MissingInformation
+     * @param UserEntity $entity
+     * @return UserEntity
      * @throws DatabaseException
      * @throws InvalidCredentialException
+     * @throws MissingInformation
      */
     public function checkUser(UserEntity $entity) : UserEntity
     {
@@ -48,15 +62,18 @@ class UserManager
             throw new DatabaseException("Erreur lors de l'authentification");
         } catch (MissingInformation) {
             throw new MissingInformation("Des informations sont manquantes");
-        } catch (InvalidCredentialException) {
-            throw new InvalidCredentialException("Les informations fournites ne sont pas valides");
         }
     }
 
     /*
      * Cette méthode permet de lire tous les users de la BDD
      */
-        public function list() : array{
+    /**
+     * @return array
+     * @throws DatabaseException
+     * @throws MissingInformation
+     */
+    public function list() : array{
             try{
                 $query = $this->pdb->prepare("SELECT * FROM user");
                 $query->execute();
@@ -80,6 +97,13 @@ class UserManager
     /*
      * Cette méthode permet de lire un user de la BDD à partir du login fournit
      */
+    /**
+     * @param string $Login
+     * @return UserEntity
+     * @throws DatabaseException
+     * @throws MissingInformation
+     * @throws NotFoundException
+     */
     public function read(string $Login) : UserEntity {
         try{
             $query = $this->pdb->prepare("SELECT * FROM user WHERE Login = ?");
@@ -100,6 +124,13 @@ class UserManager
     /*
      * Cette méthode permet de modifier le mots de passe de l'utilisateurs
      */
+    /**
+     * @param string $login
+     * @param string $newPassword
+     * @return void
+     * @throws DatabaseException
+     * @throws NotFoundException
+     */
     public function updatePassword(string $login, string $newPassword) : void {
         try{
             $query = $this->pdb->prepare("UPDATE user SET Pswd = AES_ENCRYPT(?, ?) WHERE Login = ?");
@@ -111,13 +142,16 @@ class UserManager
 
         } catch (PDOException){
             throw new DatabaseException("Impossible de mettre à jours le mots de passe");
-        } catch (NotFoundException){
-            throw new NotFoundException("Le user specifier n'existe pas");
         }
     }
 
     /*
      * Cette méthode permet de crée un utilisateurs en BDD
+     */
+    /**
+     * @param UserEntity $entity
+     * @return void
+     * @throws DatabaseException
      */
     public function create(UserEntity $entity) : void {
         try{

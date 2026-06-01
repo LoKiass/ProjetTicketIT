@@ -26,7 +26,7 @@ class TechEntity
 
     // Getter & setter
     public function getPk(): int {
-        return $this->Pk; //
+        return $this->Pk;
     }
     public function getFk_equipe(): int {
         return $this->Fk_equipe;

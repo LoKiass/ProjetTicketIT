@@ -28,19 +28,21 @@ class TechController extends BaseController
         try {
             $this->requireLogin();
 
-            if (isset($_GET['Pk'])) {
-                $Tech = $this->TM->read($_GET['Pk']);
-                $ListeFonctions = $this->FM->listByTech($_GET['Pk']);
-                $Tech->setFonctions($ListeFonctions);
+            if (isset($_GET['Pk'])) { // Si on demande l'informations d'un utilisateur précis (READ + PK)
+
+                $Tech = $this->TM->read($_GET['Pk']); // Récuperations de l'utilisateur et genere une entité
+                $ListeFonctions = $this->FM->listByTech($_GET['Pk']); // Récuperations des fonctions de l'utilisateur
+                $Tech->setFonctions($ListeFonctions); // Genere la liste des fonctions de l'utilisateur niveau entité
+
                 echo $this->TemplateEngine->render("Tech/InfoTech.twig", [
                     'TechEntity' => $Tech
                 ]);
             }
-            else {
-                $TabTech = $this->TM->list();
+            else if($_SERVER['REQUEST_METHOD'] === 'GET'){
+                $TabTech = $this->TM->list(); // Recuperation de la liste des techniciens
 
-                $successMessageFromUrl = $_GET['successMessage'] ?? null;
-                $errorMessage  = $_GET['errorMessage'] ?? null;
+                $successMessageFromUrl = $_GET['successMessage'] ?? null; // Si message de succes de modification ou suppression
+                $errorMessage  = $_GET['errorMessage'] ?? null; // Si erreur de modification ou suppression
 
                 echo $this->TemplateEngine->render("Tech/ListTech.twig", [
                     'TabTech'        => $TabTech,
@@ -63,20 +65,23 @@ class TechController extends BaseController
      */
     public function createTech() : void {
         $this->requireLogin();
-        try {
-            if (isset($_POST['Pren'])) {
-                $_POST['Pk_Tech'] = $_POST['Pk_Tech'] ?? 0;
-                $_POST['Actif'] = $_POST['Actif'] ?? 0;
 
+        try {
+            if (isset($_POST['Pren']) && $_SERVER['REQUEST_METHOD'] === 'POST') {
+                $_POST['Pk_Tech'] = $_POST['Pk_Tech'] ?? 0; // Recuperer la pk utilisateurs, si elle n'existe pas, NULL // Le formulaire envoie pas de PK
+                $_POST['Actif'] = $_POST['Actif'] ?? 0; // Recuperer l'actif de l'utilisateur, si elle n'existe pas, NULL // Une case décoche en HTML ne generer pas null
+
+                // Generaration de l'entité
                 $tempTech = TechEntity::fromArray($_POST);
 
-                if (!$tempTech) {
-                    header("HTTP/1.0 404 Not Found");
-                    exit;
+                if (!$tempTech) { // Si par malchance une erreur ce produit
+                    header("Location: error404");
                 }
 
+                // Création de l'utilisateur niveau bdd + récuperation de la PK generé par la bdd
                 $techId = $this->TM->create($tempTech);
 
+                // Si on a selectionner des fonctions, on les lier au technicien
                 if (isset($_POST['fonctions']) && is_array($_POST['fonctions'])) {
                     foreach ($_POST['fonctions'] as $idFonction) {
                         $this->TM->LinkToFunction($techId, $idFonction);
@@ -85,7 +90,7 @@ class TechController extends BaseController
 
                 $TabFonction = $this->FM->list();
                 echo $this->TemplateEngine->render("Tech/CreateTech.twig", ['success' => true, 'TabFonction' => $TabFonction]);
-            } else {
+            } else { // Si on passe par la Navbar
                 $TabFonction = $this->FM->list();
                 echo $this->TemplateEngine->render("Tech/CreateTech.twig", ['TabFonction' => $TabFonction]);
             }
@@ -95,7 +100,6 @@ class TechController extends BaseController
                 'TabFonction'  => $TabFonction,
                 'errorMessage' => $e->getMessage() // Changé pour cohérence avec ListTech
             ]);
-
         }
     }
 
@@ -105,13 +109,15 @@ class TechController extends BaseController
     public function updateTech() : void {
         $this->requireLogin();
         try {
-            if (isset($_GET['Pk'])) {
+            if (isset($_GET['Pk'])) { // Si on demande la modification d'un technicien
                 $pk = $_GET['Pk'];
 
+                // Si on passe par le formulaire de modification
                 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-                    $_POST['Pk_Tech'] = $pk;
-                    $_POST['Actif'] = $_POST['Actif'] ?? 0;
+                    $_POST['Pk_Tech'] = $pk; // On ajoute la PK du technicien pour la modifier
+                    $_POST['Actif'] = $_POST['Actif'] ?? 0; // On ajoute l'activité du technicien pour la modifier
 
+                    // Modification de l'utilisateur
                     $this->TM->update(TechEntity::fromArray($_POST));
                     $this->TM->unlinkAllFunctions($pk);
 
@@ -122,10 +128,14 @@ class TechController extends BaseController
                     }
                     header('Location: getTech?successMessage=' . urlencode("La modification du technicien a réussi"));
                 }
+                // Si on passe par la Navbar
                 else if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+
+                    // Bloc de lecture qui permet de pré-remplir le formulaire
                     $tempTech = $this->TM->read($_GET['Pk']);
                     $userFonction = $this->FM->listByTech($_GET['Pk']);
                     $tempTech->setFonctions($userFonction);
+
                     echo $this->TemplateEngine->render("Tech/UpdateTech.twig", [
                         'TechEntity'  => $tempTech,
                         'TabFonction' => $this->FM->list()

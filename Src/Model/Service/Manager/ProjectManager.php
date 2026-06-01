@@ -4,19 +4,35 @@ namespace DISEUMAT\Model\Service\Manager;
 
 use DISEUMAT\Exception\DatabaseException;
 use DISEUMAT\Exception\LinkExistBetween;
+use DISEUMAT\Exception\MissingInformation;
 use DISEUMAT\Exception\NotFoundException;
 use DISEUMAT\Model\Entity\JobEntity;
 use DISEUMAT\Model\Entity\ProjectEntity;
 use PDO;
 use PDOException;
 
+/**
+ *
+ */
 class ProjectManager
 {
-    private $pdb;
+    /**
+     * @var PDO
+     */
+    private PDO $pdb;
+
+    /**
+     *
+     */
     public function __construct(){
         $this->pdb = DBManager::getInstance();
     }
 
+    /**
+     * @param ProjectEntity $entity
+     * @return int
+     * @throws DatabaseException
+     */
     public function create(ProjectEntity $entity) : int{
         try{
             $query = $this->pdb->prepare("INSERT INTO project (Ident, Descr, Dstart, DClotEst, Budget) VALUES (?, ?, ?, ?, ?)");
@@ -29,10 +45,16 @@ class ProjectManager
             ]);
 
             return (int)$this->pdb->lastInsertId();
-        } catch (PDOException $e){
-            throw new DatabaseException("Erreur lors de l'authentification", 0);
+        } catch (PDOException){
+            throw new DatabaseException("Erreur lors de l'authentification");
         }
     }
+
+    /**
+     * @return array
+     * @throws DatabaseException
+     * @throws MissingInformation
+     */
     public function list() : array{
         try{
             $query = $this->pdb->prepare("SELECT * FROM project");
@@ -50,10 +72,18 @@ class ProjectManager
 
             return $TabProject;
 
-        } catch (PDOException $e){
-            throw new DatabaseException("Erreur lors de l'authentification",0);
+        } catch (PDOException){
+            throw new DatabaseException("Erreur lors de l'authentification");
         }
     }
+
+    /**
+     * @param int $pk
+     * @return ProjectEntity
+     * @throws DatabaseException
+     * @throws MissingInformation
+     * @throws NotFoundException
+     */
     public function read(int $pk) : ProjectEntity{
         try{
             $query = $this->pdb->prepare("SELECT * FROM project WHERE Pk_Project = ?");
@@ -64,10 +94,19 @@ class ProjectManager
             }
 
             return ProjectEntity::fromArray($query->fetch());
-        } catch (PDOException $e){
-            throw new DatabaseException("Erreur lors de l'authentifications", 0);
+        } catch (PDOException){
+            throw new DatabaseException("Erreur lors de l'authentifications");
+        } catch (MissingInformation) {
+            throw new MissingInformation("Des informations sont manquantes");
         }
+
     }
+
+    /**
+     * @param ProjectEntity $entity
+     * @return void
+     * @throws DatabaseException
+     */
     public function update(ProjectEntity $entity) : void {
         try{
             $query = $this->pdb->prepare("UPDATE project SET Ident = ?, Descr = ?, Dstart = ?, DClotEst = ?, Budget = ? WHERE Pk_Project = ?");
@@ -79,10 +118,18 @@ class ProjectManager
                 $entity->getBudget(),
                 $entity->getPk(),
             ]);
-        } catch (PDOException $e){
+        } catch (PDOException){
             throw new DatabaseException("Erreur lors de l'authentifications");
         }
     }
+
+    /**
+     * @param int $pk
+     * @return void
+     * @throws DatabaseException
+     * @throws LinkExistBetween
+     * @throws NotFoundException
+     */
     public function delete(int $pk) : void {
         try{
             $this->isLinkedToJob($pk);
@@ -93,11 +140,19 @@ class ProjectManager
             if ($query->rowCount() === 0) {
                 throw new NotFoundException("Le projet n'existe pas");
             }
-        } catch (PDOException $e){
+        } catch (PDOException){
             throw new DatabaseException("Erreur lors de l'authentifications");
+        } catch (LinkExistBetween){
+            throw new LinkExistBetween("Un lien existe entre le projet et un job");
         }
     }
 
+    /**
+     * @param int $pk
+     * @return void
+     * @throws DatabaseException
+     * @throws LinkExistBetween
+     */
     public function isLinkedToJob(int $pk) : void{
         try{
             $query = $this->pdb->prepare("SELECT COUNT(*) FROM job WHERE Fk_Project = ?");
@@ -107,10 +162,17 @@ class ProjectManager
                 throw new LinkExistBetween("Un lien existe entre le projet et un job");
             }
 
-        } catch (PDOException $e){
+        } catch (PDOException){
             throw new DatabaseException("Erreur lors de l'authentifications");
         }
     }
+
+    /**
+     * @param int $Pk
+     * @return array
+     * @throws DatabaseException
+     * @throws MissingInformation
+     */
     public function listByJobs(int $Pk): array
     {
         try{
@@ -124,8 +186,8 @@ class ProjectManager
             }
 
             return $TabJob;
-        }catch (\PDOException $e){
-
+        }catch (PDOException){
+            throw new DatabaseException("Erreur lors de l'authentification");
         }
     }
 }

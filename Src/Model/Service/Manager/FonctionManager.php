@@ -4,20 +4,40 @@ namespace DISEUMAT\Model\Service\Manager;
 
 use DISEUMAT\Exception\DatabaseException;
 use DISEUMAT\Exception\LinkExistBetween;
+use DISEUMAT\Exception\MissingInformation;
 use DISEUMAT\Exception\NotCreatedInDatabase;
 use DISEUMAT\Exception\NotFoundException;
 use DISEUMAT\Model\Entity\FonctionEntity;
 
+use PDO;
 use PDOException;
 
+/**
+ * Manager responsable de toutes les opérations en base de données
+ * liées aux fonctions (rôles/compétences) attribuables aux techniciens.
+ */
 class FonctionManager
 {
-    private $pdb;
+    /**
+     * @var PDO Instance de connexion à la base de données.
+     */
+    private PDO $pdb;
+
+    /**
+     * Initialise la connexion à la base de données via le singleton DBManager.
+     */
     public function __construct(){
         $this->pdb = DBManager::getInstance();
     }
-    /*
-     * Cette fonction permet de crée une fonction dans la BDD
+
+    /**
+     * Insère une nouvelle fonction en base de données à partir d'un FonctionEntity.
+     * Lance une NotCreatedInDatabase si aucune ligne n'a été insérée.
+     *
+     * @param FonctionEntity $entity
+     * @return void
+     * @throws DatabaseException
+     * @throws NotCreatedInDatabase
      */
     public function create(FonctionEntity $entity) : void {
         try{
@@ -25,14 +45,21 @@ class FonctionManager
             $query->execute([$entity->getDescr(), $entity->getNiveau()]);
 
             if($query->rowCount() === 0){
-               throw new NotCreatedInDatabase("L'enregistrement a pas été crée, veuillez re-essayer");
+                throw new NotCreatedInDatabase("L'enregistrement a pas été crée, veuillez re-essayer");
             }
-        } catch (PDOException $e){
-            throw new DatabaseException("Erreur lors de l'authentification", 0);
+        } catch (PDOException){
+            throw new DatabaseException("Erreur lors de l'authentification");
         }
     }
-    /*
-     * Cette fonction permet de modifier les informations d'une fonction déjà existante en BDD
+
+    /**
+     * Met à jour la description et le niveau d'une fonction existante en base de données.
+     * Lance une NotFoundException si aucune ligne n'a été modifiée (fonction inexistante).
+     *
+     * @param FonctionEntity $FonctionEntity
+     * @return void
+     * @throws DatabaseException
+     * @throws NotFoundException
      */
     public function update(FonctionEntity $FonctionEntity) : void {
         try{
@@ -42,13 +69,17 @@ class FonctionManager
             if($query->rowCount() === 0){
                 throw new NotFoundException("La fonction n'existe pas");
             }
-        } catch (PDOException $e){
-            throw new DatabaseException("Erreur lors de l'authentification", 0);
+        } catch (PDOException){
+            throw new DatabaseException("Erreur lors de l'authentification");
         }
     }
 
-    /*
-     * Cette methode permet de lire toutes les fonctions de la BDD
+    /**
+     * Récupère la liste complète de toutes les fonctions présentes en base de données.
+     * Retourne un tableau vide si aucune fonction n'existe.
+     *
+     * @return array
+     * @throws DatabaseException|MissingInformation
      */
     public function list() : array
     {
@@ -67,12 +98,19 @@ class FonctionManager
             }
 
             return $TabFunction;
-        } catch (PDOException $e) {
-            throw new DatabaseException("Erreur lors de l'authentification", 0);
+        } catch (PDOException) {
+            throw new DatabaseException("Erreur lors de l'authentification");
         }
     }
-    /*
-     * Cette methode permet de lire une fonction de la BDD
+
+    /**
+     * Récupère une fonction spécifique depuis la base de données via sa clé primaire.
+     * Lance une NotFoundException si aucune fonction ne correspond à la PK fournie.
+     *
+     * @param int $pk
+     * @return FonctionEntity
+     * @throws DatabaseException
+     * @throws NotFoundException|MissingInformation
      */
     public function read(int $pk) : FonctionEntity {
         try{
@@ -85,13 +123,22 @@ class FonctionManager
 
             return FonctionEntity::fromArray($query->fetch());
 
-        } catch (PDOException $e){
-            throw new DatabaseException("Erreur lors de l'authentification", 0);
+        } catch (PDOException){
+            throw new DatabaseException("Erreur lors de l'authentification");
         }
     }
 
-    /*
-     * Cette méthode permet de supprimer une fonction de la BD si aucun liens n'existe entre elle et un technicien (Via checklink)
+    /**
+     * Supprime une fonction de la base de données via sa clé primaire.
+     * Vérifie d'abord via checkLink() qu'aucun technicien n'est lié à cette fonction.
+     * Si un lien existe, la suppression est bloquée (LinkExistBetween).
+     * Lance une NotFoundException si la fonction n'existe pas au moment du DELETE.
+     *
+     * @param int $pk
+     * @return void
+     * @throws DatabaseException
+     * @throws LinkExistBetween
+     * @throws NotFoundException
      */
     public function delete(int $pk) : void {
         try {
@@ -103,13 +150,23 @@ class FonctionManager
             if ($query->rowCount() === 0) {
                 throw new NotFoundException("La fonction n'existe pas");
             }
-        } catch (PDOException $e) {
-            throw new DatabaseException("Erreur lors de la suppression", 0, $e);
+        } catch (PDOException) {
+            throw new DatabaseException("Erreur lors de la suppression");
+        } catch (LinkExistBetween) {
+            throw new LinkExistBetween("Un lien exite entre la fonction et un technicien, impossible de supprimer");
         }
     }
 
-    /*
-     * Cette méthode permet de verifier si un liens existe au niveau BD entre un téchniciens & une fonction
+    /**
+     * Vérifie si un lien existe entre une fonction et au moins un technicien
+     * dans la table de jointure fonction_tech.
+     * Lance une LinkExistBetween si un lien est détecté — le message sera
+     * surchargé par la méthode appelante (ex: delete()).
+     *
+     * @param int $pk
+     * @return void
+     * @throws DatabaseException
+     * @throws LinkExistBetween
      */
     public function checkLink(int $pk) : void {
         try {
@@ -117,13 +174,23 @@ class FonctionManager
             $query->execute([$pk]);
 
             if ($query->fetchColumn() > 0) {
-                throw new LinkExistBetween("Un lien existe entre la fonction et un technicien");
+                throw new LinkExistBetween("Le message vas ce faire overide par la la méthode qui l'appelle");
             }
-        } catch (PDOException $e) {
-            throw new DatabaseException("Le lien n'a pas pu être vérifié", 0, $e);
+        } catch (PDOException) {
+            throw new DatabaseException("Le lien n'a pas pu être vérifié");
         }
     }
 
+    /**
+     * Récupère la liste de toutes les fonctions attribuées à un technicien spécifique,
+     * via la table de jointure fonction_tech.
+     * Retourne un tableau vide si aucune fonction n'est liée à ce technicien.
+     *
+     * @param int $Pk
+     * @return array
+     * @throws DatabaseException
+     * @throws MissingInformation
+     */
     public function listByTech(int $Pk): array
     {
         try{
@@ -141,8 +208,11 @@ class FonctionManager
                 $TabFonction[] = FonctionEntity::fromArray($record);
             }
             return $TabFonction;
-        } catch (PDOException $e){
+        } catch (PDOException){
             throw new DatabaseException("Erreur lors de l'authentifications");
+        } catch (MissingInformation) {
+            throw new MissingInformation("Des informations sont manquantes");
         }
+
     }
 }

@@ -2,7 +2,11 @@
 
 namespace DISEUMAT\Model\Entity;
 use DISEUMAT\Exception\MissingInformation;
+use Throwable;
 
+/**
+ *
+ */
 class UserEntity
 {
     private string $Login;
@@ -44,6 +48,11 @@ class UserEntity
         $this->Actif = $Actif;
     }
 
+    /**
+     * @param array $data
+     * @return UserEntity
+     * @throws MissingInformation
+     */
     public static function fromArray(array $data) : UserEntity
     {
         try{
@@ -55,7 +64,7 @@ class UserEntity
             $instance->setActif((bool)($data['Actif']));
 
             return $instance;
-        } catch (\Throwable $th){
+        } catch (Throwable $th){
             throw new MissingInformation("Des informations sont manquantes");
         }
     }

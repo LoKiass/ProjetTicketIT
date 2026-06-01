@@ -3,7 +3,11 @@
 namespace DISEUMAT\Model\Entity;
 
 use DISEUMAT\Exception\MissingInformation;
+use Throwable;
 
+/**
+ *
+ */
 class TechEntity
 {
     private int $Pk;
@@ -69,6 +73,12 @@ class TechEntity
     public function getFonctions(): array {
         return $this->Fonction;
     }
+
+    /**
+     * @param array $data
+     * @return TechEntity
+     * @throws MissingInformation
+     */
     public static function fromArray(array $data) : TechEntity
     {
         try{
@@ -81,7 +91,7 @@ class TechEntity
             $instance->setActif((bool)($data['Actif']));
 
             return $instance;
-        }catch (\Throwable){
+        }catch (Throwable){
             throw new MissingInformation("Des informations sont manquantes");
         }
     }

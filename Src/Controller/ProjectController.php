@@ -121,7 +121,7 @@ class ProjectController extends BaseController
             }
         } catch (NotFoundException $e){
             header('Location: error404');
-        } catch (DatabaseException $e) {
+        } catch (DatabaseException|LinkExistBetween $e) {
             header('Location: getProject?errorMessage=' . urlencode($e->getMessage()));
         }
     }

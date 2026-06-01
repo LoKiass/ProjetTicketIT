@@ -13,6 +13,7 @@ use DISEUMAT\Exception\NotFoundException;
 use DISEUMAT\Model\Entity\UserEntity as UserEntity;
 use DISEUMAT\Model\Service\Manager\UserManager;
 use DISEUMAT\Model\Service\Session\UserSession;
+use http\Exception\InvalidArgumentException;
 
 class UserController extends BaseController
 {
@@ -33,33 +34,36 @@ class UserController extends BaseController
      * En cas d'erreur (identifiants invalides, erreur base), réaffiche le formulaire avec un message d'erreur.
      */
     public function formLogin() : void {
-        $accountSuccess = false;
-        $userChangedParam = isset($_GET['userChanged']) ? 1 : 0;
+        $accountSuccess = false; // Valeur de base
+        $userChangedParam = isset($_GET['userChanged']) ? 1 : 0; // Valeur de base de si l'utilisateurs à modifier ces identifiants
 
-        if(isset($_SESSION['userLogged'])){
+        if(isset($_SESSION['userLogged'])){ // Si un utilisateur arrive ici avec une sessions, la kill directement, évite de potentielle attaque via URL
             unset($_SESSION['userLogged']);
         }
 
         try{
-            if(isset($_POST['Login'])){
+            if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['Login'])){ // Si on passe par le formulaire de connexion
+                // Créations d'un utilisateurs temporaire
                 $userTmp = new UserEntity();
                 $userTmp->setLogin($_POST['Login']);
                 $userTmp->setPswd($_POST['Pswd']);
 
+                // Verifier si cette utilisateurs existe bien en DB
                 $userFromDb = $this->UM->checkUser($userTmp);
 
                 $this->US->create($userFromDb);
 
+                // Redirection vers la page d'accueil
                 header("Location: formAccueil");
-
             }
             else {
+                // Verification si un utilisateur existe au niveau de la DB
                 $checkIfUserInDb = $this->UM->list();
-                if (empty($checkIfUserInDb)){ // Si aucun utilisateurs trouver
+                if (empty($checkIfUserInDb)){ // Si aucun utilisateurs trouver -> redirection vers la page d'ajout de premiers utilisateurs
                     header("Location: addFirstUser");
                 }
                 else {
-                    if (isset($_GET['accountSuccess'])){
+                    if (isset($_GET['accountSuccess'])){ // Dans le cas ou nous avons crée un compte utilisateurs, sinon valeurs reste à false
                         $accountSuccess = true;
                     }
 
@@ -108,11 +112,15 @@ class UserController extends BaseController
         $this->requireLogin();
 
         try {
+            // Recupération de l'utilisateur à modifier au niveau de la page
             $loginTarget = $_GET['Login'] ?? null;
+
+            // Récuperation de cette utilisateur au niveau de la bdd
             $userToEdit = $this->UM->read($loginTarget);
 
+            // Si l'utilisateur existe, alors on peut modifier son mot de passe
             if ($loginTarget !== null) {
-                if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                if ($_SERVER['REQUEST_METHOD'] === 'POST') { // Si on passe par le formulaire de modification
 
                     $verifUser = new UserEntity();
                     $verifUser->setLogin($loginTarget);
@@ -136,50 +144,52 @@ class UserController extends BaseController
                         session_abort();
                         header("Location: formLogin?userChanged=1");
                     }
-                    else {
+                    else { // Sinon, on redirige vers la liste des utilisateurs
                         header("Location: ListUser");
                     }
 
                 }
 
+                // Sinon, on affiche le formulaire de modification avec les informations de l'utilisateur
                 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                     echo $this->TemplateEngine->render('/User/UpdateUser.twig', [
                         'UserEntity' => $userToEdit
                     ]);
                 }
             }
-        } catch (DatabaseException|InvalidCredentialException $e) {
+        } catch (DatabaseException|InvalidCredentialException|MissingInformation $e) { // Erreur lors de la modification du mot de passe
             echo $this->TemplateEngine->render('/User/UpdateUser.twig', [
                 'UserEntity' => $userToEdit,
                 'errorMessage' => $e->getMessage(),
             ]);
-        } catch (NotFoundException $e){
+        } catch (NotFoundException $e){ // Dans le cas d'un user inexistant
             header('Location: error404');
         }
 
     }
+    /*
+     * Cette méthode ce déclenche dans le cas de la première connexion utilisateurs
+     * Cela vas permettre à l'administrateur à ce crée un compte, et de pouvoir s'y connecter
+     */
     public function addFirstUser() : void{
             try{
-                if (isset($_SESSION['userLogged']) || !empty($this->UM->list()) ){
+                if (isset($_SESSION['userLogged']) || !empty($this->UM->list()) ){  // Si un utilisateur existe déjà en DB ou une variable sessions existe => ANORMALE ! Erreur 404 sans indice
                     header("Location: page404");
                 }
 
-                if (isset($_POST['Login']) && isset($_POST['Pswd'])){
-                    if ($_POST['Pswd'] != $_POST['PswdConfirm']){
+                if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['Login'])){
+                    if ($_POST['Pswd'] != $_POST['PswdConfirm']){ // Si les mots de passe ne correspondent pas
                         throw new InvalidCredentialException("Les mots de passe ne correspondent pas");
                     }
 
-                    $userTmp = new UserEntity();
-                    $userTmp->setLogin($_POST['Login']);
-                    $userTmp->setPswd($_POST['Pswd']);
-                    $userTmp->setStatut($_POST['Statut']);
-                    $userTmp->setActif(true);
+                    $_POST['Actif'] = true; // Si on crée un utilisateur, on le met actif directement
+                    $userTmp = UserEntity::fromArray($_POST);
 
-                    $this->UM->create($userTmp);
+                    $this->UM->create($userTmp); // Création de l'utilisateur au niveau de la DB
 
                     header("Location: formLogin?accountSuccess=true");
                 }
-                else {
+                else { // dès le lancement
                     echo $this->TemplateEngine->render('/Login/AddFirstUser.twig');
                 }
             } catch (DatabaseException|InvalidCredentialException $e){

@@ -1,7 +1,6 @@
 <?php
 
 namespace DISEUMAT\Model\Entity;
-
 use DISEUMAT\Exception\MissingInformation;
 
 class UserEntity
